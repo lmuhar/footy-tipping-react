@@ -1,56 +1,23 @@
 import * as React from 'react';
-import {Component} from 'react';
-import HighScore from './HighScore';
-import './scss/style.scss';
+import {ThemeProvider, CSSReset, Button} from '@chakra-ui/core';
+import customTheme from './theme';
+import styled from '@emotion/styled';
+import {css} from '@emotion/core';
 
-interface IProps {}
+const Heading = styled.h1<{blue: boolean}>`
+color: ${(props) => props.blue ? 'blue' : 'red'}; 
+`;
+const styles = css`color: red;`
 
-interface IState {
-    count: number;
-    overTen: boolean;
-}
-
-class Application extends Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {
-            count: 0,
-            overTen: false
-        }
-    }
-
-    handleClick() {
-        this.setState({count: this.state.count + 1});
-    }
-
-    resetCount(e: any) {
-        this.setState({
-            count: 0,
-            overTen: false
-        })
-    }
-
-    componentDidUpdate(props: IProps, state: IState) {
-        if (this.state.count > 10 && this.state.count !== state.count && !this.state.overTen) {
-            this.setState({overTen: true})
-        }
-    }
-
-    render() {
+const Application: React.FunctionComponent = (props) => { 
         return (
-          <div>
-              <h1>You clicked the button {this.state.count} times</h1>
-              <HighScore
-                overTen={this.state.overTen}
-                onReset={(e: any) => this.resetCount(e)}
-              />
-              <span>
-                  <button onClick={() => this.handleClick()}>Click Me</button>
-              </span>
-          </div>
+        <ThemeProvider theme={customTheme}>
+          <CSSReset />
+          {props.children}
+          <Heading blue={false}>Heading 1</Heading>
+          <Button children={<div css={styles}>hello</div>} />
+        </ThemeProvider>
       );
-    }
 }
 
 export default Application;
