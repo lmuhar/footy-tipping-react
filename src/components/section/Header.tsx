@@ -18,7 +18,7 @@ const Header: React.FunctionComponent = (props) => {
       justify="space-between"
       wrap="wrap"
       padding="1.5rem"
-      bg="teal.500"
+      bg="brand.500"
       color="white"
       {...props}
     >

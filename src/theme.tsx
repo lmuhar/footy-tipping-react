@@ -1,16 +1,20 @@
 import { theme } from "@chakra-ui/core";
 
-const breakpoints = ["360px", "768px", "1024px", "1440px"];
-
 const customTheme = {
     ...theme,
-    breakpoints,
     colors: {
         ...theme.colors,
         brand: {
-            900: "#1a365d",
-            800: "#153e75",
-            700: "#2a69ac",
+            50: "#F0FFF4",
+            100: "#C6F6D5",
+            200: "#9AE6B4",
+            300: "#68D391",
+            400: "#48BB78",
+            500: "#38A169",
+            600: "#2F855A",
+            700: "#276749",
+            800: "#22543D",
+            900: "#1C4532"
         }
     }
 };

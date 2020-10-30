@@ -1,27 +1,46 @@
 import * as React from 'react';
-import {ThemeProvider, CSSReset, Button} from '@chakra-ui/core';
+import {ThemeProvider, CSSReset, Flex, ColorModeProvider} from '@chakra-ui/core';
 import customTheme from './theme';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
-import LandingLayout from './components/layout/Layout';
 import Header from './components/section/Header';
-// import {Router, Switch, Route} from 'react-router';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import LoginForm from './components/forms/login';
+import RegisterForm from './components/forms/register';
 
 const Heading = styled.h1<{blue: boolean}>`
 color: ${(props) => props.blue ? 'blue' : 'red'}; 
 `;
 const styles = css`color: red;`
 
+/*
+<Heading blue={false}>Heading 1</Heading>
+<Button children={<div css={styles}>hello</div>} />
+*/
+
 const Application: React.FunctionComponent = (props) => { 
         return (
         <ThemeProvider theme={customTheme}>
-          <CSSReset />
-          {props.children}
+          <ColorModeProvider>
           <Header/>
-          <LandingLayout />
+          <Flex direction="column" align="center" justify= "center">
+          <CSSReset />
+          <Flex justify="center" align="center" w="100%" h="93vh">
+            {props.children}
+            <BrowserRouter>
+              <Switch>
+                <Route path="/login">
+                  <LoginForm/>
+                </Route>
+                <Route path="/register">
+                  <RegisterForm/>
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          </Flex>
+          </Flex>
 
-          <Heading blue={false}>Heading 1</Heading>
-          <Button children={<div css={styles}>hello</div>} />
+          </ColorModeProvider>
         </ThemeProvider>
       );
 }
