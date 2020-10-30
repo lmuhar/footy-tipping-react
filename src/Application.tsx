@@ -27,7 +27,6 @@ const Application: React.FunctionComponent = (props) => {
           <CSSReset />
           <Flex justify="center" align="center" w="100%" h="93vh">
             {props.children}
-            <BrowserRouter>
               <Switch>
                 <Route path="/login">
                   <LoginForm/>
@@ -36,7 +35,6 @@ const Application: React.FunctionComponent = (props) => {
                   <RegisterForm/>
                 </Route>
               </Switch>
-            </BrowserRouter>
           </Flex>
           </Flex>
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Flex, Text, Heading, Box, Button } from '@chakra-ui/core';
+import { Link } from 'react-router-dom';
 
 const MenuItems: React.FunctionComponent = ({ children }) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -46,9 +47,7 @@ const Header: React.FunctionComponent = (props) => {
         alignItems="center"
         flexGrow={1}
       >
-        <MenuItems>Docs</MenuItems>
-        <MenuItems>Examples</MenuItems>
-        <MenuItems>Blog</MenuItems>
+        <MenuItems><Link to="/login">Login</Link></MenuItems>
       </Box>
 
       <Box
@@ -56,7 +55,9 @@ const Header: React.FunctionComponent = (props) => {
         mt={{ base: 4, md: 0 }}
       >
         <Button bg="transparent" border="1px">
-          Create account
+          <Link to="/register">
+            Register
+          </Link>
         </Button>
       </Box>
     </Flex>
