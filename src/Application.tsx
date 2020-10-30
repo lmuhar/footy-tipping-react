@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {ThemeProvider, CSSReset, Flex, ColorModeProvider} from '@chakra-ui/core';
+import { ChakraProvider, Flex } from "@chakra-ui/core"
 import customTheme from './theme';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 import Header from './components/section/Header';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import LoginForm from './components/forms/login';
 import RegisterForm from './components/forms/register';
 
@@ -20,11 +20,9 @@ const styles = css`color: red;`
 
 const Application: React.FunctionComponent = (props) => { 
         return (
-        <ThemeProvider theme={customTheme}>
-          <ColorModeProvider>
+        <ChakraProvider theme={customTheme}>
           <Header/>
           <Flex direction="column" align="center" justify= "center">
-          <CSSReset />
           <Flex justify="center" align="center" w="100%" h="93vh">
             {props.children}
               <Switch>
@@ -37,9 +35,7 @@ const Application: React.FunctionComponent = (props) => {
               </Switch>
           </Flex>
           </Flex>
-
-          </ColorModeProvider>
-        </ThemeProvider>
+        </ChakraProvider>
       );
 }
 
