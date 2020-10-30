@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Flex, Text, Link } from '@chakra-ui/core';
-import Header from '../section/Header';
+import { Flex } from '@chakra-ui/core';
 
 const LandingLayout: React.FunctionComponent = (props) => {
     return (
@@ -11,7 +10,6 @@ const LandingLayout: React.FunctionComponent = (props) => {
             m="0 auto"
             {...props}
             >
-            <Header/>
             {props.children}
         </Flex>
     )

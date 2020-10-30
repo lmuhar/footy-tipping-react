@@ -4,6 +4,7 @@ import customTheme from './theme';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 import LandingLayout from './components/layout/Layout';
+import Header from './components/section/Header';
 // import {Router, Switch, Route} from 'react-router';
 
 const Heading = styled.h1<{blue: boolean}>`
@@ -16,6 +17,7 @@ const Application: React.FunctionComponent = (props) => {
         <ThemeProvider theme={customTheme}>
           <CSSReset />
           {props.children}
+          <Header/>
           <LandingLayout />
 
           <Heading blue={false}>Heading 1</Heading>
