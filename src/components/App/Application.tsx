@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { ChakraProvider, Flex } from "@chakra-ui/core"
-import customTheme from './theme';
-import styled from '@emotion/styled';
-import {css} from '@emotion/core';
-import Header from './components/section/Header';
+import customTheme from '../../theme';
+/*import styled from '@emotion/styled';
+import {css} from '@emotion/core';*/
+import Header from '../section/Header';
 import { Route, Switch } from 'react-router-dom';
-import LoginForm from './components/forms/login';
-import RegisterForm from './components/forms/register';
+import LoginForm from '../forms/login';
+import RegisterForm from '../forms/register';
 
-const Heading = styled.h1<{blue: boolean}>`
+/*const Heading = styled.h1<{blue: boolean}>`
 color: ${(props) => props.blue ? 'blue' : 'red'}; 
 `;
 const styles = css`color: red;`
 
-/*
 <Heading blue={false}>Heading 1</Heading>
 <Button children={<div css={styles}>hello</div>} />
 */
