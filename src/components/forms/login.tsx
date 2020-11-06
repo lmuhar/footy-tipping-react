@@ -9,8 +9,8 @@ import {
   FormLabel
 } from '@chakra-ui/core';
 import { useDispatch } from 'react-redux';
-import { userLogin } from '../../redux/user';
 import { useForm } from 'react-hook-form';
+import { userLogin } from '../../redux/user/user.types';
 
 const LoginForm: React.FunctionComponent = () => {
     const { handleSubmit, register } = useForm();
