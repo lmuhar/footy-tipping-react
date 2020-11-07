@@ -1,75 +1,36 @@
 {
     "name": "footy-tipping-react",
     "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "@chakra-ui/core": "^1.0.0-rc.8",
-        "@emotion/core": "^10.0.35",
-        "@emotion/styled": "^10.0.27",
-        "@prisma/client": "^2.10.2",
-        "@testing-library/jest-dom": "^5.11.5",
-        "@testing-library/react": "^11.1.0",
-        "@testing-library/user-event": "^12.1.10",
-        "emotion-theming": "^10.0.27",
-        "framer-motion": "^2.9.4",
-        "next": "^10.0.1",
-        "pretty-quick": "^3.1.0",
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1",
-        "react-hook-form": "^6.10.1",
-        "react-redux": "^7.2.2",
-        "react-router": "^5.2.0",
-        "react-router-dom": "^5.2.0",
-        "react-scripts": "4.0.0",
-        "redux": "^4.0.5",
-        "web-vitals": "^0.2.4"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "pretty-quick --staged"
-        }
-    },
+    "main": "index.js",
     "scripts": {
         "dev": "next",
         "build": "next build",
         "start": "next start",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
         "prisma:generate": "prisma generate",
         "prisma:save": "prisma migrate save --experimental",
         "prisma:up": "prisma migrate up --experimental",
         "prisma:studio": "prisma studio --experimental"
     },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
+    "dependencies": {
+        "@chakra-ui/core": "^1.0.0-rc.8",
+        "@emotion/core": "^10.0.35",
+        "@emotion/styled": "^10.0.27",
+        "@prisma/client": "^2.10.2",
+        "await-to-js": "^2.1.1",
+        "axios": "^0.21.0",
+        "emotion": "^10.0.27",
+        "emotion-server": "^10.0.27",
+        "emotion-theming": "^10.0.27",
+        "framer-motion": "^2.9.4",
+        "next": "^10.0.1",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1"
     },
     "devDependencies": {
-        "husky": "^4.3.0",
-        "prettier": "^2.1.2",
-        "@types/jest": "^26.0.15",
         "@types/node": "^14.14.3",
         "@types/react": "^16.9.53",
         "@types/react-dom": "^16.9.8",
-        "@types/react-redux": "^7.1.11",
-        "@types/react-router": "^5.1.8",
-        "@types/react-router-dom": "^5.1.6",
         "@prisma/cli": "^2.10.2",
-        "typescript": "^4.0.3",
-        "redux-devtools-extension": "^2.13.8"
+        "typescript": "^4.0.3"
     }
 }

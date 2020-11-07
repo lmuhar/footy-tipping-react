@@ -1,15 +1,10 @@
-import * as React from 'react';
-import {
-  Flex,
-  Box,
-  Heading,
-  FormControl,
-  Input,
-  Button
-} from '@chakra-ui/core';
+import { Box, Button, Flex, FormControl, Heading, Input } from "@chakra-ui/core";
+import { NextPage } from "next";
+import React from "react";
 
-const RegisterForm: React.FunctionComponent = () => {
-    return (
+const IndexPage: NextPage = () => {
+  return (
+    <Flex direction="column" margin="auto">
     <Flex width="full" align="center" justifyContent="center">
       <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
         <Box textAlign="center">
@@ -18,13 +13,13 @@ const RegisterForm: React.FunctionComponent = () => {
         <Box my={4} textAlign="left">
             <form>
                 <FormControl>
-                    <Input type="email" placeholder="Email" />
+                    <Input id="email" type="email" placeholder="Email" />
                 </FormControl>
                 <FormControl mt={6}>
-                    <Input type="text" placeholder="Username" />
+                    <Input id="username" type="text" placeholder="Username" />
                 </FormControl>
                 <FormControl mt={6}>
-                    <Input type="password" placeholder="Password" />
+                    <Input id="password" type="password" placeholder="Password" />
                 </FormControl>
                 <Button type="submit" width="full" mt={4}>
                     Register
@@ -33,7 +28,8 @@ const RegisterForm: React.FunctionComponent = () => {
         </Box>
       </Box>
     </Flex>
-    );
-}
+    </Flex>
+  );
+};
 
-export default RegisterForm;
+export default IndexPage;
