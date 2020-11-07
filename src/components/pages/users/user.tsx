@@ -1,18 +1,7 @@
 import { ListItem, Flex, Stack, Text, Heading } from '@chakra-ui/core';
 import { PrismaClient } from '@prisma/client';
 import React from 'react';
-import NextLink from 'next/link';
 
-export async function getStaticProps() {
-    const prisma = new PrismaClient();
-    const users = await prisma.user.findMany({
-    });
-    return {
-        props: {
-            users
-        }
-    };
-}
 
 const User: React.FunctionComponent = (user) => {
     console.log(user);
@@ -35,5 +24,16 @@ const User: React.FunctionComponent = (user) => {
   </ListItem>
     )
 }
+
+/*export async function getStaticProps() {
+    const prisma = new PrismaClient();
+    const users = await prisma.user.findMany({
+    });
+    return {
+        props: {
+            users
+        }
+    };
+}*/
 
 export default User;

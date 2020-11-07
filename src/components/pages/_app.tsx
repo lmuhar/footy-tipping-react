@@ -4,10 +4,12 @@ import customTheme from '../../theme';
 /*import styled from '@emotion/styled';
 import {css} from '@emotion/core';*/
 import Header from '../section/Header';
-import { Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import LoginForm from '../forms/login';
 import RegisterForm from '../forms/register';
 import User from './users/user';
+import { Provider } from 'react-redux';
+import store from '../../redux/store';
 
 /*const Heading = styled.h1<{blue: boolean}>`
 color: ${(props) => props.blue ? 'blue' : 'red'}; 
@@ -21,23 +23,27 @@ const styles = css`color: red;`
 
 const Application: React.FunctionComponent = (props) => { 
         return (
-        <ChakraProvider theme={customTheme}>
-          <Header/>
-          <Flex direction="column" align="center" justify= "center">
-          <Flex justify="center" align="center" w="100%" h="93vh">
-            {props.children}
-              <Switch>
-                <Route path="/login">
-                  <LoginForm/>
-                </Route>
-                <Route path="/register">
-                  <RegisterForm/>
-                </Route>
-                <User/>
-              </Switch>
-          </Flex>
-          </Flex>
-        </ChakraProvider>
+      <Provider store={store}>
+          <BrowserRouter>
+            <ChakraProvider theme={customTheme}>
+              <Header/>
+              <Flex direction="column" align="center" justify= "center">
+              <Flex justify="center" align="center" w="100%" h="93vh">
+                {props.children}
+                  <Switch>
+                    <Route path="/login">
+                      <LoginForm/>
+                    </Route>
+                    <Route path="/register">
+                      <RegisterForm/>
+                    </Route>
+                    <User/>
+                  </Switch>
+              </Flex>
+              </Flex>
+            </ChakraProvider>
+          </BrowserRouter>
+        </Provider>
       );
 }
 
