@@ -1,6 +1,7 @@
 import NextApp from 'next/app';
 import { ChakraProvider } from "@chakra-ui/core";
 import customTheme from '../theme';
+import Header from './../components/section/Header';
 
 
 export default class App extends NextApp {
@@ -9,7 +10,8 @@ export default class App extends NextApp {
 
     return (
         <ChakraProvider theme={customTheme}>
-          <Component {...pageProps} />
+            <Header/>
+            <Component {...pageProps} />
         </ChakraProvider>
     );
   };

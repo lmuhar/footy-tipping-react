@@ -10,10 +10,10 @@ import {
 import { NextPage } from "next";
 import React from "react";
 
-const IndexPage: NextPage = () => {
+const IndexPage: NextPage = (_props) => {
   return (
-    <Flex direction="column" margin="auto">
-    <Flex width="full" align="center" justifyContent="center">
+      <Flex direction="column" align="center" justify= "center">
+        <Flex justify="center" align="center" w="100%" h="93vh">
       <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
         <Box textAlign="center">
           <Heading>Login</Heading>

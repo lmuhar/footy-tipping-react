@@ -1,8 +1,7 @@
-import { default as React, FunctionComponent } from 'react';
-import { Flex, Text, Box, Link as PrettyLink } from '@chakra-ui/core';
+import { default as React } from 'react';
+import { Flex, Text, Box } from '@chakra-ui/core';
 import Link from "next/link";
 
-//const NavLink: FunctionComponent<{ to: string; text: string; }> = ({ to, text }) => <Link as={Link} pr={5} color="white" href={to}>{text}</PrettyLink>;
 
 const Header: React.FunctionComponent = (_props) => {
   return (
@@ -14,19 +13,17 @@ const Header: React.FunctionComponent = (_props) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Flex flexDirection="row" justifyContent="center" alignItems="center">
-          <Text pl={3} color="white">
+        <Flex bg="brand.500" flexDirection="row" justifyContent="center" alignItems="center">
+          <Text pl={3}>
             Footy Tipping {new Date().getFullYear()} 🏉
           </Text>
         </Flex>
         <Box>
+          <Link href="/login"><a>Login</a></Link>
+          <Link href="/registration"><a>Register</a></Link>
         </Box>
       </Flex>
   );
 };
-
-/*<NavLink to="/login" text="Login" />
-<NavLink to="/register" text="Register" />
-<NavLink to="/luke-was-here" text="Butt's McGee 🤑" />*/
 
 export default Header;

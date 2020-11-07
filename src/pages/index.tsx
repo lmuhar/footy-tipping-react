@@ -4,11 +4,11 @@ import React from "react";
 
 const IndexPage: NextPage = () => {
   return (
-    <Flex direction="column" align="center" justify= "center">
-      <Flex justify="center" align="center" w="100%" h="93vh">
-        Hello World
+      <Flex direction="column" align="center" justify= "center">
+        <Flex justify="center" align="center" w="100%" h="93vh">
+          Hello World
+        </Flex>
       </Flex>
-    </Flex>
   );
 };
 
