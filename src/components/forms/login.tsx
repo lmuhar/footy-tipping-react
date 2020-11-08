@@ -7,8 +7,8 @@ import { Flex, Box, Heading, FormControl, Input, Button, FormLabel } from '@chak
 const LoginForm: React.FunctionComponent = () => {
   // const { handleSubmit, register } = useForm();
   // const dispatch = useDispatch();
-  const onSubmit = (e: any) => {
-    console.log(e);
+  const onSubmit = () => {
+    // console.log(e);
     // dispatch(userLogin(e));
   };
 
