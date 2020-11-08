@@ -1,22 +1,12 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { extractCritical } from 'emotion-server';
+import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 
-class CustomDocument extends Document {
-  static async getInitialProps(ctx: any) {
+class MyDocument extends Document {
+  static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
-    const styles = extractCritical(initialProps.html);
-    return {
-      ...initialProps,
-      styles: (
-        <>
-          {initialProps.styles}
-          <style data-emotion-css={styles.ids.join(' ')} dangerouslySetInnerHTML={{ __html: styles.css }} />
-        </>
-      ),
-    };
+    return { ...initialProps };
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <Html>
         <Head />
@@ -29,4 +19,4 @@ class CustomDocument extends Document {
   }
 }
 
-export default CustomDocument;
+export default MyDocument;

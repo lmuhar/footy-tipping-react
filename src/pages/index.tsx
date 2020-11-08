@@ -1,15 +1,9 @@
-import { Flex } from "@chakra-ui/core";
-import { NextPage } from "next";
-import React from "react";
+import { NextPage } from 'next';
+import React from 'react';
+import DefaultLayout from '../layouts/default.layout';
 
 const IndexPage: NextPage = () => {
-  return (
-      <Flex direction="column" align="center" justify= "center">
-        <Flex justify="center" align="center" w="100%" h="93vh">
-          Hello World
-        </Flex>
-      </Flex>
-  );
+  return <DefaultLayout>Hello World!</DefaultLayout>;
 };
 
 export default IndexPage;
