@@ -108,3 +108,5 @@ dist
 .sessions
 
 prisma/**/studio
+
+.history/
