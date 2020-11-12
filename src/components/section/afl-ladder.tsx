@@ -1,52 +1,94 @@
-import { Box, Container  } from "@chakra-ui/core";
-import {useTable} from 'react-table';
-import React from "react";
+// import { Box, Container  } from "@chakra-ui/core";
+import { useTable } from 'react-table';
+import React from 'react';
 
 interface CompProp {
-    aflData: any[];
+  aflData: any[];
 }
 
-const AflLadder: React.FunctionComponent<CompProp> = ({aflData}) => {
-    return (
-        <Box maxW="md" borderWidth="1px" borderRadius="lg">
-            <Container maxW="x4" centerContent>
+const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
+  const data = React.useMemo(() => aflData, []);
 
-        {aflData.map((item) => (
-            <Box spacing={8} key={"grid__" + item.order}>
-                    <span>{item.order}</span>
-                    <span>
-                        {item.name}
-                    </span>
-                    <span>
-                        {item.played}
-                    </span>
-                    <span>
-                        {item.wins}
-                    </span>
-                    <span>
-                        {item.draw}
-                    </span>
-                    <span>
-                        {item.loss}
-                    </span>
-                    <span>
-                        {item.for}
-                    </span>
-                    <span>
-                        {item.agt}
-                    </span>
-                    <span>
-                        {item.percent}
-                    </span>
-                    <span>
-                        {item.points}
-                    </span>
-                </Box >
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'No.',
+        accessor: 'order', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Team',
+        accessor: 'name',
+      },
+      {
+        Header: 'Played',
+        accessor: 'played',
+      },
+      {
+        Header: 'Wins',
+        accessor: 'wins',
+      },
+      {
+        Header: 'Draw',
+        accessor: 'draws',
+      },
+      {
+        Header: 'Loss',
+        accessor: 'loss',
+      },
+      {
+        Header: 'For',
+        accessor: 'for',
+      },
+      {
+        Header: 'Agt',
+        accessor: 'agt',
+      },
+      {
+        Header: 'Percent',
+        accessor: 'percent',
+      },
+      {
+        Header: 'Points',
+        accessor: 'points',
+      },
+    ],
+    [],
+  );
+
+  const tableInstance = useTable({ columns, data });
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th key={column.header} {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </th>
             ))}
-            </Container>
-        </Box>
-    )
-}
-
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <tr key={row} {...row.getRowProps()}>
+              {row.cells.map((cell) => {
+                return (
+                  <td key={cell.order} {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
 
 export default AflLadder;
