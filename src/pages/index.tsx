@@ -2,6 +2,7 @@ import to from 'await-to-js';
 import Axios from 'axios';
 import { NextPage } from 'next';
 import AflLadder from '../components/section/afl-ladder';
+// import useTokenData from '../custom-hooks/token.data';
 import DefaultLayout from '../layouts/default.layout';
 
 interface PageProps {
@@ -9,6 +10,8 @@ interface PageProps {
 }
 
 const IndexPage: NextPage<PageProps> = (props) => {
+  // const user = useTokenData();
+  // console.log(user);
   return (
     <DefaultLayout>
       <AflLadder aflData={props.aflLadder} />

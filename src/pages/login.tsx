@@ -5,7 +5,6 @@ import DefaultLayout from '../layouts/default.layout';
 import { useForm } from 'react-hook-form';
 import to from 'await-to-js';
 import Axios from 'axios';
-import jwtDecode from 'jwt-decode';
 
 interface UserToken {
   token: string;
@@ -22,7 +21,6 @@ const IndexPage: NextPage = (_props) => {
     }
 
     if (res && res.data) {
-      console.log(jwtDecode(res.data.token));
       localStorage.setItem('token', res.data.token);
     }
   };
