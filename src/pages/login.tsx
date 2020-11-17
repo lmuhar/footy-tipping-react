@@ -5,17 +5,25 @@ import DefaultLayout from '../layouts/default.layout';
 import { useForm } from 'react-hook-form';
 import to from 'await-to-js';
 import Axios from 'axios';
+import jwtDecode from 'jwt-decode';
+
+interface UserToken {
+  token: string;
+}
 
 const IndexPage: NextPage = (_props) => {
   const { handleSubmit, register } = useForm();
   const onSubmit = async (data) => {
-    const [err, res] = await to(Axios.post(`http://localhost:${process.env.PORT || 3000}/api/user/login`, data));
+    const [err, res] = await to(
+      Axios.post<UserToken>(`http://localhost:${process.env.PORT || 3000}/api/user/login`, data),
+    );
     if (err) {
       console.log(err);
     }
 
-    if (res) {
-      console.log('Success');
+    if (res && res.data) {
+      console.log(jwtDecode(res.data.token));
+      localStorage.setItem('token', res.data.token);
     }
   };
   return (
