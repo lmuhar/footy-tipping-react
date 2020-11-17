@@ -5,12 +5,14 @@ import DefaultLayout from '../layouts/default.layout';
 import { useForm } from 'react-hook-form';
 import to from 'await-to-js';
 import Axios from 'axios';
+import { useRouter } from 'next/dist/client/router';
 
 interface UserToken {
   token: string;
 }
 
 const IndexPage: NextPage = (_props) => {
+  const router = useRouter();
   const { handleSubmit, register } = useForm();
   const onSubmit = async (data) => {
     const [err, res] = await to(
@@ -22,6 +24,7 @@ const IndexPage: NextPage = (_props) => {
 
     if (res && res.data) {
       localStorage.setItem('token', res.data.token);
+      router.push('/')
     }
   };
   return (
