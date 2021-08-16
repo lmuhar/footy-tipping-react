@@ -1,15 +1,18 @@
 import NextApp from 'next/app';
-import { ChakraProvider } from '@chakra-ui/core';
+import { Box } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core/styles';
 
-import customTheme from '../utils/theme';
+const theme = {
+  background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+};
 
 export default class App extends NextApp {
   render(): JSX.Element {
     const { Component, pageProps } = this.props;
     return (
-      <ChakraProvider theme={customTheme}>
+      <Box>
         <Component {...pageProps} />
-      </ChakraProvider>
+      </Box>
     );
   }
 }

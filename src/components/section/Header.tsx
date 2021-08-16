@@ -1,5 +1,5 @@
 import { default as React } from 'react';
-import { Flex, Text, Box } from '@chakra-ui/core';
+import { Box } from '@material-ui/core'
 import Link from 'next/link';
 import useTokenData from '../../custom-hooks/token.data';
 import { useRouter } from 'next/dist/client/router';
@@ -13,10 +13,10 @@ const Header: React.FunctionComponent = (_props) => {
 
   }
   return (
-    <Flex bg="brand.500" w="100%" px={5} py={4} justifyContent="space-between" alignItems="center">
-      <Flex bg="brand.500" flexDirection="row" justifyContent="center" alignItems="center">
-        <Text pl={3}>Footy Tipping {new Date().getFullYear()} 🏉</Text>
-      </Flex>
+    <Box>
+      <Box>
+        <Box pl={3}>Footy Tipping {new Date().getFullYear()} 🏉</Box>
+      </Box>
       <Box>
         {!user ? (<Link href="/login">
           <a>Login</a>
@@ -24,11 +24,11 @@ const Header: React.FunctionComponent = (_props) => {
         {!user ? (<Link href="/registration">
           <a>Register</a>
         </Link>): ''}
-        {user ? <Text onClick={logout}>
+        {user ? <Box onClick={logout}>
           Logout
-        </Text> : '' }
+        </Box> : '' }
       </Box>
-    </Flex>
+    </Box>
   );
 };
 
