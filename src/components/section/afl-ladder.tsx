@@ -1,4 +1,3 @@
-// import { Box, Container  } from "@chakra-ui/core";
 import { useTable } from 'react-table';
 import React from 'react';
 
