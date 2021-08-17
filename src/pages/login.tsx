@@ -2,7 +2,7 @@
 import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default.layout';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import to from 'await-to-js';
 import Axios from 'axios';
 import { useRouter } from 'next/dist/client/router';
@@ -10,8 +10,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -21,6 +19,11 @@ import Container from '@material-ui/core/Container';
 
 interface UserToken {
   token: string;
+}
+
+type FormValues = {
+  email: string;
+  password: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -46,8 +49,9 @@ const useStyles = makeStyles((theme) => ({
 const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
-  const { handleSubmit, register } = useForm();
+  const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
+    console.log(data);
     const [err, res] = await to(
       Axios.post<UserToken>(`http://localhost:${process.env.PORT || 3000}/api/user/login`, data),
     );
@@ -72,34 +76,42 @@ const IndexPage: NextPage = (_props) => {
           Sign in
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-          <TextField
+          <Controller
+            as={<TextField />}
+            name="email"
+            label="Email Address"
+            control={control}
+            value={""}
             variant="outlined"
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
-            name="email"
             autoComplete="email"
             autoFocus
-            ref={register}
+            onChange={([ event ]) => {
+              return event.target.value
+            }}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+
+          <Controller
+            as={<TextField />}
             name="password"
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
-            ref={register}
+            control={control}
+            value={""}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            autoFocus
+            onChange={([ event ]) => {
+              return event.target.value
+            }}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Button
             type="submit"
             fullWidth
