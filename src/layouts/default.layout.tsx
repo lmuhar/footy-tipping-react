@@ -120,7 +120,7 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
+      <Drawer onClose={handleDrawerClose}
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}

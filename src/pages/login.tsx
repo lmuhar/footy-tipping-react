@@ -2,7 +2,7 @@
 import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default.layout';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import to from 'await-to-js';
 import Axios from 'axios';
 import { useRouter } from 'next/dist/client/router';
