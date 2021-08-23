@@ -10,6 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import useTokenData from '../custom-hooks/token.data';
+import { Box, Divider } from '@material-ui/core'
+import Link from 'next/link';
+import { useRouter } from 'next/dist/client/router';
+import List from '@material-ui/core/List';
 
 const drawerWidth = 240;
 
@@ -101,6 +106,13 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const user = useTokenData();
+  const router = useRouter();
+  const logout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+
+  }
   return (
  <div className={classes.root}>
       <CssBaseline />
@@ -131,6 +143,18 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
             <ChevronLeftIcon />
           </IconButton>
         </div>
+        <Divider/>
+        <List>
+        {!user ? (<Link href="/login">
+          <a>Login</a>
+        </Link>): ''}
+        {!user ? (<Link href="/registration">
+          <a>Register</a>
+        </Link>): ''}
+        {user ? <Box onClick={logout}>
+          Logout
+        </Box> : '' }
+      </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

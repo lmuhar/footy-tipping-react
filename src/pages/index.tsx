@@ -7,7 +7,6 @@ import DefaultLayout from '../layouts/default.layout';
 interface PageProps {
   aflLadder: any[];
 }
-
 const IndexPage: NextPage<PageProps> = (props) => {
   return (
     <DefaultLayout>
