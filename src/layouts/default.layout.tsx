@@ -11,10 +11,16 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import useTokenData from '../custom-hooks/token.data';
-import { Box, Divider } from '@material-ui/core'
+import { Divider } from '@material-ui/core'
 import Link from 'next/link';
 import { useRouter } from 'next/dist/client/router';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AddIcon from '@material-ui/icons/Add';
 
 const drawerWidth = 240;
 
@@ -145,15 +151,33 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         </div>
         <Divider/>
         <List>
-        {!user ? (<Link href="/login">
-          <a>Login</a>
-        </Link>): ''}
-        {!user ? (<Link href="/registration">
-          <a>Register</a>
-        </Link>): ''}
-        {user ? <Box onClick={logout}>
-          Logout
-        </Box> : '' }
+          <div>
+            {!user ? (<Link href="/login">
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Login" />
+            </ListItem></Link>): ''}
+          </div>
+          <div>
+            {!user ? (<Link href="/registration">
+            <ListItem button>
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </ListItem></Link>): ''}
+          </div>
+          <div>
+            {user ? 
+            <ListItem button onClick={logout}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>: ''}
+          </div>
       </List>
       </Drawer>
       <main className={classes.content}>
