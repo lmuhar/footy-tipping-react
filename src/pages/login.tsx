@@ -53,7 +53,7 @@ const IndexPage: NextPage = (_props) => {
   console.log(process.env.PORT);
   const onSubmit = async (data) => {
     const [err, res] = await to(
-      Axios.post<UserToken>(`https://0.0.0.0:${process.env.PORT || 3000}/api/user/login`, data),
+      Axios.post<UserToken>(`/api/user/login`, data),
     );
     if (err) {
       console.log(err);
