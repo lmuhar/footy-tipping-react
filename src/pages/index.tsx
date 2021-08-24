@@ -16,6 +16,7 @@ const IndexPage: NextPage<PageProps> = (props) => {
 };
 
 IndexPage.getInitialProps = async (): Promise<PageProps> => {
+  console.log(process.env.PORT);
   const [err, res] = await to(Axios.get(`http://localhost:${process.env.PORT || 3000}/api/afl-ladder`));
   if (err) {
     return { aflLadder: [] };

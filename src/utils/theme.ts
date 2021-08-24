@@ -9,7 +9,7 @@ const customTheme = createTheme({
     },
     secondary: {
       main: green[500],
-    }
+    },
   },
 });
 export default customTheme;

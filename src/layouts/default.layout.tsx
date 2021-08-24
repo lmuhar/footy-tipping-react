@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import useTokenData from '../custom-hooks/token.data';
-import { Divider } from '@material-ui/core'
+import { Divider } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/dist/client/router';
 import List from '@material-ui/core/List';
@@ -117,10 +117,9 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     router.push('/login');
-
-  }
+  };
   return (
- <div className={classes.root}>
+    <div className={classes.root}>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -138,7 +137,8 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer onClose={handleDrawerClose}
+      <Drawer
+        onClose={handleDrawerClose}
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
@@ -149,36 +149,49 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
             <ChevronLeftIcon />
           </IconButton>
         </div>
-        <Divider/>
+        <Divider />
         <List>
           <div>
-            {!user ? (<Link href="/login">
-            <ListItem button>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Login" />
-            </ListItem></Link>): ''}
+            {!user ? (
+              <Link href="/login">
+                <ListItem button>
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Login" />
+                </ListItem>
+              </Link>
+            ) : (
+              ''
+            )}
           </div>
           <div>
-            {!user ? (<Link href="/registration">
-            <ListItem button>
-              <ListItemIcon>
-                <AddIcon />
-              </ListItemIcon>
-              <ListItemText primary="Register" />
-            </ListItem></Link>): ''}
+            {!user ? (
+              <Link href="/registration">
+                <ListItem button>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Register" />
+                </ListItem>
+              </Link>
+            ) : (
+              ''
+            )}
           </div>
           <div>
-            {user ? 
-            <ListItem button onClick={logout}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>: ''}
+            {user ? (
+              <ListItem button onClick={logout}>
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            ) : (
+              ''
+            )}
           </div>
-      </List>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
