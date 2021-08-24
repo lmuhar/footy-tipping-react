@@ -51,7 +51,7 @@ const IndexPage: NextPage = (_props) => {
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log(process.env.PORT);
     const [err, res] = await to(
       Axios.post<UserToken>(`http://localhost:${process.env.PORT || 3000}/api/user/login`, data),
     );
@@ -84,6 +84,7 @@ const IndexPage: NextPage = (_props) => {
             value={""}
             variant="outlined"
             margin="normal"
+            defaultValue=""
             required
             fullWidth
             id="email"
@@ -102,6 +103,7 @@ const IndexPage: NextPage = (_props) => {
             id="password"
             control={control}
             value={""}
+            defaultValue=""
             variant="outlined"
             margin="normal"
             required
