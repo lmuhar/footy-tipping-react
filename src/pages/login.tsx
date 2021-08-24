@@ -45,13 +45,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getHost = (context: NextPageContext): { host: string; proto: string } => {
+   const { req } = context;
+   if (req !== undefined) {
+     const {
+       "x-forwarded-host": host,
+       "x-forwarded-proto": proto
+     } = req.headers;
+     if (
+       typeof host === "string" &&
+       typeof proto === "string" &&
+       (proto === "http" || proto === "https")
+     ) {
+       // Proto doesn't have the colon on server
+       return { host, proto: proto + ":" };
+     }
+   } else if (window && window.location) {
+     // Parse url to determine our current host
+     const { href } = window.location;
+     const { host, protocol: proto } = new URL(href);
+     return { host, proto };
+   }
+   throw new Error("Could not determine host to fetch API.");
+ };
+
 const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
     const [err, res] = await to(
-      Axios.post<UserToken>(`https://localhost${process.env.PORT || 80}/api/user/login`, data),
+      Axios.post<UserToken>(`${getHost(_props).host}:${getHost(_props).proto || 80}/api/user/login`, data),
     );
     if (err) {
       console.log(err);
