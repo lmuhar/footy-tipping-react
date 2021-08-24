@@ -1,4 +1,3 @@
-
 import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default.layout';
@@ -24,7 +23,7 @@ interface UserToken {
 type FormValues = {
   email: string;
   password: string;
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,7 +50,6 @@ const IndexPage: NextPage = (_props) => {
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
-    console.log(process.env.PORT);
     const [err, res] = await to(
       Axios.post<UserToken>(`http://localhost:${process.env.PORT || 3000}/api/user/login`, data),
     );
@@ -61,83 +59,77 @@ const IndexPage: NextPage = (_props) => {
 
     if (res && res.data) {
       localStorage.setItem('token', res.data.token);
-      router.push('/')
+      router.push('/');
     }
   };
   return (
     <DefaultLayout>
-<Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-          <Controller
-            as={<TextField />}
-            name="email"
-            label="Email Address"
-            control={control}
-            value={""}
-            variant="outlined"
-            margin="normal"
-            defaultValue=""
-            required
-            fullWidth
-            id="email"
-            autoComplete="email"
-            autoFocus
-            onChange={([ event ]) => {
-              return event.target.value
-            }}
-          />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+            <Controller
+              as={<TextField />}
+              name="email"
+              label="Email Address"
+              control={control}
+              value={''}
+              variant="outlined"
+              margin="normal"
+              defaultValue=""
+              required
+              fullWidth
+              id="email"
+              autoComplete="email"
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
 
-          <Controller
-            as={<TextField />}
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            control={control}
-            value={""}
-            defaultValue=""
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            autoFocus
-            onChange={([ event ]) => {
-              return event.target.value
-            }}
-          />
+            <Controller
+              as={<TextField />}
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              control={control}
+              value={''}
+              defaultValue=""
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="/registration" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="/registration" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
     </DefaultLayout>
   );
 };

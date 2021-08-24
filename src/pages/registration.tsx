@@ -18,8 +18,7 @@ type FormValues = {
   email: string;
   username: string;
   password: string;
-}
-
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IndexPage: NextPage = () => {
+const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
@@ -53,88 +52,82 @@ const IndexPage: NextPage = () => {
 
     if (res) {
       localStorage.setItem('token', res.data.token);
-      router.push('/')
+      router.push('/');
       console.log('Success');
     }
   };
   return (
     <DefaultLayout>
-<Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-          <Controller
-            as={<TextField />}
-            name="email"
-            label="Email Address"
-            control={control}
-            value={""}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            autoComplete="email"
-            autoFocus
-            onChange={([ event ]) => {
-              return event.target.value
-            }}
-          />
-
-                    <Controller
-            as={<TextField />}
-            name="username"
-            label="Username"
-            control={control}
-            value={""}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            autoComplete="username"
-            autoFocus
-            onChange={([ event ]) => {
-              return event.target.value
-            }}
-          />
-
-          <Controller
-            as={<TextField />}
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            control={control}
-            value={""}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            autoFocus
-            onChange={([ event ]) => {
-              return event.target.value
-            }}
-          />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             Sign Up
-          </Button>
-        </form>
-      </div>
-    </Container>
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+            <Controller
+              as={<TextField />}
+              name="email"
+              label="Email Address"
+              control={control}
+              value={''}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              autoComplete="email"
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
+
+            <Controller
+              as={<TextField />}
+              name="username"
+              label="Username"
+              control={control}
+              value={''}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              autoComplete="username"
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
+
+            <Controller
+              as={<TextField />}
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              control={control}
+              value={''}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
+
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+              Sign Up
+            </Button>
+          </form>
+        </div>
+      </Container>
     </DefaultLayout>
   );
 };
