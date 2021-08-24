@@ -51,7 +51,7 @@ const IndexPage: NextPage = (_props) => {
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
     const [err, res] = await to(
-      Axios.post<UserToken>(`https://0.0.0.0:${process.env.PORT || 80}/api/user/login`, data),
+      Axios.post<UserToken>(`https://localhost${process.env.PORT || 80}/api/user/login`, data),
     );
     if (err) {
       console.log(err);
