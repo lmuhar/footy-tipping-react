@@ -50,7 +50,6 @@ const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
-  console.log(process.env.PORT);
   const onSubmit = async (data) => {
     const [err, res] = await to(
       Axios.post<UserToken>(`/api/user/login`, data),

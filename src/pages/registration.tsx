@@ -45,7 +45,7 @@ const IndexPage: NextPage = (_props) => {
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
-    const [err, res] = await to(Axios.post(`http://localhost:${process.env.PORT || 3000}/api/user/register`, data));
+    const [err, res] = await to(Axios.post(`/api/user/register`, data));
     if (err) {
       console.log(err);
     }

@@ -25,7 +25,7 @@ const IndexPage: NextPage<PageProps> = (props) => {
 };
 
 IndexPage.getInitialProps = async (ctx: NextPageContext): Promise<PageProps> => {
-  const [err, res] = await to(Axios.get(`http://localhost:${process.env.PORT || 3000}/api/user`));
+  const [err, res] = await to(Axios.get(`/api/user`));
 
   if (err) {
     return { name: ctx.query.name as string, users: [] };
