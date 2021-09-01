@@ -132,9 +132,11 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Footy Tipping {new Date().getFullYear()} 🏉
-          </Typography>
+          <Link href="/">
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              Footy Tipping {new Date().getFullYear()} 🏉
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer
