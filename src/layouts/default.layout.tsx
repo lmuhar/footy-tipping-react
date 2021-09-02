@@ -192,7 +192,7 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
             )}
           </div>
           <div>
-            {!user ? (
+            {user && user.role === 'admin' ? (
               <Link href="/admin">
                 <ListItem button>
                   <ListItemIcon>
