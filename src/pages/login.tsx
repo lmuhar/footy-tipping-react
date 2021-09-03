@@ -45,15 +45,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
   const onSubmit = async (data) => {
-    const [err, res] = await to(
-      Axios.post<UserToken>(`/api/user/login`, data),
-    );
+    const [err, res] = await to(Axios.post<UserToken>(`/api/user/login`, data));
     if (err) {
       console.log(err);
     }

@@ -1,24 +1,26 @@
 import { useTable } from 'react-table';
 import React from 'react';
 
-
 interface CompProp {
-    userData: any[]
+  userData: any[];
 }
 
 const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
-  const data = React.useMemo(() => userData, [])
+  const data = React.useMemo(() => userData, []);
 
-  const columns = React.useMemo(() => [
+  const columns = React.useMemo(
+    () => [
       {
-          Header: 'Username',
-          accessor: 'username'
+        Header: 'Username',
+        accessor: 'username',
       },
       {
-          Header: 'Email',
-          accessor: 'email'
-      }
-  ], [])
+        Header: 'Email',
+        accessor: 'email',
+      },
+    ],
+    [],
+  );
 
   const tableInstance = useTable({ columns, data });
 
@@ -54,6 +56,6 @@ const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
       </tbody>
     </table>
   );
-}
+};
 
 export default UserTable;

@@ -65,8 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const [err, ladder] = await aflLadderService();
 
   // Lets handle the error state
-  if (err) res.status(500).json(err);
+  if (err) return res.status(500).json(err);
 
   // And when all is good in the world, we do what was expected!
-  res.status(200).json(ladder);
+  return res.status(200).json(ladder);
 }
