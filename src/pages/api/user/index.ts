@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { IUserData } from '../../../models/user-data.model';
 
 export async function userDataService(): Promise<[Error, IUserData[]]> {
   const prisma = new PrismaClient();

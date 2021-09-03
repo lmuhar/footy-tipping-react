@@ -7,20 +7,20 @@ interface CompProp {
 }
 
 const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
-    const data = React.useMemo(() => userData, [])
+  const data = React.useMemo(() => userData, [])
 
-    const columns = React.useMemo(() => [
-        {
-            Header: 'Username',
-            accessor: 'username'
-        },
-        {
-            Header: 'Email',
-            accessor: 'email'
-        }
-    ], [])
+  const columns = React.useMemo(() => [
+      {
+          Header: 'Username',
+          accessor: 'username'
+      },
+      {
+          Header: 'Email',
+          accessor: 'email'
+      }
+  ], [])
 
-    const tableInstance = useTable({ columns, data });
+  const tableInstance = useTable({ columns, data });
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
   return (
