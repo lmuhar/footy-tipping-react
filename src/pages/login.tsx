@@ -1,35 +1,128 @@
-import { Box, Heading, FormControl, Input, Button, FormLabel } from '@chakra-ui/core';
 import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default.layout';
+import { useForm, Controller } from 'react-hook-form';
+import to from 'await-to-js';
+import Axios from 'axios';
+import { useRouter } from 'next/dist/client/router';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+
+interface UserToken {
+  token: string;
+}
+
+type FormValues = {
+  email: string;
+  password: string;
+};
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const IndexPage: NextPage = (_props) => {
+  const classes = useStyles();
+  const router = useRouter();
+  const { control, handleSubmit } = useForm<FormValues>();
+  const onSubmit = async (data) => {
+    const [err, res] = await to(Axios.post<UserToken>(`/api/user/login`, data));
+    if (err) {
+      console.log(err);
+    }
+
+    if (res && res.data) {
+      localStorage.setItem('token', res.data.token);
+      router.push('/');
+    }
+  };
   return (
     <DefaultLayout>
-      <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
-        <Box textAlign="center">
-          <Heading>Login</Heading>
-        </Box>
-        <Box my={4} textAlign="left">
-          <form>
-            <FormControl isRequired>
-              <FormLabel>Email</FormLabel>
-              <Input id="email" name="email" type="email" placeholder="Email" />
-            </FormControl>
-            <FormControl mt={6} isRequired>
-              <FormLabel>Username</FormLabel>
-              <Input id="username" name="username" type="username" placeholder="Username" />
-            </FormControl>
-            <FormControl mt={6} isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input id="password" name="password" type="password" placeholder="Password" />
-            </FormControl>
-            <Button type="submit" width="full" mt={4}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+            <Controller
+              as={<TextField />}
+              name="email"
+              label="Email Address"
+              control={control}
+              value={''}
+              variant="outlined"
+              margin="normal"
+              defaultValue=""
+              required
+              fullWidth
+              id="email"
+              autoComplete="email"
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
+
+            <Controller
+              as={<TextField />}
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              control={control}
+              value={''}
+              defaultValue=""
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              autoFocus
+              onChange={([event]) => {
+                return event.target.value;
+              }}
+            />
+
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Sign In
             </Button>
+            <Grid container>
+              <Grid item>
+                <Link href="/registration" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
           </form>
-        </Box>
-      </Box>
+        </div>
+      </Container>
     </DefaultLayout>
   );
 };
