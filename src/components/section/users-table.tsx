@@ -1,12 +1,18 @@
 import { useTable } from 'react-table';
 import React from 'react';
+import { makeStyles } from '@material-ui/core';
 
 interface CompProp {
   userData: any[];
 }
 
+const useStyles = makeStyles((theme) => ({
+  
+}));
+
 const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
   const data = React.useMemo(() => userData, []);
+  const classes = useStyles();
 
   const columns = React.useMemo(
     () => [
@@ -26,7 +32,7 @@ const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
   return (
-    <table {...getTableProps()}>
+    <table className={classes.table} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
