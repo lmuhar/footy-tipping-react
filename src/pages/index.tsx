@@ -3,6 +3,8 @@ import Axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import AflLadder from '../components/section/afl-ladder';
 import DefaultLayout from '../layouts/default.layout';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
 import { IAFLLadder } from '../models/afl-ladder.model';
@@ -79,9 +81,15 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder }) => {
       {!isLoading && (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
-          <div className={classes.paper}>
-            <AflLadder aflData={AFLLadder} />
-          </div>
+        <Grid spacing={3} container>
+        <Grid item xs>
+        </Grid>
+        <Grid item xs={6}>
+          <AflLadder aflData={AFLLadder} />
+        </Grid>
+        <Grid item xs>
+        </Grid>
+        </Grid>
         </Container>
       )}
     </DefaultLayout>
