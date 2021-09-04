@@ -4,23 +4,10 @@ import { GetServerSideProps, NextPage } from 'next';
 import AflLadder from '../components/section/afl-ladder';
 import DefaultLayout from '../layouts/default.layout';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
 import { IAFLLadder } from '../models/afl-ladder.model';
 import { aflLadderService } from './api/afl-ladder';
-import { makeStyles } from '@material-ui/core';
-import { CssBaseline } from '@material-ui/core';
-import { Container } from 'next/app';
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  }
-}));
 
 // Alias of the to(Axtios(...)) as an API method
 const fetchAFLLadder = () => to(Axios.get<IAFLLadder[]>(`/api/afl-ladder`));
@@ -74,23 +61,15 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder }) => {
     if (!ladder) getLadderDataFromAPI();
   }, []);
 
-  const classes = useStyles();
   return (
     <DefaultLayout>
       {isLoading && <CircularProgress />}
       {!isLoading && (
-        <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Grid spacing={3} container>
-        <Grid item xs>
+        <Grid container>
+          <Grid item xs={12}>
+            <AflLadder aflData={AFLLadder} />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <AflLadder aflData={AFLLadder} />
-        </Grid>
-        <Grid item xs>
-        </Grid>
-        </Grid>
-        </Container>
       )}
     </DefaultLayout>
   );
