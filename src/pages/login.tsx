@@ -15,6 +15,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import { useState } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface UserToken {
   token: string;
@@ -49,9 +51,12 @@ const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const onSubmit = async (data) => {
+    setLoading(true);
     const [err, res] = await to(Axios.post<UserToken>(`/api/user/login`, data));
     if (err) {
+      setLoading(false);
       console.log(err);
     }
 
@@ -62,7 +67,12 @@ const IndexPage: NextPage = (_props) => {
   };
   return (
     <DefaultLayout>
-      <Container component="main" maxWidth="xs">
+      {isLoading && (<Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+       <CircularProgress />
+      </div>
+      </Container>)}
+      {!isLoading && (<Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -122,7 +132,7 @@ const IndexPage: NextPage = (_props) => {
             </Grid>
           </form>
         </div>
-      </Container>
+      </Container>)}
     </DefaultLayout>
   );
 };
