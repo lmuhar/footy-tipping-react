@@ -15,6 +15,16 @@ enum Role {
   user
 }
 
+model Location {
+  id String @id @default(cuid())
+  name String
+}
+
+model TeamName {
+  id String @id @default(cuid())
+  name String
+}
+
 model Tip {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -42,6 +52,8 @@ model Games {
 model Round {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
+  dateStart DateTime
+  dateEnd DateTime
   roundNumber Int
   games       Games[]
   tips        Tip[]
