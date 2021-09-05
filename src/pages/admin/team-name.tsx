@@ -12,9 +12,17 @@ import { makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import { ITeamNames } from '../../models/team-names.model';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
+import { teamDataService } from './../api/team';
+import TeamTable from '../../components/section/team-table';
+
+const fetchTeams = () => to(Axios.get<ITeamNames[]>('/api/team'));
+
+interface PageProps {
+  TeamData?: ITeamNames[];
+}
 
 type FormValues = {
   name: string;
@@ -40,11 +48,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IndexPage: NextPage = (_props) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
+  const [err, TeamData] = await teamDataService();
+
+  if (err) return {props: {}};
+
+  return { props: { TeamData }};
+}
+
+const IndexPage: NextPage = ({TeamData}) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [team, setTeam] = useState<ITeamNames[]>(TeamData || null);
+
+  const getTeamNameDataFromAPI = async () => {
+    setLoading(true);
+
+    const [err, teams] = await fetchTeams();
+
+    setLoading(false);
+
+    if (err) return setTeam([]);
+
+    if (Array.isArray(teams)) {
+      setTeam(teams);
+    } else {
+      setTeam([]);
+    }
+  }
+
+  useEffect(() => {
+    if (!team) getTeamNameDataFromAPI();
+  }, [])
 
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
@@ -53,8 +90,8 @@ const IndexPage: NextPage = (_props) => {
     if (err) console.log(err);
 
     if (teamName) {
-      console.log(teamName);
       setLoading(false);
+      getTeamNameDataFromAPI();
     }
   };
   return (
@@ -93,6 +130,9 @@ const IndexPage: NextPage = (_props) => {
                 Save
               </Button>
             </form>
+          </div>
+          <div className={classes.paper}>
+            <TeamTable teamData={TeamData} />
           </div>
         </Container>
       )}
