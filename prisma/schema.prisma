@@ -15,11 +15,44 @@ enum Role {
   user
 }
 
-model User {
+model Tip {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  tip       Int
+  round     Round    @relation(fields: [roundId], references: [id])
+  roundId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@unique([userId, roundId])
+}
+
+model Games {
+  id       String   @id @default(cuid())
+  homeTeam String
+  awayTeam String
+  location String
+  date     DateTime
+  round    Round    @relation(fields: [roundId], references: [id])
+  roundId  String
+
+  @@unique([roundId])
+}
+
+model Round {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
-  username    String   @unique
-  email       String   @unique
-  password    String
-  role        Role     @default(user)
+  roundNumber Int
+  games       Games[]
+  tips        Tip[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      Role     @default(user)
+  Tip       Tip[]
 }
