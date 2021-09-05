@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useRouter } from 'next/dist/client/router';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useState } from 'react';
 
 type FormValues = {
   email: string;
@@ -44,9 +46,12 @@ const IndexPage: NextPage = (_props) => {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormValues>();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const onSubmit = async (data) => {
+    setLoading(true);
     const [err, res] = await to(Axios.post(`/api/user/register`, data));
     if (err) {
+      setLoading(false);
       console.log(err);
     }
 
@@ -58,7 +63,12 @@ const IndexPage: NextPage = (_props) => {
   };
   return (
     <DefaultLayout>
-      <Container component="main" maxWidth="xs">
+    {isLoading && (<Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+       <CircularProgress />
+      </div>
+      </Container>)}
+      {!isLoading && (<Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -127,7 +137,7 @@ const IndexPage: NextPage = (_props) => {
             </Button>
           </form>
         </div>
-      </Container>
+      </Container>)}
     </DefaultLayout>
   );
 };

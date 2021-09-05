@@ -9,22 +9,22 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
-import { ITeamNames } from '../../models/team-names.model';
+import { ILocationNames } from '../../models/location-name.model';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
-import { teamDataService } from './../api/team';
+import { locationDataService } from './../api/location';
 import GenericTable from '../../components/section/generic-table';
 
-const fetchTeams = () => to(Axios.get<ITeamNames[]>('/api/team'));
+const fetchLocations = () => to(Axios.get<ILocationNames[]>('/api/location'));
 
 interface PageProps {
-  TeamData?: ITeamNames[];
+    LocationData?: ILocationNames[];
 }
 
 type FormValues = {
-  name: string;
-};
+    name: string;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,63 +47,64 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
-  const [err, TeamData] = await teamDataService();
+    const [err, LocationData] = await locationDataService();
 
-  if (err) return {props: {}};
+    if (err) return {props: {}};
 
-  return { props: { TeamData }};
+    return { props: {LocationData}};
 }
 
-const IndexPage: NextPage<PageProps> = ({TeamData}) => {
-  const classes = useStyles();
-  const { control, handleSubmit } = useForm<FormValues>();
+const IndexPage: NextPage<PageProps> = ({LocationData}) => {
+    const classes = useStyles();
+    const {control, handleSubmit} = useForm<FormValues>();
 
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [team, setTeam] = useState<ITeamNames[]>(TeamData || null);
+    const [isLoading, setLoading] = useState<boolean>(false);
+    const [location, setLocation] = useState<ILocationNames[]>(LocationData || null);
 
-  const getTeamNameDataFromAPI = async () => {
-    setLoading(true);
+    const getLocationNameDataFromAPI = async () => {
+        setLoading(true);
 
-    const [err, teams] = await fetchTeams();
+        const [err, locations] = await fetchLocations();
 
-    setLoading(false);
+        setLoading(false);
 
-    if (err) return setTeam([]);
+        if (err) return setLocation([]);
 
-    if (Array.isArray(teams)) {
-      setTeam(teams);
-    } else {
-      setTeam([]);
+        if (Array.isArray(locations)) {
+            setLocation(locations);
+        } else {
+            setLocation([]);
+        }
     }
-  }
 
-  useEffect(() => {
-    if (!team) getTeamNameDataFromAPI();
-  }, [])
+    useEffect(() => {
+        if (!location) getLocationNameDataFromAPI();
+    }, [])
 
-  const onSubmit = async (data: ITeamNames) => {
-    setLoading(true);
-    const [err, teamName] = await to(Axios.post<ITeamNames>(`/api/team/create`, data));
+    const onSubmit = async (data: ILocationNames) => {
+        setLoading(true);
+        const [err, locationName] = await to(Axios.post<ILocationNames>('/api/location/create', data));
 
-    if (err) console.log(err);
+        if (err) console.log(err);
 
-    if (teamName) {
-      setLoading(false);
-    }
-  };
-  return (
+        if (locationName) {
+            setLoading(false);
+        }
+    };
+
+      return (
     <DefaultLayout>
-    {isLoading && (<Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
+    <Container component="main" maxWidth="xs">
+        {isLoading && (<div className={classes.paper}>
        <CircularProgress />
-      </div>
-      </Container>)}
+      </div>)}
+      </Container>
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Team Names
+              Locations
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
               <Controller
@@ -131,12 +132,12 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <GenericTable teamData={TeamData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
+            <GenericTable teamData={LocationData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
           </div>
         </Container>
       )}
     </DefaultLayout>
   );
-};
+}
 
 export default IndexPage;

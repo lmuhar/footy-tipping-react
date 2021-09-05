@@ -1,7 +1,6 @@
 import { CssBaseline } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
 import { Container } from 'next/app';
-import UserTable from '../../components/section/users-table';
 import DefaultLayout from '../../layouts/default.layout';
 import { makeStyles } from '@material-ui/core';
 import { IUserData } from '../../models/user-data.model';
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { userDataService } from './../api/user';
 import to from 'await-to-js';
 import Axios from 'axios';
+import GenericTable from '../../components/section/generic-table';
 
 const fetchUsers = () => to(Axios.get<IUserData[]>(`/api/user`));
 
@@ -61,12 +61,23 @@ const IndexPage: NextPage<PageProps> = ({ UserData }) => {
   const classes = useStyles();
   return (
     <DefaultLayout>
-      {isLoading && <CircularProgress />}
+    {isLoading && (<Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+       <CircularProgress />
+      </div>
+      </Container>)}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <UserTable userData={UserData} />
+            <GenericTable teamData={UserData} tableHeader={[{
+        Header: 'Username',
+        accessor: 'username',
+      },
+      {
+        Header: 'Email',
+        accessor: 'email',
+      },]} />
           </div>
         </Container>
       )}
