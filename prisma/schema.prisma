@@ -16,13 +16,16 @@ enum Role {
 }
 
 model Location {
-  id String @id @default(cuid())
+  id   String @id @default(cuid())
   name String
+  game Game[]
 }
 
 model TeamName {
-  id String @id @default(cuid())
-  name String
+  id       String @id @default(cuid())
+  name     String
+  gameAway Game[] @relation("gameAway")
+  gameHome Game[] @relation("gameHome")
 }
 
 model Tip {
@@ -37,25 +40,29 @@ model Tip {
   @@unique([userId, roundId])
 }
 
-model Games {
-  id       String   @id @default(cuid())
-  homeTeam String
-  awayTeam String
-  location String
-  date     DateTime
-  round    Round    @relation(fields: [roundId], references: [id])
-  roundId  String
+model Game {
+  id            String   @id @default(cuid())
+  homeTeamId    String
+  homeTeam      TeamName @relation("gameHome", fields: [homeTeamId], references: [id])
+  awayTeamId    String
+  awayTeam      TeamName @relation("gameAway", fields: [awayTeamId], references: [id])
+  location      Location @relation(fields: [locationId], references: [id])
+  locationId    String
+  startDateTime DateTime
+  round         Round    @relation(fields: [roundId], references: [id])
+  roundId       String
 
-  @@unique([roundId])
+
+  @@unique([roundId, locationId, homeTeamId, awayTeamId])
 }
 
 model Round {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
-  dateStart DateTime
-  dateEnd DateTime
+  dateStart   DateTime
+  dateEnd     DateTime
   roundNumber Int
-  games       Games[]
+  games       Game[]
   tips        Tip[]
 }
 
@@ -66,5 +73,5 @@ model User {
   email     String   @unique
   password  String
   role      Role     @default(user)
-  Tip       Tip[]
+  tips      Tip[]
 }
