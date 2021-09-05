@@ -80,7 +80,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
   useEffect(() => {
     if (!team) getTeamNameDataFromAPI();
   }, [])
-
+  
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
     const [err, teamName] = await to(Axios.post<ITeamNames>(`/api/team/create`, data));

@@ -18,7 +18,6 @@ export async function createTeamNameService(data: ITeamNames): Promise<[Error, I
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  console.log(req);
   const [err, teamName] = await createTeamNameService(req.body);
 
   if (err) return res.status(500).json(err);
