@@ -195,12 +195,26 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
           </div>
           <div>
             {user && user.role === 'admin' ? (
-              <Link href="/admin">
+              <Link href="/admin/users">
                 <ListItem button>
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Admin" />
+                  <ListItemText primary="Users" />
+                </ListItem>
+              </Link>
+            ) : (
+              ''
+            )}
+          </div>
+          <div>
+            {user && user.role === 'admin' ? (
+              <Link href="/admin/team-name">
+                <ListItem button>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Teams" />
                 </ListItem>
               </Link>
             ) : (

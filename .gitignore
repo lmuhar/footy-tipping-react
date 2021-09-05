@@ -110,3 +110,4 @@ dist
 prisma/**/studio
 
 .history/
+.vscode/

@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React from 'react';
-import DefaultLayout from '../layouts/default.layout';
+import DefaultLayout from '../../layouts/default.layout';
 import { useForm, Controller } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
-import { ITeamNames } from '../models/team-names.model';
+import { ITeamNames } from '../../models/team-names.model';
 import { useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
@@ -59,14 +59,13 @@ const IndexPage: NextPage = (_props) => {
   };
   return (
     <DefaultLayout>
+    <Container component="main" maxWidth="xs">
       {isLoading && <CircularProgress />}
+      </Container>
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
             <Typography component="h1" variant="h5">
               Team Names
             </Typography>
