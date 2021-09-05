@@ -147,7 +147,7 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-        <div>Welcome {user.username}</div>
+        {!user ? (<div>Welcome {user.username}</div>) : ''}
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
