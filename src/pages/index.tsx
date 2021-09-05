@@ -66,8 +66,8 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder }) => {
       {isLoading && <CircularProgress />}
       {!isLoading && (
         <Container>
-            <AflLadder aflData={AFLLadder} />
-            <AflLadder aflData={AFLLadder} />
+          <AflLadder aflData={AFLLadder} />
+          <AflLadder aflData={AFLLadder} />
         </Container>
       )}
     </DefaultLayout>

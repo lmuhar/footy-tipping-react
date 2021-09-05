@@ -1,14 +1,14 @@
 import { useTable } from 'react-table';
-import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import React from 'react';
 
 interface CompProp {
-  aflData: any[];
+  teamData: any[];
 }
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -44,51 +44,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
-  const data = React.useMemo(() => aflData, []);
+const TeamTable: React.FunctionComponent<CompProp> = ({ teamData }) => {
+  const data = React.useMemo(() => teamData, []);
   const classes = useStyles();
   const columns = React.useMemo(
     () => [
       {
-        Header: 'No.',
-        accessor: 'order', // accessor is the "key" in the data
-      },
-      {
-        Header: 'Team',
+        Header: 'Name',
         accessor: 'name',
-      },
-      /*{
-        Header: 'Played',
-        accessor: 'played',
-      },
-      {
-        Header: 'Wins',
-        accessor: 'wins',
-      },
-      {
-        Header: 'Draw',
-        accessor: 'draws',
-      },
-      {
-        Header: 'Loss',
-        accessor: 'loss',
-      },
-      {
-        Header: 'For',
-        accessor: 'for',
-      },
-      {
-        Header: 'Agt',
-        accessor: 'agt',
-      },*/
-      {
-        Header: 'Percent',
-        accessor: 'percent',
-      },
-      {
-        Header: 'Points',
-        accessor: 'points',
-      },
+      }
     ],
     [],
   );
@@ -114,7 +78,7 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr key={row} {...row.getRowProps()} className={classes.tr}>
+              <tr className={classes.tr} key={row} {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
                     <td className={classes.td} key={cell.order} {...cell.getCellProps()}>
@@ -131,4 +95,4 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
   );
 };
 
-export default AflLadder;
+export default TeamTable;
