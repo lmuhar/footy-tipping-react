@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 
 interface CompProp {
-  teamName: any[];
+  teamData: any[];
 }
 
 const useStyles = makeStyles((theme) => ({
