@@ -13,7 +13,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import { ITeamNames } from '../models/team-names.model';
 import { useState } from 'react';
-import { createTeamNameService } from './api/team/create';
+import to from 'await-to-js';
+import Axios from 'axios';
 
 type FormValues = {
   name: string;
@@ -47,54 +48,55 @@ const IndexPage: NextPage = (_props) => {
 
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
-    const [err, teamName] = await createTeamNameService(data);
+    const [err, teamName] = await to(Axios.post(`/api/team/create`, data));
 
     if (err) console.log(err);
 
     if (teamName) {
-      console.log(teamName)
+      console.log(teamName);
       setLoading(false);
     }
-
   };
   return (
     <DefaultLayout>
       {isLoading && <CircularProgress />}
-      {!isLoading && (<Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Team Names
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-            <Controller
-              as={<TextField />}
-              name="name"
-              label="Name"
-              control={control}
-              value={''}
-              variant="outlined"
-              margin="normal"
-              defaultValue=""
-              required
-              fullWidth
-              id="name"
-              autoComplete="name"
-              autoFocus
-              onChange={([event]) => {
-                return event.target.value;
-              }}
-            />
+      {!isLoading && (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Team Names
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+              <Controller
+                as={<TextField />}
+                name="name"
+                label="Name"
+                control={control}
+                value={''}
+                variant="outlined"
+                margin="normal"
+                defaultValue=""
+                required
+                fullWidth
+                id="name"
+                autoComplete="name"
+                autoFocus
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
 
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-              Save
-            </Button>
-          </form>
-        </div>
-      </Container>)}
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                Save
+              </Button>
+            </form>
+          </div>
+        </Container>
+      )}
     </DefaultLayout>
   );
 };
