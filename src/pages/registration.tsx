@@ -56,6 +56,7 @@ const IndexPage: NextPage = (_props) => {
     }
 
     if (res) {
+      console.log(res.data);
       localStorage.setItem('token', res.data.token);
       router.push('/');
       console.log('Success');

@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { genSaltSync, hashSync } from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const prisma = new PrismaClient();
@@ -16,5 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     data: { username, password: hashedPassword, email },
   });
 
-  res.status(201).send(registeredUser);
+  const token = jwt.sign({ user: registeredUser }, process.env.SECRET_TOKEN);
+  return res.status(200).json({token: token});
 }

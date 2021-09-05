@@ -94,11 +94,11 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
 
       return (
     <DefaultLayout>
-    <Container component="main" maxWidth="xs">
-        {isLoading && (<div className={classes.paper}>
+    {isLoading && (<Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
        <CircularProgress />
-      </div>)}
-      </Container>
+      </div>
+      </Container>)}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
