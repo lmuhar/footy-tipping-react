@@ -221,6 +221,20 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
               ''
             )}
           </div>
+          <div>
+            {user && user.role === 'admin' ? (
+              <Link href="/admin/locations">
+                <ListItem button>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Locations" />
+                </ListItem>
+              </Link>
+            ) : (
+              ''
+            )}
+          </div>
         </List>
       </Drawer>
       <main className={classes.content}>
