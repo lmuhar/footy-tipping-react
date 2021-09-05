@@ -10,9 +10,9 @@ export async function createTeamNameService(data: ITeamNames): Promise<[Error, I
 
   const [err, teamNames] = await to(prisma.teamName.create({ data }));
 
-  if (err) return [new Error('Something went wrong fetching all team names'), null];
+  if (err) return [new Error('Something went wrong creating the record'), null];
 
-  if (!teamNames) return [new Error('Something went wrong fetching all team names'), null];
+  if (!teamNames) return [new Error('Something went wrong creating the record'), null];
 
   return [null, data];
 }

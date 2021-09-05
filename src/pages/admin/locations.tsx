@@ -95,14 +95,16 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
       return (
     <DefaultLayout>
     <Container component="main" maxWidth="xs">
-      {isLoading && <CircularProgress />}
+        {isLoading && (<div className={classes.paper}>
+       <CircularProgress />
+      </div>)}
       </Container>
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Team Names
+              Locations
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
               <Controller

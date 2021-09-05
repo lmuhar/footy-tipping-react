@@ -93,9 +93,11 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
   };
   return (
     <DefaultLayout>
-    <Container component="main" maxWidth="xs">
-      {isLoading && <CircularProgress />}
-      </Container>
+    {isLoading && (<Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+       <CircularProgress />
+      </div>
+      </Container>)}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
