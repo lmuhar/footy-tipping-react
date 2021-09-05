@@ -16,34 +16,33 @@ const useStyles = makeStyles((theme) => ({
   table: {
     borderCollapse: 'collapse',
     margin: '25px 0',
-    boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)'
+    boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
   },
   thead: {
     backgroundColor: '#2196f3',
     color: '#ffffff',
-    textAlign: 'left'
+    textAlign: 'left',
   },
   th: {
-    padding: '12px 15px'
+    padding: '12px 15px',
   },
   td: {
-    padding: '12px 15px'
+    padding: '12px 15px',
   },
   tr: {
     borderBottom: '1px solid #dddddd',
     '&:nth-of-type(even)': {
-      backgroundColor: '#f3f3f3'
+      backgroundColor: '#f3f3f3',
     },
     '&:last-of-type': {
-      borderBottom: '2px solid #2196f3'
+      borderBottom: '2px solid #2196f3',
     },
     '.active-row': {
       fontWeight: 'bold',
-      color: '#2196f3'
-    }
-  }
+      color: '#2196f3',
+    },
+  },
 }));
-
 
 const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
   const data = React.useMemo(() => aflData, []);
@@ -115,7 +114,7 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr  key={row} {...row.getRowProps()} className={classes.tr} >
+              <tr key={row} {...row.getRowProps()} className={classes.tr}>
                 {row.cells.map((cell) => {
                   return (
                     <td className={classes.td} key={cell.order} {...cell.getCellProps()}>

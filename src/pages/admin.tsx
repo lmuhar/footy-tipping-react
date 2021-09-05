@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  }
+  },
 }));
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
@@ -34,9 +34,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   return { props: { UserData } };
 };
 
-
-const IndexPage: NextPage<PageProps> = ({UserData}) => {
-
+const IndexPage: NextPage<PageProps> = ({ UserData }) => {
   const [user, setUser] = useState<IUserData[]>(UserData || null);
   const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -54,24 +52,26 @@ const IndexPage: NextPage<PageProps> = ({UserData}) => {
     } else {
       setUser([]);
     }
-  }
+  };
 
   useEffect(() => {
     if (!user) getUserDataFromApi();
-  }, [])
+  }, []);
 
   const classes = useStyles();
-    return (
-        <DefaultLayout>
-          {isLoading && <CircularProgress />}
-            {!isLoading && (<Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                <UserTable userData={UserData}/>
-                </div>
-            </Container>)}
-        </DefaultLayout>
-    )
-}
+  return (
+    <DefaultLayout>
+      {isLoading && <CircularProgress />}
+      {!isLoading && (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <UserTable userData={UserData} />
+          </div>
+        </Container>
+      )}
+    </DefaultLayout>
+  );
+};
 
 export default IndexPage;

@@ -16,32 +16,32 @@ const useStyles = makeStyles((theme) => ({
   table: {
     borderCollapse: 'collapse',
     margin: '25px 0',
-    boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)'
+    boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
   },
   thead: {
     backgroundColor: '#2196f3',
     color: '#ffffff',
-    textAlign: 'left'
+    textAlign: 'left',
   },
   th: {
-    padding: '12px 15px'
+    padding: '12px 15px',
   },
   td: {
-    padding: '12px 15px'
+    padding: '12px 15px',
   },
   tr: {
     borderBottom: '1px solid #dddddd',
     '&:nth-of-type(even)': {
-      backgroundColor: '#f3f3f3'
+      backgroundColor: '#f3f3f3',
     },
     '&:last-of-type': {
-      borderBottom: '2px solid #2196f3'
+      borderBottom: '2px solid #2196f3',
     },
     '.active-row': {
       fontWeight: 'bold',
-      color: '#2196f3'
-    }
-  }
+      color: '#2196f3',
+    },
+  },
 }));
 
 const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
@@ -69,7 +69,7 @@ const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
       <table className={classes.table} {...getTableProps()}>
         <thead className={classes.thead}>
           {headerGroups.map((headerGroup) => (
-            <tr className={classes.tr}  key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
+            <tr className={classes.tr} key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th className={classes.th} key={column.header} {...column.getHeaderProps()}>
                   {column.render('Header')}
