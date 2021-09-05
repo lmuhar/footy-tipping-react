@@ -2,8 +2,14 @@ import { useTable } from 'react-table';
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 
+export interface TableHeader {
+ Header: string;
+ accessor: string;
+}
+
 interface CompProp {
-  userData: any[];
+  teamData: any[];
+  tableHeader: TableHeader[];
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -44,20 +50,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
-  const data = React.useMemo(() => userData, []);
+const GenericTable: React.FunctionComponent<CompProp> = ({ teamData, tableHeader }) => {
+  const data = React.useMemo(() => teamData, []);
   const classes = useStyles();
   const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Username',
-        accessor: 'username',
-      },
-      {
-        Header: 'Email',
-        accessor: 'email',
-      },
-    ],
+    () => tableHeader,
     [],
   );
 
@@ -99,4 +96,4 @@ const UserTable: React.FunctionComponent<CompProp> = ({ userData }) => {
   );
 };
 
-export default UserTable;
+export default GenericTable;

@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
 import { teamDataService } from './../api/team';
-import TeamTable from '../../components/section/team-table';
+import GenericTable from '../../components/section/generic-table';
 
 const fetchTeams = () => to(Axios.get<ITeamNames[]>('/api/team'));
 
@@ -80,7 +80,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
   useEffect(() => {
     if (!team) getTeamNameDataFromAPI();
   }, [])
-  
+
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
     const [err, teamName] = await to(Axios.post<ITeamNames>(`/api/team/create`, data));
@@ -129,7 +129,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <TeamTable teamData={TeamData} />
+            <GenericTable teamData={TeamData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
           </div>
         </Container>
       )}
