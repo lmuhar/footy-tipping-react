@@ -1,12 +1,10 @@
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import { useForm, Controller } from 'react-hook-form';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -56,7 +54,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   return { props: { TeamData }};
 }
 
-const IndexPage: NextPage = ({TeamData}) => {
+const IndexPage: NextPage<PageProps> = ({TeamData}) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
 
@@ -85,13 +83,12 @@ const IndexPage: NextPage = ({TeamData}) => {
 
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
-    const [err, teamName] = await to(Axios.post(`/api/team/create`, data));
+    const [err, teamName] = await to(Axios.post<ITeamNames>(`/api/team/create`, data));
 
     if (err) console.log(err);
 
     if (teamName) {
       setLoading(false);
-      getTeamNameDataFromAPI();
     }
   };
   return (
