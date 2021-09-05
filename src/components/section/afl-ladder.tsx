@@ -8,7 +8,7 @@ interface CompProp {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -58,7 +58,7 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
         Header: 'Team',
         accessor: 'name',
       },
-      {
+      /*{
         Header: 'Played',
         accessor: 'played',
       },
@@ -81,7 +81,7 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
       {
         Header: 'Agt',
         accessor: 'agt',
-      },
+      },*/
       {
         Header: 'Percent',
         accessor: 'percent',
@@ -115,7 +115,7 @@ const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr className={classes.tr} key={row} {...row.getRowProps()}>
+              <tr  key={row} {...row.getRowProps()} className={classes.tr} >
                 {row.cells.map((cell) => {
                   return (
                     <td className={classes.td} key={cell.order} {...cell.getCellProps()}>
