@@ -64,7 +64,7 @@ const IndexPage: NextPage<PageProps> = ({UserData}) => {
     return (
         <DefaultLayout>
           {isLoading && <CircularProgress />}
-            {!isLoading && (<Container component="main" maxWidth="m">
+            {!isLoading && (<Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
                 <UserTable userData={UserData}/>
