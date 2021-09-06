@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
-import { ITeamNames } from '../../models/team-names.model';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
@@ -25,8 +24,8 @@ interface PageProps {
 
 type FormValues = {
     roundNumber: number;
-    dateStart: DateTime;
-    dateEnd: DateTime;
+    dateStart: Date;
+    dateEnd: Date;
 }
 
 const useStyles = makeStyles((theme) => ({
