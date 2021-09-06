@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
 export async function createRoundService(data: IRound): Promise<[Error, IRound]> {
     const prisma = new PrismaClient();
 
