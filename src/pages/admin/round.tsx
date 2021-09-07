@@ -80,8 +80,9 @@ const IndexPage: NextPage<PageProps> = ({RoundData}) => {
     }, [])
 
     const onSubmit = async (data: IRound) => {
+        const request: IRound = {roundNumber: parseInt(data.roundNumber), dateStart: new Date(data.dateStart), dateEnd: new Date(data.dateEnd)};
         setLoading(true);
-        const [err, round] = await to(Axios.post<IRound>('/api/round/create', data));
+        const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
 
         if (err) console.log(err);
 
@@ -136,7 +137,7 @@ const IndexPage: NextPage<PageProps> = ({RoundData}) => {
                                 required
                                 fullWidth
                                 type="datetime-local"
-                                autofocus
+                                autoFocus
                                 InputLabelProps={{
                                 shrink: true,
                                 }}
@@ -157,7 +158,7 @@ const IndexPage: NextPage<PageProps> = ({RoundData}) => {
                                 required
                                 fullWidth
                                 type="datetime-local"
-                                autofocus
+                                autoFocus
                                 InputLabelProps={{
                                 shrink: true,
                                 }}
