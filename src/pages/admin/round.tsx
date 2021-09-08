@@ -22,10 +22,10 @@ interface PageProps {
 }
 
 type FormValues = {
-    roundNumber: number;
-    dateStart: Date;
-    dateEnd: Date;
-}
+  roundNumber: number;
+  dateStart: Date;
+  dateEnd: Date;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,140 +40,146 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  }
+  },
 }));
 
-export  const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
-    const [err, RoundData] = await roundDataService();
+export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
+  const [err, RoundData] = await roundDataService();
 
-    if (err) return {props: {}}
+  if (err) return { props: {} };
 
-    return { props: {RoundData}};
-}
+  return { props: { RoundData } };
+};
 
-const IndexPage: NextPage<PageProps> = ({RoundData}) => {
-    const classes = useStyles();
-    const { control, handleSubmit} = useForm<FormValues>();
+const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
+  const classes = useStyles();
+  const { control, handleSubmit } = useForm<FormValues>();
 
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [round, setRound] = useState<IRound[]>(RoundData || null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [round, setRound] = useState<IRound[]>(RoundData || null);
 
-    const getRoundDataFromAPI = async () => {
-        setLoading(true);
+  const getRoundDataFromAPI = async () => {
+    setLoading(true);
 
-        const [err, rounds] = await fetchRounds();
+    const [err, rounds] = await fetchRounds();
 
-        setLoading(false);
+    setLoading(false);
 
-        if (err) return setRound([]);
+    if (err) return setRound([]);
 
-        if (Array.isArray(rounds)) {
-            setRound(rounds);
-        } else {
-            setRound([]);
-        }
+    if (Array.isArray(rounds)) {
+      setRound(rounds);
+    } else {
+      setRound([]);
     }
+  };
 
-    useEffect(() => {
-        if (!round) getRoundDataFromAPI();
-    }, [])
+  useEffect(() => {
+    if (!round) getRoundDataFromAPI();
+  }, []);
 
-    const onSubmit = async (data: IRound) => {
-        const request: IRound = {roundNumber: data.roundNumber, dateStart: new Date(data.dateStart), dateEnd: new Date(data.dateEnd)};
-        setLoading(true);
-        const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
-
-        if (err) console.log(err);
-
-        if (round) {
-            setLoading(false);
-        }
+  const onSubmit = async (data: IRound) => {
+    const request: IRound = {
+      roundNumber: data.roundNumber,
+      dateStart: new Date(data.dateStart),
+      dateEnd: new Date(data.dateEnd),
     };
-    return (
-        <DefaultLayout>
-            {isLoading && (<Container component="main" maxWidth="xs">
-                <div className={classes.paper}>
-                    <CircularProgress />
-                </div>
-            </Container>)}
-            {!isLoading && (
-                <Container component="main" maxWidth="md">
-                    <CssBaseline/>
-                    <div className={classes.paper}>
-                        <Typography component="h1" variant="h5">
-                            Rounds
-                        </Typography>
-                        <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-                            <Controller 
-                                as={<TextField />}
-                                name="roundNumber"
-                                label="Round"
-                                control={control}
-                                value={''}
-                                variant="outlined"
-                                margin="normal"
-                                defaultValue=""
-                                required
-                                fullWidth
-                                id="roundNumber"
-                                autoComplete="roundNumber"
-                                type="number"
-                                autoFocus
-                                onChange={([event]) => {
-                                    return event.target.value;
-                                }}
-                            />
-                            <Controller
-                                as={<TextField/>}
-                                name="dateStart"
-                                id="dateStart"
-                                label="Start Date"
-                                control={control}
-                                value={''}
-                                variant="outlined"
-                                margin="normal"
-                                defaultValue=""
-                                required
-                                fullWidth
-                                type="datetime-local"
-                                autoFocus
-                                InputLabelProps={{
-                                shrink: true,
-                                }}
-                                onChange={([event]) => {
-                                    return event.target.value;
-                                }}
-                            />
-                            <Controller
-                                as={<TextField/>}
-                                name="dateEnd"
-                                id="dateEnd"
-                                label="Start End"
-                                control={control}
-                                value={''}
-                                variant="outlined"
-                                margin="normal"
-                                defaultValue=""
-                                required
-                                fullWidth
-                                type="datetime-local"
-                                autoFocus
-                                InputLabelProps={{
-                                shrink: true,
-                                }}
-                                onChange={([event]) => {
-                                    return event.target.value;
-                                }}
-                            />
-                            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                                Save Round
-                            </Button>
-                        </form>
-                    </div>
-                </Container>
-            )}
-        </DefaultLayout>
-    )
-}
+    setLoading(true);
+    const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
+
+    if (err) console.log(err);
+
+    if (round) {
+      setLoading(false);
+    }
+  };
+  return (
+    <DefaultLayout>
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
+      {!isLoading && (
+        <Container component="main" maxWidth="md">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Rounds
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+              <Controller
+                as={<TextField />}
+                name="roundNumber"
+                label="Round"
+                control={control}
+                value={''}
+                variant="outlined"
+                margin="normal"
+                defaultValue=""
+                required
+                fullWidth
+                id="roundNumber"
+                autoComplete="roundNumber"
+                type="number"
+                autoFocus
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
+              <Controller
+                as={<TextField />}
+                name="dateStart"
+                id="dateStart"
+                label="Start Date"
+                control={control}
+                value={''}
+                variant="outlined"
+                margin="normal"
+                defaultValue=""
+                required
+                fullWidth
+                type="datetime-local"
+                autoFocus
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
+              <Controller
+                as={<TextField />}
+                name="dateEnd"
+                id="dateEnd"
+                label="Start End"
+                control={control}
+                value={''}
+                variant="outlined"
+                margin="normal"
+                defaultValue=""
+                required
+                fullWidth
+                type="datetime-local"
+                autoFocus
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                Save Round
+              </Button>
+            </form>
+          </div>
+        </Container>
+      )}
+    </DefaultLayout>
+  );
+};
 
 export default IndexPage;

@@ -19,12 +19,12 @@ import GenericTable from '../../components/section/generic-table';
 const fetchLocations = () => to(Axios.get<ILocationNames[]>('/api/location'));
 
 interface PageProps {
-    LocationData?: ILocationNames[];
+  LocationData?: ILocationNames[];
 }
 
 type FormValues = {
-    name: string;
-}
+  name: string;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,59 +47,61 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
-    const [err, LocationData] = await locationDataService();
+  const [err, LocationData] = await locationDataService();
 
-    if (err) return {props: {}};
+  if (err) return { props: {} };
 
-    return { props: {LocationData}};
-}
+  return { props: { LocationData } };
+};
 
-const IndexPage: NextPage<PageProps> = ({LocationData}) => {
-    const classes = useStyles();
-    const {control, handleSubmit} = useForm<FormValues>();
+const IndexPage: NextPage<PageProps> = ({ LocationData }) => {
+  const classes = useStyles();
+  const { control, handleSubmit } = useForm<FormValues>();
 
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [location, setLocation] = useState<ILocationNames[]>(LocationData || null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [location, setLocation] = useState<ILocationNames[]>(LocationData || null);
 
-    const getLocationNameDataFromAPI = async () => {
-        setLoading(true);
+  const getLocationNameDataFromAPI = async () => {
+    setLoading(true);
 
-        const [err, locations] = await fetchLocations();
+    const [err, locations] = await fetchLocations();
 
-        setLoading(false);
+    setLoading(false);
 
-        if (err) return setLocation([]);
+    if (err) return setLocation([]);
 
-        if (Array.isArray(locations && locations.data)) {
-            setLocation(locations.data);
-        } else {
-            setLocation([]);
-        }
+    if (Array.isArray(locations && locations.data)) {
+      setLocation(locations.data);
+    } else {
+      setLocation([]);
     }
+  };
 
-    useEffect(() => {
-        if (!location) getLocationNameDataFromAPI();
-    }, [])
+  useEffect(() => {
+    if (!location) getLocationNameDataFromAPI();
+  }, []);
 
-    const onSubmit = async (data: ILocationNames) => {
-        setLoading(true);
-        const [err, locationName] = await to(Axios.post<ILocationNames>('/api/location/create', data));
+  const onSubmit = async (data: ILocationNames) => {
+    setLoading(true);
+    const [err, locationName] = await to(Axios.post<ILocationNames>('/api/location/create', data));
 
-        if (err) console.log(err);
+    if (err) console.log(err);
 
-        if (locationName) {
-          setLoading(false);
-          getLocationNameDataFromAPI();
-        }
-    };
+    if (locationName) {
+      setLoading(false);
+      getLocationNameDataFromAPI();
+    }
+  };
 
-      return (
+  return (
     <DefaultLayout>
-    {isLoading && (<Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-       <CircularProgress />
-      </div>
-      </Container>)}
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -133,12 +135,12 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <GenericTable teamData={location} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
+            <GenericTable teamData={location} tableHeader={[{ Header: 'Name', accessor: 'name' }]} />
           </div>
         </Container>
       )}
     </DefaultLayout>
   );
-}
+};
 
 export default IndexPage;

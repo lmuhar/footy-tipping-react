@@ -67,72 +67,76 @@ const IndexPage: NextPage = (_props) => {
   };
   return (
     <DefaultLayout>
-      {isLoading && (<Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-       <CircularProgress />
-      </div>
-      </Container>)}
-      {!isLoading && (<Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-            <Controller
-              as={<TextField />}
-              name="email"
-              label="Email Address"
-              control={control}
-              value={''}
-              variant="outlined"
-              margin="normal"
-              defaultValue=""
-              required
-              fullWidth
-              id="email"
-              autoComplete="email"
-              autoFocus
-              onChange={([event]) => {
-                return event.target.value;
-              }}
-            />
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
+      {!isLoading && (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+              <Controller
+                as={<TextField />}
+                name="email"
+                label="Email Address"
+                control={control}
+                value={''}
+                variant="outlined"
+                margin="normal"
+                defaultValue=""
+                required
+                fullWidth
+                id="email"
+                autoComplete="email"
+                autoFocus
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
 
-            <Controller
-              as={<TextField />}
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              control={control}
-              value={''}
-              defaultValue=""
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              autoFocus
-              onChange={([event]) => {
-                return event.target.value;
-              }}
-            />
+              <Controller
+                as={<TextField />}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                control={control}
+                value={''}
+                defaultValue=""
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                autoFocus
+                onChange={([event]) => {
+                  return event.target.value;
+                }}
+              />
 
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link href="/registration" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href="/registration" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Container>)}
+            </form>
+          </div>
+        </Container>
+      )}
     </DefaultLayout>
   );
 };
