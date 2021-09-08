@@ -80,7 +80,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
 
   const onSubmit = async (data: IRound) => {
     const request: IRound = {
-      roundNumber: parseInt(data.roundNumber, 10),
+      roundNumber: parseInt(data.roundNumber.toString(), 10),
       dateStart: new Date(data.dateStart),
       dateEnd: new Date(data.dateEnd),
     };
