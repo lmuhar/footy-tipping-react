@@ -70,8 +70,8 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
 
     if (err) return setTeam([]);
 
-    if (Array.isArray(teams)) {
-      setTeam(teams);
+    if (Array.isArray(teams.data)) {
+      setTeam(teams.data);
     } else {
       setTeam([]);
     }
@@ -89,6 +89,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
 
     if (teamName) {
       setLoading(false);
+      getTeamNameDataFromAPI();
     }
   };
   return (
@@ -131,7 +132,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <GenericTable teamData={TeamData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
+            <GenericTable teamData={team} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
           </div>
         </Container>
       )}

@@ -70,8 +70,8 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
 
         if (err) return setLocation([]);
 
-        if (Array.isArray(locations)) {
-            setLocation(locations);
+        if (Array.isArray(locations && locations.data)) {
+            setLocation(locations.data);
         } else {
             setLocation([]);
         }
@@ -88,7 +88,8 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
         if (err) console.log(err);
 
         if (locationName) {
-            setLoading(false);
+          setLoading(false);
+          getLocationNameDataFromAPI();
         }
     };
 
@@ -132,7 +133,7 @@ const IndexPage: NextPage<PageProps> = ({LocationData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <GenericTable teamData={LocationData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
+            <GenericTable teamData={location} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
           </div>
         </Container>
       )}

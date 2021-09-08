@@ -51,16 +51,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const GenericTable: React.FunctionComponent<CompProp> = ({ teamData, tableHeader }) => {
-  const data = React.useMemo(() => teamData, []);
   const classes = useStyles();
-  const columns = React.useMemo(
-    () => tableHeader,
-    [],
-  );
 
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+  const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow
+    } = useTable({ columns: tableHeader, data: teamData });
   return (
     <div className={classes.paper}>
       <table className={classes.table} {...getTableProps()}>

@@ -13,7 +13,7 @@ export async function roundDataService(): Promise<[Error, IRound[]]> {
 
     if (!rounds) return [new Error("Something went wrong fetching all rounds"), null];
 
-    if (Array.isArray(rounds)) return [null, rounds]
+    if (Array.isArray(rounds)) return [null, rounds];
 
     return [null, [rounds]]
 }

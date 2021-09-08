@@ -21,7 +21,6 @@ interface PageProps {
   RoundData?: IRound[];
 }
 
-
 type FormValues = {
     roundNumber: number;
     dateStart: Date;
@@ -80,7 +79,7 @@ const IndexPage: NextPage<PageProps> = ({RoundData}) => {
     }, [])
 
     const onSubmit = async (data: IRound) => {
-        const request: IRound = {roundNumber: parseInt(data.roundNumber), dateStart: new Date(data.dateStart), dateEnd: new Date(data.dateEnd)};
+        const request: IRound = {roundNumber: data.roundNumber, dateStart: new Date(data.dateStart), dateEnd: new Date(data.dateEnd)};
         setLoading(true);
         const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
 

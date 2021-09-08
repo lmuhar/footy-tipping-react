@@ -3,4 +3,5 @@ export interface IRound {
     dateStart: Date;
     dateEnd: Date;
     roundNumber: number;
+    createdAt?: Date;
 }
