@@ -80,7 +80,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
 
   const onSubmit = async (data: IRound) => {
     const request: IRound = {
-      roundNumber: data.roundNumber,
+      roundNumber: parseInt(data.roundNumber, 10),
       dateStart: new Date(data.dateStart),
       dateEnd: new Date(data.dateEnd),
     };
@@ -118,16 +118,13 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
                 value={''}
                 variant="outlined"
                 margin="normal"
-                defaultValue=""
+                defaultValue="0"
                 required
                 fullWidth
                 id="roundNumber"
                 autoComplete="roundNumber"
                 type="number"
                 autoFocus
-                onChange={([event]) => {
-                  return event.target.value;
-                }}
               />
               <Controller
                 as={<TextField />}
