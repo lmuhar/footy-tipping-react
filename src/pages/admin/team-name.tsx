@@ -49,12 +49,12 @@ const useStyles = makeStyles((theme) => ({
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, TeamData] = await teamDataService();
 
-  if (err) return {props: {}};
+  if (err) return { props: {} };
 
-  return { props: { TeamData }};
-}
+  return { props: { TeamData } };
+};
 
-const IndexPage: NextPage<PageProps> = ({TeamData}) => {
+const IndexPage: NextPage<PageProps> = ({ TeamData }) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
 
@@ -70,16 +70,16 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
 
     if (err) return setTeam([]);
 
-    if (Array.isArray(teams)) {
-      setTeam(teams);
+    if (Array.isArray(teams.data)) {
+      setTeam(teams.data);
     } else {
       setTeam([]);
     }
-  }
+  };
 
   useEffect(() => {
     if (!team) getTeamNameDataFromAPI();
-  }, [])
+  }, []);
 
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
@@ -89,15 +89,18 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
 
     if (teamName) {
       setLoading(false);
+      getTeamNameDataFromAPI();
     }
   };
   return (
     <DefaultLayout>
-    {isLoading && (<Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-       <CircularProgress />
-      </div>
-      </Container>)}
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -131,7 +134,7 @@ const IndexPage: NextPage<PageProps> = ({TeamData}) => {
             </form>
           </div>
           <div className={classes.paper}>
-            <GenericTable teamData={TeamData} tableHeader={[{Header: 'Name', accessor: 'name'}]} />
+            <GenericTable teamData={team} tableHeader={[{ Header: 'Name', accessor: 'name' }]} />
           </div>
         </Container>
       )}

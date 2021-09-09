@@ -1,25 +1,30 @@
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import React from 'react';
-import DefaultLayout from '../layouts/default.layout';
+import DefaultLayout from '../../layouts/default.layout';
 import { useForm, Controller } from 'react-hook-form';
-import to from 'await-to-js';
-import Axios from 'axios';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import { useRouter } from 'next/dist/client/router';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useState } from 'react';
+import Container from '@material-ui/core/Container';
+import { useEffect, useState } from 'react';
+import to from 'await-to-js';
+import Axios from 'axios';
+import { IRound } from '../../models/round.model';
+import { roundDataService } from '../api/round';
+
+const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
+
+interface PageProps {
+  RoundData?: IRound[];
+}
 
 type FormValues = {
-  email: string;
-  username: string;
-  password: string;
+  roundNumber: number;
+  dateStart: Date;
+  dateEnd: Date;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -29,12 +34,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '50%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -42,24 +43,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IndexPage: NextPage = (_props) => {
-  const classes = useStyles();
-  const router = useRouter();
-  const { control, handleSubmit } = useForm<FormValues>();
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const onSubmit = async (data) => {
-    setLoading(true);
-    const [err, res] = await to(Axios.post(`/api/user/register`, data));
-    if (err) {
-      setLoading(false);
-      console.log(err);
-    }
+export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
+  const [err, RoundData] = await roundDataService();
 
-    if (res) {
-      console.log(res.data);
-      localStorage.setItem('token', res.data.token);
-      router.push('/');
-      console.log('Success');
+  if (err) return { props: {} };
+
+  return { props: { RoundData } };
+};
+
+const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
+  const classes = useStyles();
+  const { control, handleSubmit } = useForm<FormValues>();
+
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [round, setRound] = useState<IRound[]>(RoundData || null);
+
+  const getRoundDataFromAPI = async () => {
+    setLoading(true);
+
+    const [err, rounds] = await fetchRounds();
+
+    setLoading(false);
+
+    if (err) return setRound([]);
+
+    if (Array.isArray(rounds)) {
+      setRound(rounds);
+    } else {
+      setRound([]);
+    }
+  };
+
+  useEffect(() => {
+    if (!round) getRoundDataFromAPI();
+  }, []);
+
+  const onSubmit = async (data: IRound) => {
+    const request: IRound = {
+      roundNumber: parseInt(data.roundNumber.toString(), 10),
+      dateStart: new Date(data.dateStart),
+      dateEnd: new Date(data.dateEnd),
+    };
+    setLoading(true);
+    const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
+
+    if (err) console.log(err);
+
+    if (round) {
+      setLoading(false);
     }
   };
   return (
@@ -72,72 +103,73 @@ const IndexPage: NextPage = (_props) => {
         </Container>
       )}
       {!isLoading && (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="md">
           <CssBaseline />
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
             <Typography component="h1" variant="h5">
-              Sign Up
+              Rounds
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
               <Controller
                 as={<TextField />}
-                name="email"
-                label="Email Address"
+                name="roundNumber"
+                label="Round"
                 control={control}
                 value={''}
                 variant="outlined"
                 margin="normal"
+                defaultValue="0"
                 required
                 fullWidth
-                id="email"
-                autoComplete="email"
+                id="roundNumber"
+                autoComplete="roundNumber"
+                type="number"
                 autoFocus
-                onChange={([event]) => {
-                  return event.target.value;
-                }}
               />
-
               <Controller
                 as={<TextField />}
-                name="username"
-                label="Username"
+                name="dateStart"
+                id="dateStart"
+                label="Start Date"
                 control={control}
                 value={''}
                 variant="outlined"
                 margin="normal"
+                defaultValue=""
                 required
                 fullWidth
-                id="username"
-                autoComplete="username"
+                type="datetime-local"
                 autoFocus
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={([event]) => {
                   return event.target.value;
                 }}
               />
-
               <Controller
                 as={<TextField />}
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
+                name="dateEnd"
+                id="dateEnd"
+                label="Start End"
                 control={control}
                 value={''}
                 variant="outlined"
                 margin="normal"
+                defaultValue=""
                 required
                 fullWidth
+                type="datetime-local"
                 autoFocus
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={([event]) => {
                   return event.target.value;
                 }}
               />
-
               <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                Sign Up
+                Save Round
               </Button>
             </form>
           </div>
