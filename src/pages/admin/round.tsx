@@ -14,6 +14,7 @@ import to from 'await-to-js';
 import Axios from 'axios';
 import { IRound } from '../../models/round.model';
 import { roundDataService } from '../api/round';
+import Moment from 'react-moment';
 
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
 
@@ -172,6 +173,16 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
                 Save Round
               </Button>
             </form>
+            <div>
+              {round.map((d) => (
+                <div key={d.roundNumber}>
+                  <div>{d.roundNumber}</div>
+                  <div>
+                    <Moment format="DD/MM/YYYY">{d.dateStart}</Moment>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </Container>
       )}

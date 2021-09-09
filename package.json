@@ -44,10 +44,12 @@
         "framer-motion": "^2.9.4",
         "jsonwebtoken": "^8.5.1",
         "jwt-decode": "^3.1.2",
+        "moment": "^2.29.1",
         "next": "^10.0.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-hook-form": "^6.11.2",
+        "react-moment": "^1.1.1",
         "react-table": "^7.6.1",
         "superjson": "^1.7.5"
     },
