@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../client';
 import { ILocationNames } from './../../../models/location-name.model';
 
 export async function creatLocationNameService(data: ILocationNames): Promise<[Error, ILocationNames]> {
-  const prisma = new PrismaClient();
-
   if (!data.name) return [new Error('Something went wrong creating the record'), null];
 
   const [err, locationNames] = await to(prisma.location.create({ data }));

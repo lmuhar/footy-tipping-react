@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { compareSync } from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const prisma = new PrismaClient();
-
   const user = await prisma.user.findOne({ where: { email: req.body.email } });
 
   if (!user) res.status(403);

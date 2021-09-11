@@ -1,11 +1,9 @@
 import { ITeamNames } from './../../../models/team-names.model';
-import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import to from 'await-to-js';
+import prisma from '../client';
 
 export async function createTeamNameService(data: ITeamNames): Promise<[Error, ITeamNames]> {
-  const prisma = new PrismaClient();
-
   if (!data.name) return [new Error('Something went wrong creating the team'), null];
 
   const [err, teamNames] = await to(prisma.teamName.create({ data }));
