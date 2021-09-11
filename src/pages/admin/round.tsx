@@ -15,6 +15,10 @@ import Axios from 'axios';
 import { IRound } from '../../models/round.model';
 import { roundDataService } from '../api/round';
 import Moment from 'react-moment';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import AddGameForm from '../../components/section/add-game';
 
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
 
@@ -173,16 +177,18 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
                 Save Round
               </Button>
             </form>
-            <div>
+            <AddGameForm roundData={round}></AddGameForm>
+            <List component="nav" className={classes.paper}>
               {round.map((d) => (
-                <div key={d.roundNumber}>
-                  <div>{d.roundNumber}</div>
+                <ListItem button key={d.roundNumber}>
+                  <div>{d.roundNumber} - </div>
                   <div>
                     <Moment format="DD/MM/YYYY">{d.dateStart}</Moment>
                   </div>
-                </div>
+                  <Divider />
+                </ListItem>
               ))}
-            </div>
+            </List>
           </div>
         </Container>
       )}
