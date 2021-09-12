@@ -19,11 +19,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import AddGameForm from '../../components/section/add-game';
+import { ILocationNames } from '../../models/location-name.model';
+import { ITeamNames } from '../../models/team-names.model';
+import { teamDataService } from '../api/team';
+import { locationDataService } from '../api/location';
 
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
 
 interface PageProps {
   RoundData?: IRound[];
+  LocationData?: ILocationNames[];
+  TeamData?: ITeamNames[];
 }
 
 type FormValues = {
@@ -50,13 +56,17 @@ const useStyles = makeStyles((theme) => ({
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
+  const [err1, LocationData] = await locationDataService();
+  const [err2, TeamData] = await teamDataService();
 
+  if (err1) return { props: {} };
+  if (err2) return { props: {} };
   if (err) return { props: {} };
 
-  return { props: { RoundData } };
+  return { props: { RoundData, LocationData, TeamData } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
+const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
 
@@ -177,7 +187,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
                 Save Round
               </Button>
             </form>
-            <AddGameForm roundData={round}></AddGameForm>
+            <AddGameForm roundData={round} locationData={LocationData} teamData={TeamData}></AddGameForm>
             <List component="nav" className={classes.paper}>
               {round.map((d) => (
                 <ListItem button key={d.roundNumber}>
