@@ -17,3 +17,13 @@ export interface IGame {
   round: { id: string; name: string };
   result?: { id: string; name: string };
 }
+
+export interface IGameGet {
+  id?: string;
+  homeTeam: { id: string; name: string };
+  awayTeam: { id: string; name: string };
+  location: { id: string; name: string };
+  startDateTime: Date;
+  round: { id: string; name: string };
+  result?: { id: string; name: string };
+}
