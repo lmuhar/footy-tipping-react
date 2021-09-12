@@ -8,6 +8,11 @@ import ReactSelect from 'react-select';
 import { ILocationNames } from '../../models/location-name.model';
 import { ITeamNames } from '../../models/team-names.model';
 import { IRound } from '../../models/round.model';
+import { IGameCreate } from '../../models/game.model';
+import to from 'await-to-js';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useState } from 'react';
+import Axios from 'axios';
 
 interface CompProp {
   roundData: IRound[];
@@ -40,10 +45,27 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
   const classes = useStyles();
   const [indexes, setIndexes] = React.useState([]);
   const [counter, setCounter] = React.useState(0);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<FormValues>();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     console.log('here', data);
+    const req: IGameCreate = {
+      homeTeam: data.games[0].homeTeam.id,
+      awayTeam: data.games[0].awayTeam.id,
+      location: data.games[0].location.id,
+      startDateTime: new Date(data.games[0].startDateTime),
+      round: data.round.id,
+    };
+
+    const [err, createBook] = await to(Axios.post<IGameCreate>('/api/game/create', req));
+
+    if (err) console.log(err);
+
+    if (createBook) {
+      setLoading(false);
+    }
   };
 
   const addGame = () => {
@@ -62,6 +84,13 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
 
   return (
     <Container component="main" maxWidth="xs">
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
       <div className={classes.paper}>
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
           <FormControl className={classes.form}>
