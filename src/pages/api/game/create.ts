@@ -7,7 +7,7 @@ export async function creatGameService(data: IGameCreate): Promise<[Error, IGame
   const { round, homeTeam, awayTeam, location, startDateTime } = data;
 
   if (!homeTeam || !round || !awayTeam || !location || !startDateTime)
-    return [new Error('Something went wrong creating the record'), null];
+    return [new Error('Something went wrong creating the record -missing data'), null];
 
   const [err, game] = await to(
     prisma.game.create({
@@ -21,9 +21,9 @@ export async function creatGameService(data: IGameCreate): Promise<[Error, IGame
     }),
   );
 
-  if (err) return [new Error('Something went wrong creating the record'), null];
+  if (err) return [new Error(`Something went wrong creating the record, ${err}`), null];
 
-  if (!game) return [new Error('Something went wrong creating the record'), null];
+  if (!game) return [new Error('Something went wrong creating the record, no game'), null];
 
   return [null, data];
 }

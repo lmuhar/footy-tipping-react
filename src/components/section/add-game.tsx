@@ -8,7 +8,7 @@ import ReactSelect from 'react-select';
 import { ILocationNames } from '../../models/location-name.model';
 import { ITeamNames } from '../../models/team-names.model';
 import { IRound } from '../../models/round.model';
-import { IGameCreate } from '../../models/game.model';
+import { IGame, IGameCreate } from '../../models/game.model';
 import to from 'await-to-js';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ interface CompProp {
 
 type FormValues = {
   round: string;
-  games: any[];
+  games: IGame[];
 };
 
 const useStyles = makeStyles((theme) => ({
