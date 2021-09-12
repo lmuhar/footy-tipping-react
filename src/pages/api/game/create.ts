@@ -7,7 +7,7 @@ export async function creatGameService(data: IGameCreate): Promise<[Error, IGame
   const { round, homeTeam, awayTeam, location, startDateTime } = data;
 
   if (!homeTeam || !round || !awayTeam || !location || !startDateTime)
-    return [new Error('Something went wrong creating the record -missing data'), null];
+    return [new Error('Something went wrong creating the record'), null];
 
   const [err, game] = await to(
     prisma.game.create({
@@ -21,16 +21,15 @@ export async function creatGameService(data: IGameCreate): Promise<[Error, IGame
     }),
   );
 
-  if (err) return [new Error(`Something went wrong creating the record, ${err}`), null];
+  if (err) return [new Error('Something went wrong creating the record'), null];
 
-  if (!game) return [new Error('Something went wrong creating the record, no game'), null];
+  if (!game) return [new Error('Something went wrong creating the record'), null];
 
   return [null, data];
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const [err, game] = await creatGameService(req.body);
-  console.log(err);
 
   if (err) return res.status(500).json(err);
 
