@@ -50,7 +50,6 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log('here', data);
     const req: IGameCreate[] = [];
 
     data.games.forEach((item) => {
@@ -81,6 +80,8 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
   const addGame = () => {
     setIndexes((prevIndexes) => [...prevIndexes, counter]);
     setCounter((prevCounter) => prevCounter + 1);
+    console.log(indexes);
+    console.log(counter);
   };
 
   const removeGame = (index) => () => {

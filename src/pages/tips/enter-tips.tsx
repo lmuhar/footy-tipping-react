@@ -2,7 +2,6 @@ import { NextPage, GetServerSideProps } from 'next';
 import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Button, FormControl, InputLabel, makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -68,6 +67,8 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [teams, setTeam] = useState<ITeamNames[]>(TeamData || null);
+  const [indexes, setIndexes] = useState([]);
+  const [counter, setCounter] = useState(0);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
   const getRoundDataFromAPI = async () => {
@@ -84,6 +85,21 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
     } else {
       setRound([]);
     }
+  };
+
+  const addGame = (number) => {
+    let i = 0;
+    const index = [];
+    while (i < number) {
+      index.push(i);
+      i++;
+    }
+    setIndexes(index);
+    setCounter(number);
+    console.log(game);
+    console.log(counter);
+    console.log(indexes);
+    console.log(number);
   };
 
   const getTeamNameDataFromAPI = async () => {
@@ -113,6 +129,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
 
     if (Array.isArray(games.data)) {
       setGame(games.data);
+      addGame(games.data.length);
     } else {
       setGame([]);
     }
@@ -125,7 +142,10 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
     }
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async (data) => {
+    setLoading(true);
+    console.log(data);
+  };
 
   useEffect(() => {
     if (!round) getRoundDataFromAPI();
@@ -151,6 +171,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
             <Typography component="h1" variant="h5">
               Enter Tips
             </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
             <div className={classes.form}>
               <ReactSelect
                 onChange={handleInputChange}
@@ -173,10 +194,38 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
               />
             </div>
 
+            {indexes.map((index) => {
+              const fieldName = `tips[${index}]`;
+              return (
+                <fieldset name={fieldName} key={fieldName}>
+                  <div>{fieldName}</div>
+                  <FormControl className={classes.form}>
+                  <InputLabel id="homeTeam">Home Team</InputLabel>
+                  <Controller
+                    as={<ReactSelect instanceId={'homeTeam'} />}
+                    name={`${fieldName}.homeTeam`}
+                    label="Home Team"
+                    options={TeamData}
+                    getOptionLabel={(item) => `${item.name}`}
+                    getOptionValue={(item) => item['id']}
+                    control={control}
+                    value={''}
+                    variant="outlined"
+                    defaultValue=""
+                    required
+                    fullWidth
+                    isClearable
+                    id="homeTeam"
+                  />
+                </FormControl>
+                </fieldset>
+              )
+            })}
+
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Save
             </Button>
-            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate></form>
+            </form>
           </div>
         </Container>
       )}
