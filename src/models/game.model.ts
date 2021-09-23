@@ -11,7 +11,9 @@ export interface IGameCreate {
 export interface IGame {
   id?: string;
   homeTeam: { id: string; name: string };
+  homeTeamId?: string;
   awayTeam: { id: string; name: string };
+  awayTeamId?: string;
   location: { id: string; name: string };
   startDateTime: Date;
   round: { id: string; name: string };

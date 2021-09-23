@@ -3,7 +3,7 @@ import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import { Button, FormControl, InputLabel, makeStyles } from '@material-ui/core';
+import { Button, FormControlLabel, makeStyles, Radio, RadioGroup } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import { ITeamNames } from '../../models/team-names.model';
@@ -16,6 +16,7 @@ import { IRound } from '../../models/round.model';
 import { IGame } from '../../models/game.model';
 import { useForm, Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
+import Moment from 'react-moment';
 
 const fetchGames = (data) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
@@ -68,7 +69,6 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [teams, setTeam] = useState<ITeamNames[]>(TeamData || null);
   const [indexes, setIndexes] = useState([]);
-  const [counter, setCounter] = useState(0);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
   const getRoundDataFromAPI = async () => {
@@ -95,11 +95,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
       i++;
     }
     setIndexes(index);
-    setCounter(number);
     console.log(game);
-    console.log(counter);
-    console.log(indexes);
-    console.log(number);
   };
 
   const getTeamNameDataFromAPI = async () => {
@@ -138,6 +134,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
   const handleInputChange = (inputValue) => {
     if (inputValue && inputValue.id) {
       setSelectedRound(inputValue.id);
+      setIndexes([]);
       getGameDataFromAPI({ roundId: inputValue.id });
     }
   };
@@ -172,59 +169,67 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
               Enter Tips
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-            <div className={classes.form}>
-              <ReactSelect
-                onChange={handleInputChange}
-                name="round"
-                label="Round"
-                options={RoundData}
-                getOptionLabel={(item) => `${item.roundNumber}`}
-                getOptionValue={(item) => item['id']}
-                control={control}
-                variant="outlined"
-                defaultValue=""
-                value={RoundData.filter(function (option) {
-                  return option.id === selectedRound;
-                })}
-                required
-                fullWidth
-                isClearable
-                instanceId="round"
-                id="round"
-              />
-            </div>
+              <div className={classes.form}>
+                <ReactSelect
+                  onChange={handleInputChange}
+                  name="round"
+                  label="Round"
+                  options={RoundData}
+                  getOptionLabel={(item) => `${item.roundNumber}`}
+                  getOptionValue={(item) => item['id']}
+                  control={control}
+                  variant="outlined"
+                  defaultValue=""
+                  value={RoundData.filter(function (option) {
+                    return option.id === selectedRound;
+                  })}
+                  required
+                  fullWidth
+                  isClearable
+                  instanceId="round"
+                  id="round"
+                />
+              </div>
 
-            {indexes.map((index) => {
-              const fieldName = `tips[${index}]`;
-              return (
-                <fieldset name={fieldName} key={fieldName}>
-                  <div>{fieldName}</div>
-                  <FormControl className={classes.form}>
-                  <InputLabel id="homeTeam">Home Team</InputLabel>
-                  <Controller
-                    as={<ReactSelect instanceId={'homeTeam'} />}
-                    name={`${fieldName}.homeTeam`}
-                    label="Home Team"
-                    options={TeamData}
-                    getOptionLabel={(item) => `${item.name}`}
-                    getOptionValue={(item) => item['id']}
-                    control={control}
-                    value={''}
-                    variant="outlined"
-                    defaultValue=""
-                    required
-                    fullWidth
-                    isClearable
-                    id="homeTeam"
-                  />
-                </FormControl>
-                </fieldset>
-              )
-            })}
+              {indexes.map((index) => {
+                const fieldName = `tips[${index}]`;
+                return (
+                  <fieldset name={fieldName} key={fieldName}>
+                    <div className={classes.form}>
+                      <label>Game {index + 1}</label>
+                      <div>
+                        <Moment format="DD/MM/YYYY hh:mm a">{game[index].startDateTime}</Moment>
+                      </div>
+                      <section>
+                        <Controller
+                          name={`${fieldName}.tip`}
+                          control={control}
+                          required
+                          defaultValue=""
+                          as={
+                            <RadioGroup name={`${fieldName}.tip`}>
+                              <FormControlLabel
+                                value={game[index].homeTeamId}
+                                control={<Radio />}
+                                label={game[index].homeTeam.name}
+                              />
+                              <FormControlLabel
+                                value={game[index].awayTeamId}
+                                control={<Radio />}
+                                label={game[index].awayTeam.name}
+                              />
+                            </RadioGroup>
+                          }
+                        />
+                      </section>
+                    </div>
+                  </fieldset>
+                );
+              })}
 
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-              Save
-            </Button>
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                Save
+              </Button>
             </form>
           </div>
         </Container>
