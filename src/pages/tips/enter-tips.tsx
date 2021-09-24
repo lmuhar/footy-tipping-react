@@ -6,27 +6,27 @@ import Typography from '@material-ui/core/Typography';
 import { Button, FormControlLabel, makeStyles, Radio, RadioGroup } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
-import { ITeamNames } from '../../models/team-names.model';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
-import { teamDataService } from './../api/team';
 import { roundDataService } from '../api/round';
 import { IRound } from '../../models/round.model';
 import { IGame } from '../../models/game.model';
 import { useForm, Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 import Moment from 'react-moment';
+import { IUserData } from '../../models/user-data.model';
+import useTokenData from '../../custom-hooks/token.data';
+import { ITipCreate } from '../../models/tip.model';
 
 const fetchGames = (data) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
-const fetchTeams = () => to(Axios.get<ITeamNames[]>('/api/team'));
 
 interface PageProps {
   RoundData?: IRound[];
   GameData?: IGame[];
-  TeamData?: ITeamNames[];
   SelectedRound?: any;
+  UserData?: IUserData;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -49,25 +49,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type FormValues = {
+  tips: [];
+};
+
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
-  const [err2, TeamData] = await teamDataService();
   const GameData = [];
 
   if (err) return { props: {} };
-  if (err2) return { props: {} };
 
-  return { props: { RoundData, TeamData, GameData } };
+  return { props: { RoundData, GameData } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, SelectedRound }) => {
+const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) => {
   const classes = useStyles();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<FormValues>();
+  const user = useTokenData();
+  console.log(user);
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
-  const [teams, setTeam] = useState<ITeamNames[]>(TeamData || null);
   const [indexes, setIndexes] = useState([]);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
@@ -98,22 +101,6 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
     console.log(game);
   };
 
-  const getTeamNameDataFromAPI = async () => {
-    setLoading(true);
-
-    const [err, teams] = await fetchTeams();
-
-    setLoading(false);
-
-    if (err) return setTeam([]);
-
-    if (Array.isArray(teams.data)) {
-      setTeam(teams.data);
-    } else {
-      setTeam([]);
-    }
-  };
-
   const getGameDataFromAPI = async (body) => {
     setLoading(true);
 
@@ -141,15 +128,33 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, TeamData, Selecte
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
+    const req: ITipCreate[] = [];
+    data.tips.forEach((item) => {
+      if (item.tip) {
+        req.push({
+          user: user.id,
+          tip: item.tip,
+          round: selectedRound,
+        });
+      }
+    });
+    const createAllTips = req.map((tip) => {
+      return to(Axios.post<ITipCreate>('/api/tip/create', tip));
+    });
+
+    await Promise.all(createAllTips)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
+        console.log(e);
+      });
   };
 
   useEffect(() => {
     if (!round) getRoundDataFromAPI();
-  }, []);
-
-  useEffect(() => {
-    if (!teams) getTeamNameDataFromAPI();
   }, []);
 
   return (

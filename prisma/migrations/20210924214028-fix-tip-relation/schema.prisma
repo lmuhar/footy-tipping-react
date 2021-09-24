@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -40,6 +40,8 @@ model Tip {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   correct   Boolean?
+
+  @@unique([userId, roundId])
 }
 
 model Game {
