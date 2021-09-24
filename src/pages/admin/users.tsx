@@ -61,23 +61,30 @@ const IndexPage: NextPage<PageProps> = ({ UserData }) => {
   const classes = useStyles();
   return (
     <DefaultLayout>
-    {isLoading && (<Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-       <CircularProgress />
-      </div>
-      </Container>)}
+      {isLoading && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
       {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <GenericTable teamData={UserData} tableHeader={[{
-        Header: 'Username',
-        accessor: 'username',
-      },
-      {
-        Header: 'Email',
-        accessor: 'email',
-      },]} />
+            <GenericTable
+              teamData={UserData}
+              tableHeader={[
+                {
+                  Header: 'Username',
+                  accessor: 'username',
+                },
+                {
+                  Header: 'Email',
+                  accessor: 'email',
+                },
+              ]}
+            />
           </div>
         </Container>
       )}
