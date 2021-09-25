@@ -129,18 +129,23 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
     setLoading(true);
 
     const req: ITipCreate[] = [];
-    data.tips.forEach((item) => {
+    data.tips.forEach((item, i) => {
       if (item.tip) {
         req.push({
           user: user.id,
           selectedTip: item.tip,
           round: selectedRound,
-          game: item.gameId,
+          game: game[i].id,
+          id: game[i]?.tip[0]?.id,
         });
       }
     });
     const createAllTips = req.map((tip) => {
-      return to(Axios.post<ITipCreate>('/api/tip/create', tip));
+      if (tip.id) {
+        return to(Axios.post<ITipCreate>('/api/tip/edit', tip));
+      } else {
+        return to(Axios.post<ITipCreate>('/api/tip/create', tip));
+      }
     });
 
     await Promise.all(createAllTips)
