@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -27,13 +27,13 @@ model TeamName {
   gameAway Game[] @relation("gameAway")
   gameHome Game[] @relation("gameHome")
   result   Game[] @relation("result")
-  userTips Tip[]
+  tip      Tip[]  @relation("tip")
 }
 
 model Tip {
   id            String   @id @default(cuid())
   createdAt     DateTime @default(now())
-  selectedTip   TeamName @relation(fields: [selectedTipId], references: [id])
+  selectedTip   TeamName @relation("tip", fields: [selectedTipId], references: [id])
   selectedTipId String
   round         Round    @relation(fields: [roundId], references: [id])
   roundId       String

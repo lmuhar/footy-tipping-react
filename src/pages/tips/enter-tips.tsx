@@ -3,7 +3,7 @@ import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import { Button, FormControlLabel, makeStyles, Radio, RadioGroup } from '@material-ui/core';
+import { Button, FormControlLabel, makeStyles, Radio, RadioGroup, TextField } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type FormValues = {
-  tips: [];
+  tips: [{ tip: string; gameId: string }];
 };
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
@@ -146,6 +146,16 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
     }
   };
 
+  const setTip = (gameId) => {
+    if (userTips?.length > 0) {
+      return userTips.filter((item) => {
+        return item.game === gameId;
+      }).selectedTip;
+    } else {
+      return '';
+    }
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     const req: ITipCreate[] = [];
@@ -153,8 +163,9 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
       if (item.tip) {
         req.push({
           user: user.id,
-          tip: item.tip,
+          selectedTip: item.tip,
           round: selectedRound,
+          game: item.gameId,
         });
       }
     });
@@ -205,7 +216,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                   control={control}
                   variant="outlined"
                   defaultValue=""
-                  value={RoundData.filter(function (option) {
+                  value={RoundData.filter((option) => {
                     return option.id === selectedRound;
                   })}
                   required
@@ -230,7 +241,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                           name={`${fieldName}.tip`}
                           control={control}
                           required
-                          defaultValue=""
+                          defaultValue={setTip(game[index].id)}
                           as={
                             <RadioGroup name={`${fieldName}.tip`}>
                               <FormControlLabel
@@ -245,6 +256,19 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                               />
                             </RadioGroup>
                           }
+                        />
+                        <Controller
+                          as={<TextField hidden />}
+                          name={`${fieldName}.gameId`}
+                          control={control}
+                          defaultValue={game[index].id}
+                          required
+                          hidden
+                          fullWidth
+                          id="gameId"
+                          onChange={([event]) => {
+                            return event.target.value;
+                          }}
                         />
                       </section>
                     </div>

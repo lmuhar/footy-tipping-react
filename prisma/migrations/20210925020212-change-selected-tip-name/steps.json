@@ -1,0 +1,82 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Tip",
+      "field": "selectedTip",
+      "type": "TeamName",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Tip",
+          "field": "selectedTip"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Tip",
+          "field": "selectedTip"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"tip\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Tip",
+          "field": "selectedTip"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[selectedTipId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Tip",
+          "field": "selectedTip"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Tip",
+      "field": "selectedTipId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Tip",
+      "field": "tip"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Tip",
+      "field": "tipId"
+    }
+  ]
+}

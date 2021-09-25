@@ -1,24 +1,34 @@
 export interface ITipCreate {
   id?: string;
-  tip: string;
+  selectedTip: string;
   round: string;
   user: string;
+  game: string;
 }
 
 export interface ITip {
   id?: string;
-  tip: { id: string; name: string };
-  tipId?: string;
-  round: { id: string; name: number };
+  selectedTip: { name: string };
+  selectedTipId?: string;
+  round: { name: number };
   roundId?: string;
-  user: { id: string; name: string };
+  user: { name: string };
   userId?: string;
+  game: { name: string };
+  gameId?: string;
 }
 
 export interface IUserTipsRound {
   id?: string;
   roundId: string;
-  tip: { name: string };
+  selectedTip: { name: string };
+  round: string;
+  user: string;
   tipId: string;
   userId: string;
+  gameId: string;
+}
+
+export interface ITipDelete {
+  id: string;
 }
