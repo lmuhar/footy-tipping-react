@@ -71,6 +71,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
   const user = useTokenData();
 
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [indexes, setIndexes] = useState([]);
@@ -129,11 +130,12 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
 
     if (err) return setGame([]);
 
-    if (Array.isArray(tips.data)) {
+    if (Array.isArray(tips.data) && tips.data.length > 0) {
       setUserTips(tips.data);
-      console.log(userTips);
+      setIsEditing(true);
     } else {
       setUserTips([]);
+      setIsEditing(false);
     }
   };
 
@@ -148,9 +150,21 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
 
   const setTip = (gameId) => {
     if (userTips?.length > 0) {
-      return userTips.filter((item) => {
-        return item.game === gameId;
-      }).selectedTip;
+      const found = userTips.filter((item) => {
+        return item.gameId === gameId;
+      });
+      if (found) return found[0].selectedTipId;
+    } else {
+      return '';
+    }
+  };
+
+  const findTipId = (gameId) => {
+    if (userTips?.length > 0) {
+      const found = userTips.filter((item) => {
+        return item.gameId === gameId;
+      });
+      if (found) return found[0].id;
     } else {
       return '';
     }
@@ -158,30 +172,60 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
 
   const onSubmit = async (data) => {
     setLoading(true);
-    const req: ITipCreate[] = [];
-    data.tips.forEach((item) => {
-      if (item.tip) {
-        req.push({
-          user: user.id,
-          selectedTip: item.tip,
-          round: selectedRound,
-          game: item.gameId,
-        });
-      }
-    });
-    const createAllTips = req.map((tip) => {
-      return to(Axios.post<ITipCreate>('/api/tip/create', tip));
-    });
 
-    await Promise.all(createAllTips)
-      .then((res) => {
-        console.log(res);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setLoading(false);
-        console.log(e);
+    if (isEditing) {
+      const req: ITipCreate[] = [];
+      data.tips.forEach((item) => {
+        if (item.tip) {
+          console.log(item.tipId);
+          req.push({
+            user: user.id,
+            selectedTip: item.tip,
+            round: selectedRound,
+            game: item.gameId,
+            id: item.tipId,
+          });
+        }
       });
+      const createAllTips = req.map((tip) => {
+        return to(Axios.put<ITipCreate>('/api/tip/edit', tip));
+      });
+
+      await Promise.all(createAllTips)
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+        })
+        .catch((e) => {
+          setLoading(false);
+          console.log(e.response);
+        });
+    } else {
+      const req: ITipCreate[] = [];
+      data.tips.forEach((item) => {
+        if (item.tip) {
+          req.push({
+            user: user.id,
+            selectedTip: item.tip,
+            round: selectedRound,
+            game: item.gameId,
+          });
+        }
+      });
+      const createAllTips = req.map((tip) => {
+        return to(Axios.post<ITipCreate>('/api/tip/create', tip));
+      });
+
+      await Promise.all(createAllTips)
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+        })
+        .catch((e) => {
+          setLoading(false);
+          console.log(e);
+        });
+    }
   };
 
   useEffect(() => {
@@ -216,7 +260,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                   control={control}
                   variant="outlined"
                   defaultValue=""
-                  value={RoundData.filter((option) => {
+                  value={RoundData?.filter((option) => {
                     return option.id === selectedRound;
                   })}
                   required
@@ -266,6 +310,19 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                           hidden
                           fullWidth
                           id="gameId"
+                          onChange={([event]) => {
+                            return event.target.value;
+                          }}
+                        />
+                        <Controller
+                          as={<TextField hidden />}
+                          name={`${fieldName}.tipId`}
+                          control={control}
+                          defaultValue={findTipId(game[index].id)}
+                          required
+                          hidden
+                          fullWidth
+                          id="tipId"
                           onChange={([event]) => {
                             return event.target.value;
                           }}
