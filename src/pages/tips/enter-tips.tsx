@@ -21,12 +21,14 @@ import { ITipCreate } from '../../models/tip.model';
 
 const fetchGames = (data) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
+const fetchUserTips = (data) => to(Axios.post<ITipCreate>('/api/tip/tip-for-user-by-round', data));
 
 interface PageProps {
   RoundData?: IRound[];
   GameData?: IGame[];
   SelectedRound?: any;
   UserData?: IUserData;
+  UserTips?: any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -56,22 +58,23 @@ type FormValues = {
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
   const GameData = [];
+  const UserTips = [];
 
   if (err) return { props: {} };
 
-  return { props: { RoundData, GameData } };
+  return { props: { RoundData, GameData, UserTips } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) => {
+const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, UserTips }) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
   const user = useTokenData();
-  console.log(user);
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [indexes, setIndexes] = useState([]);
+  const [userTips, setUserTips] = useState(UserTips || null);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
   const getRoundDataFromAPI = async () => {
@@ -98,7 +101,6 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
       i++;
     }
     setIndexes(index);
-    console.log(game);
   };
 
   const getGameDataFromAPI = async (body) => {
@@ -118,11 +120,29 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
     }
   };
 
+  const getTipDataFromAPI = async (body) => {
+    setLoading(true);
+
+    const [err, tips] = await fetchUserTips(body);
+
+    setLoading(false);
+
+    if (err) return setGame([]);
+
+    if (Array.isArray(tips.data)) {
+      setUserTips(tips.data);
+      console.log(userTips);
+    } else {
+      setUserTips([]);
+    }
+  };
+
   const handleInputChange = (inputValue) => {
     if (inputValue && inputValue.id) {
       setSelectedRound(inputValue.id);
       setIndexes([]);
       getGameDataFromAPI({ roundId: inputValue.id });
+      getTipDataFromAPI({ roundId: inputValue.id, userId: user.id });
     }
   };
 

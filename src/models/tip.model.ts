@@ -14,3 +14,11 @@ export interface ITip {
   user: { id: string; name: string };
   userId?: string;
 }
+
+export interface IUserTipsRound {
+  id?: string;
+  roundId: string;
+  tip: { name: string };
+  tipId: string;
+  userId: string;
+}
