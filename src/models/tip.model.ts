@@ -21,12 +21,12 @@ export interface ITip {
 export interface IUserTipsRound {
   id?: string;
   roundId: string;
-  selectedTip: { name: string };
-  round: string;
-  user: string;
-  tipId: string;
-  userId: string;
-  gameId: string;
+  selectedTip?: string;
+  round?: string;
+  user?: string;
+  userId?: string;
+  game?: string;
+  gameId?: string;
 }
 
 export interface ITipDelete {
