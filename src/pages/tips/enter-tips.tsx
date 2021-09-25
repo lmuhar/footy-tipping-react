@@ -128,59 +128,30 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
   const onSubmit = async (data) => {
     setLoading(true);
 
-    if (isEditing) {
-      const req: ITipCreate[] = [];
-      data.tips.forEach((item) => {
-        if (item.tip) {
-          console.log(item.tipId);
-          req.push({
-            user: user.id,
-            selectedTip: item.tip,
-            round: selectedRound,
-            game: item.gameId,
-            id: item.tipId,
-          });
-        }
-      });
-      const createAllTips = req.map((tip) => {
-        return to(Axios.put<ITipCreate>('/api/tip/edit', tip));
-      });
-
-      await Promise.all(createAllTips)
-        .then((res) => {
-          console.log(res);
-          setLoading(false);
-        })
-        .catch((e) => {
-          setLoading(false);
-          console.log(e.response);
+    const req: ITipCreate[] = [];
+    data.tips.forEach((item) => {
+      if (item.tip) {
+        req.push({
+          user: user.id,
+          selectedTip: item.tip,
+          round: selectedRound,
+          game: item.gameId,
         });
-    } else {
-      const req: ITipCreate[] = [];
-      data.tips.forEach((item) => {
-        if (item.tip) {
-          req.push({
-            user: user.id,
-            selectedTip: item.tip,
-            round: selectedRound,
-            game: item.gameId,
-          });
-        }
-      });
-      const createAllTips = req.map((tip) => {
-        return to(Axios.post<ITipCreate>('/api/tip/create', tip));
-      });
+      }
+    });
+    const createAllTips = req.map((tip) => {
+      return to(Axios.post<ITipCreate>('/api/tip/create', tip));
+    });
 
-      await Promise.all(createAllTips)
-        .then((res) => {
-          console.log(res);
-          setLoading(false);
-        })
-        .catch((e) => {
-          setLoading(false);
-          console.log(e);
-        });
-    }
+    await Promise.all(createAllTips)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
+        console.log(e);
+      });
   };
 
   useEffect(() => {
