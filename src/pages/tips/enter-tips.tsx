@@ -3,7 +3,7 @@ import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import { Button, FormControlLabel, makeStyles, Radio, RadioGroup, TextField } from '@material-ui/core';
+import { Button, FormControlLabel, makeStyles, Radio, RadioGroup } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import { useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import to from 'await-to-js';
 import Axios from 'axios';
 import { roundDataService } from '../api/round';
 import { IRound } from '../../models/round.model';
-import { IGame } from '../../models/game.model';
+import { IGame, IGameByRoundUser } from '../../models/game.model';
 import { useForm, Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 import Moment from 'react-moment';
@@ -19,9 +19,8 @@ import { IUserData } from '../../models/user-data.model';
 import useTokenData from '../../custom-hooks/token.data';
 import { ITipCreate } from '../../models/tip.model';
 
-const fetchGames = (data) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
+const fetchGames = (data: IGameByRoundUser) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
-const fetchUserTips = (data) => to(Axios.post<ITipCreate>('/api/tip/tip-for-user-by-round', data));
 
 interface PageProps {
   RoundData?: IRound[];
@@ -58,24 +57,21 @@ type FormValues = {
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
   const GameData = [];
-  const UserTips = [];
 
   if (err) return { props: {} };
 
-  return { props: { RoundData, GameData, UserTips } };
+  return { props: { RoundData, GameData } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, UserTips }) => {
+const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
   const user = useTokenData();
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [indexes, setIndexes] = useState([]);
-  const [userTips, setUserTips] = useState(UserTips || null);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
   const getRoundDataFromAPI = async () => {
@@ -121,52 +117,11 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
     }
   };
 
-  const getTipDataFromAPI = async (body) => {
-    setLoading(true);
-
-    const [err, tips] = await fetchUserTips(body);
-
-    setLoading(false);
-
-    if (err) return setGame([]);
-
-    if (Array.isArray(tips.data) && tips.data.length > 0) {
-      setUserTips(tips.data);
-      setIsEditing(true);
-    } else {
-      setUserTips([]);
-      setIsEditing(false);
-    }
-  };
-
   const handleInputChange = (inputValue) => {
     if (inputValue && inputValue.id) {
       setSelectedRound(inputValue.id);
       setIndexes([]);
-      getGameDataFromAPI({ roundId: inputValue.id });
-      getTipDataFromAPI({ roundId: inputValue.id, userId: user.id });
-    }
-  };
-
-  const setTip = (gameId) => {
-    if (userTips?.length > 0) {
-      const found = userTips.filter((item) => {
-        return item.gameId === gameId;
-      });
-      if (found) return found[0].selectedTipId;
-    } else {
-      return '';
-    }
-  };
-
-  const findTipId = (gameId) => {
-    if (userTips?.length > 0) {
-      const found = userTips.filter((item) => {
-        return item.gameId === gameId;
-      });
-      if (found) return found[0].id;
-    } else {
-      return '';
+      getGameDataFromAPI({ roundId: inputValue.id, userId: user.id });
     }
   };
 
@@ -280,12 +235,13 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                       <div>
                         <Moment format="DD/MM/YYYY hh:mm a">{game[index].startDateTime}</Moment>
                       </div>
+                      <div>{game[index].location.name}</div>
                       <section>
                         <Controller
                           name={`${fieldName}.tip`}
                           control={control}
                           required
-                          defaultValue={setTip(game[index].id)}
+                          defaultValue={game[index]?.tip[0]?.selectedTipId}
                           as={
                             <RadioGroup name={`${fieldName}.tip`}>
                               <FormControlLabel
@@ -300,32 +256,6 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, Us
                               />
                             </RadioGroup>
                           }
-                        />
-                        <Controller
-                          as={<TextField hidden />}
-                          name={`${fieldName}.gameId`}
-                          control={control}
-                          defaultValue={game[index].id}
-                          required
-                          hidden
-                          fullWidth
-                          id="gameId"
-                          onChange={([event]) => {
-                            return event.target.value;
-                          }}
-                        />
-                        <Controller
-                          as={<TextField hidden />}
-                          name={`${fieldName}.tipId`}
-                          control={control}
-                          defaultValue={findTipId(game[index].id)}
-                          required
-                          hidden
-                          fullWidth
-                          id="tipId"
-                          onChange={([event]) => {
-                            return event.target.value;
-                          }}
                         />
                       </section>
                     </div>

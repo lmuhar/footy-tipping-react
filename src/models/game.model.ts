@@ -1,3 +1,5 @@
+import { ITip } from './tip.model';
+
 export interface IGameCreate {
   id?: string;
   homeTeam: string;
@@ -18,6 +20,7 @@ export interface IGame {
   startDateTime: Date;
   round: { id: string; name: string };
   result?: { id: string; name: string };
+  tip?: ITip[];
 }
 
 export interface IGameGet {
@@ -28,4 +31,9 @@ export interface IGameGet {
   startDateTime: Date;
   round: { id: string; name: string };
   result?: { id: string; name: string };
+}
+
+export interface IGameByRoundUser {
+  roundId: string;
+  userId: string;
 }
