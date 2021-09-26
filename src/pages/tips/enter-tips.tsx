@@ -217,7 +217,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
                           name={`${fieldName}.tip`}
                           control={control}
                           required
-                          defaultValue={game[index]?.tip[0]?.selectedTipId}
+                          defaultValue={game[index]?.tip[0]?.selectedTipId || ''}
                           as={
                             <RadioGroup name={`${fieldName}.tip`}>
                               <FormControlLabel
