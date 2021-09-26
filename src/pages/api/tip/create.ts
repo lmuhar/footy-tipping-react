@@ -20,7 +20,6 @@ export async function createTipsService(data: ITipCreate): Promise<[Error, ITipC
 
   if (err) return [new Error(`Something went wrong creating the record ${err}`), null];
   if (!tips) return [new Error('Something went wrong creating the record'), null];
-
   return [null, data];
 }
 
