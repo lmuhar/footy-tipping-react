@@ -1,0 +1,29 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamName",
+          "field": "userTips"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "DeleteArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Tip",
+          "field": "selectedTip"
+        },
+        "directive": "relation"
+      },
+      "argument": ""
+    }
+  ]
+}

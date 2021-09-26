@@ -1,10 +1,9 @@
 import { IRound } from './../../../models/round.model';
-import { PrismaClient } from '@prisma/client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../client';
 
 export async function roundDataService(): Promise<[Error, IRound[]]> {
-  const prisma = new PrismaClient();
   const [err, rounds] = await to(prisma.round.findMany({}));
 
   if (err) return [new Error('Something went wrong fetching all rounds'), null];

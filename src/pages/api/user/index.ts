@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { IUserData } from '../../../models/user-data.model';
+import prisma from '../client';
 
 export async function userDataService(): Promise<[Error, IUserData[]]> {
-  const prisma = new PrismaClient();
   const [err, users] = await to(
     prisma.user.findMany({
       select: {

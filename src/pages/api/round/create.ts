@@ -1,11 +1,9 @@
 import { IRound } from './../../../models/round.model';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function createRoundService(data: IRound): Promise<[Error, IRound]> {
-  const prisma = new PrismaClient();
-
   if (!data.roundNumber || !data.dateStart || !data.dateEnd)
     return [new Error('Something went wrong creating the round'), null];
 

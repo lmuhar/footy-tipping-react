@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const prisma = new PrismaClient();
-
   if (!req.body.username || !req.body.password || !req.body.email) {
     res.status(400);
   }
