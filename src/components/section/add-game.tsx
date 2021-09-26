@@ -50,27 +50,38 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log('here', data);
-    const req: IGameCreate = {
-      homeTeam: data.games[0].homeTeam.id,
-      awayTeam: data.games[0].awayTeam.id,
-      location: data.games[0].location.id,
-      startDateTime: new Date(data.games[0].startDateTime),
-      round: data.round.id,
-    };
+    const req: IGameCreate[] = [];
 
-    const [err, createBook] = await to(Axios.post<IGameCreate>('/api/game/create', req));
+    data.games.forEach((item) => {
+      req.push({
+        homeTeam: item.homeTeam.id,
+        awayTeam: item.awayTeam.id,
+        location: item.location.id,
+        startDateTime: new Date(item.startDateTime),
+        round: data.round.id,
+      });
+    });
 
-    if (err) console.log(err);
+    const createAllGames = req.map((game) => {
+      return to(Axios.post<IGameCreate>('/api/game/create', game));
+    });
 
-    if (createBook) {
-      setLoading(false);
-    }
+    await Promise.all(createAllGames)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
+        console.log(e);
+      });
   };
 
   const addGame = () => {
     setIndexes((prevIndexes) => [...prevIndexes, counter]);
     setCounter((prevCounter) => prevCounter + 1);
+    console.log(indexes);
+    console.log(counter);
   };
 
   const removeGame = (index) => () => {

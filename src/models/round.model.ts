@@ -1,7 +1,7 @@
 export interface IRound {
-    id?: string;
-    dateStart: Date;
-    dateEnd: Date;
-    roundNumber: number;
-    createdAt?: Date;
+  id?: string;
+  dateStart: Date;
+  dateEnd: Date;
+  roundNumber: number;
+  createdAt?: Date;
 }

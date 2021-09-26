@@ -1,3 +1,5 @@
+import { ITip } from './tip.model';
+
 export interface IGameCreate {
   id?: string;
   homeTeam: string;
@@ -11,11 +13,14 @@ export interface IGameCreate {
 export interface IGame {
   id?: string;
   homeTeam: { id: string; name: string };
+  homeTeamId?: string;
   awayTeam: { id: string; name: string };
+  awayTeamId?: string;
   location: { id: string; name: string };
   startDateTime: Date;
   round: { id: string; name: string };
   result?: { id: string; name: string };
+  tip?: ITip[];
 }
 
 export interface IGameGet {
@@ -26,4 +31,9 @@ export interface IGameGet {
   startDateTime: Date;
   round: { id: string; name: string };
   result?: { id: string; name: string };
+}
+
+export interface IGameByRoundUser {
+  roundId: string;
+  userId: string;
 }

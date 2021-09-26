@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DefaultLayout: FunctionComponent = ({ children }) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -113,6 +113,7 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
     setOpen(false);
   };
   const user = useTokenData();
+
   const router = useRouter();
   const logout = () => {
     localStorage.removeItem('token');
@@ -248,6 +249,20 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
             ) : (
               ''
             )}
+            <div>
+              {user ? (
+                <Link href="/tips/enter-tips">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Enter tips" />
+                  </ListItem>
+                </Link>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </List>
       </Drawer>

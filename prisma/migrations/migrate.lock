@@ -3,3 +3,10 @@
 20201107073152
 20210905061743-new-tables
 20210912025626-remove-unique-on-game
+20210924140318-add-tip-relation
+20210924214028-fix-tip-relation
+20210924220259-remove-unique
+20210925012459-change-game-id
+20210925020212-change-selected-tip-name
+20210925021735-update-relationships
+20210925023113-remove-two-way-relationship

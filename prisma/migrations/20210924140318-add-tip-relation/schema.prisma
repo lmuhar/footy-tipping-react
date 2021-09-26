@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -27,21 +27,21 @@ model TeamName {
   gameAway Game[] @relation("gameAway")
   gameHome Game[] @relation("gameHome")
   result   Game[] @relation("result")
-  userTips Tip[]
+  tip      Tip[]
 }
 
 model Tip {
-  id            String   @id @default(cuid())
-  createdAt     DateTime @default(now())
-  selectedTip   TeamName @relation(fields: [selectedTipId], references: [id])
-  selectedTipId String
-  round         Round    @relation(fields: [roundId], references: [id])
-  roundId       String
-  game          Game     @relation(fields: [gameId], references: [id])
-  gameId        String
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String
-  correct       Boolean?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  tip       TeamName @relation(fields: [tipId], references: [id])
+  tipId     String
+  round     Round    @relation(fields: [roundId], references: [id])
+  roundId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  correct   Boolean?
+
+  @@unique([userId, roundId])
 }
 
 model Game {
@@ -57,7 +57,6 @@ model Game {
   roundId       String
   resultId      String?
   result        TeamName? @relation("result", fields: [resultId], references: [id])
-  tip           Tip[]
 }
 
 model Round {
