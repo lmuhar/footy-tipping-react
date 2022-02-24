@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import { IRound } from '../../models/round.model';
 import { latestRoundService } from '../api/round/latest-round';
+import ViewTipsScreen from '../../components/section/view-tips-screen';
 import Moment from 'react-moment';
 import _ from 'lodash';
 
@@ -33,8 +34,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
   console.log(RoundData);
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  setLoading(false);
-
+setLoading(false);
   return (
     <DefaultLayout>
       {isLoading && (
@@ -52,13 +52,14 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
               View Tips
             </Typography>
             <Typography component="h5" variant="h5">
-              <div>Round {RoundData[0].roundNumber}</div>
+              <div>Round {RoundData ? RoundData[0]?.roundNumber : ''}</div>
               <div>
-                <Moment format="DD/MM/YY">{RoundData[0].dateStart}</Moment> -{' '}
-                <Moment format="DD/MM/YY">{RoundData[0].dateEnd}</Moment>
+                <Moment format="DD/MM/YY">{RoundData[0]?.dateStart}</Moment> -{' '}
+                <Moment format="DD/MM/YY">{RoundData[0]?.dateEnd}</Moment>
               </div>
             </Typography>
-          </div>
+            <ViewTipsScreen tips={RoundData[0].tips}></ViewTipsScreen>
+            </div>
         </Container>
       )}
     </DefaultLayout>

@@ -10,9 +10,10 @@ export async function latestRoundService(): Promise<[Error, any]> {
       include: {
         tips: {
           select: {
+            id: true,
             user: { select: { username: true } },
             selectedTip: { select: { name: true } },
-            game: { select: { startDateTime: true } },
+            game: { select: { startDateTime: true, homeTeam: true, awayTeam: true } },
           },
         },
       },
