@@ -1,12 +1,13 @@
-import { CircularProgress, Container, CssBaseline, makeStyles, Typography } from '@material-ui/core';
+import { CircularProgress, Container, CssBaseline, Typography, makeStyles } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
-import React, { useState } from 'react';
+
 import DefaultLayout from '../../layouts/default.layout';
 import { IRound } from '../../models/round.model';
-import { latestRoundService } from '../api/round/latest-round';
-import ViewTipsScreen from '../../components/section/view-tips-screen';
 import Moment from 'react-moment';
+import React from 'react';
+import ViewTipsScreen from '../../components/section/view-tips-screen';
 import _ from 'lodash';
+import { latestRoundService } from '../api/round/latest-round';
 
 interface PageProps {
   RoundData?: IRound[];
@@ -31,20 +32,16 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
 
 const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
   const classes = useStyles();
-  console.log(RoundData);
-
-  const [isLoading, setLoading] = useState<boolean>(false);
-setLoading(false);
   return (
     <DefaultLayout>
-      {isLoading && (
+      {!RoundData && (
         <Container component="main" maxWidth="xs">
           <div className={classes.paper}>
             <CircularProgress />
           </div>
         </Container>
       )}
-      {!isLoading && (
+      {RoundData && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
