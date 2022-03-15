@@ -263,6 +263,20 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
                 ''
               )}
             </div>
+            <div>
+              {user ? (
+                <Link href="/tips/view-tips">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="View tips" />
+                  </ListItem>
+                </Link>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </List>
       </Drawer>
