@@ -1,10 +1,10 @@
 export interface IRound {
-  tips: any;
   id?: string;
   dateStart: Date;
   dateEnd: Date;
   roundNumber: number;
   createdAt?: Date;
+  tips?: any;
 }
 
 export interface ViewTips {
