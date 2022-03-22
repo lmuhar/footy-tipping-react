@@ -2,18 +2,18 @@ import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../client';
 
-export async function latestRoundService(): Promise<[Error, any]> {
+export async function getLastRoundGames(): Promise<[Error, any]> {
   const [err, round] = await to(
     prisma.round.findMany({
       orderBy: { dateEnd: 'desc' },
       take: 1,
       include: {
-        tips: {
+        games: {
           select: {
             id: true,
-            user: { select: { username: true } },
-            selectedTip: true,
-            game: { select: { startDateTime: true, homeTeam: true, awayTeam: true, result: true } },
+            homeTeam: true,
+            awayTeam: true,
+            result: true,
           },
         },
       },
@@ -28,7 +28,7 @@ export async function latestRoundService(): Promise<[Error, any]> {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const [err, round] = await latestRoundService();
+  const [err, round] = await getLastRoundGames();
   if (err) return res.status(500).json(err);
 
   return res.status(200).json(round);
