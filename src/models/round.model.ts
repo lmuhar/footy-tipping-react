@@ -7,7 +7,7 @@ export interface IRound {
   roundNumber: number;
   createdAt?: Date;
   tips?: any;
-  games?: IGame[];
+  games?: any[];
 }
 
 export interface ViewTips {
