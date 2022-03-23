@@ -4,23 +4,24 @@ import {
   Container,
   CssBaseline,
   FormControlLabel,
-  makeStyles,
   Radio,
   RadioGroup,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
-import Moment from 'react-moment';
-import { GetServerSideProps, NextPage } from 'next';
-import DefaultLayout from '../../layouts/default.layout';
-import { IRound, SaveResult } from '../../models/round.model';
-import { getLastRoundGames } from '../api/round/get-last-round-games';
 import { Controller, useForm } from 'react-hook-form';
-import to from 'await-to-js';
+import { GetRound, SaveResult } from '../../models/round.model';
+import { GetServerSideProps, NextPage } from 'next';
+
 import Axios from 'axios';
+import DefaultLayout from '../../layouts/default.layout';
+import Moment from 'react-moment';
+import { getLastRoundGames } from '../api/round/get-last-round-games';
+import to from 'await-to-js';
 import { useState } from 'react';
 
 interface PageProps {
-  RoundData?: IRound[];
+  RoundData?: GetRound[];
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -64,7 +65,6 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
         req.push({ id: key, result: data[key] });
       }
     });
-    console.log(req);
     const updateResults = req.map((tip) => {
       if (tip.id && tip.result) {
         return to(Axios.post<SaveResult>('/api/game/update-result', tip));

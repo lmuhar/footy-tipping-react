@@ -1,5 +1,3 @@
-import { IGame } from './game.model';
-
 export interface IRound {
   id?: string;
   dateStart: Date;
@@ -7,7 +5,6 @@ export interface IRound {
   roundNumber: number;
   createdAt?: Date;
   tips?: any;
-  games?: any[];
 }
 
 export interface ViewTips {
@@ -34,4 +31,14 @@ export interface SelectedTip {
 export interface SaveResult {
   id: string;
   result: string;
+}
+
+export interface GetRound {
+  id?: string;
+  dateStart: Date;
+  dateEnd: Date;
+  roundNumber: number;
+  createdAt?: Date;
+  tips?: any;
+  games?: any[];
 }
