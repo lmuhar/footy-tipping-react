@@ -27,7 +27,9 @@ const ViewTipsScreen: React.FunctionComponent<CompProp> = ({ tips }) => {
   const keys = Object.keys(userTips);
 
   const correct = (tip, fieldId) => {
-    return fieldId === tip.selectedTip.id && tip.game.result.id === tip.selectedTip.id;
+    if (tip.game.result && tip.game.result.id) {
+      return fieldId === tip.selectedTip.id && tip.game.result.id === tip.selectedTip.id;
+    }
   };
 
   return (
