@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   const [err3, RoundId] = await latestRoundId();
 
   // Return nothing if there was an error. Props understands "AFLLadder?:" might be undefined.
-  if (err || err2) return { props: {} };
+  if (err || err2 || err3) return { props: {} };
 
   // If all is good in the good, return the AFLLadder data! Variable is named the same, we can omit the :
   return { props: { AFLLadder, UserData, RoundId } };

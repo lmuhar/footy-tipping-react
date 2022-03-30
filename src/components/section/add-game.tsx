@@ -67,10 +67,10 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
     });
 
     await Promise.all(createAllGames)
-      .then((res) => {
+      .then(() => {
         setLoading(false);
       })
-      .catch((e) => {
+      .catch(() => {
         setLoading(false);
       });
   };
