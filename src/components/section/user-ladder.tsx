@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 interface CompProp {
   userData: any[];
+  roundId: any[];
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -45,20 +46,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserLadder: React.FunctionComponent<CompProp> = ({ userData }) => {
+const UserLadder: React.FunctionComponent<CompProp> = ({ userData, roundId }) => {
   const info = [];
 
   userData.forEach((user) => {
     let total = 0;
+    let lastRound = 0;
     user.tips.forEach((tip) => {
       if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
         total = total + 1;
+        if (roundId[0].id === tip.game.roundId) {
+          lastRound = lastRound + 1;
+        }
       }
     });
     if (total > 0) {
       info.push({
         id: user.id,
         name: user.username,
+        lastRound: lastRound,
         total: total,
       });
     }
@@ -70,6 +76,10 @@ const UserLadder: React.FunctionComponent<CompProp> = ({ userData }) => {
       {
         Header: 'Name',
         accessor: 'name',
+      },
+      {
+        Header: 'Last Round',
+        accessor: 'lastRound',
       },
       {
         Header: 'Total',

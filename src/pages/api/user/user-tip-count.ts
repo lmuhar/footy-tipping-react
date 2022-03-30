@@ -11,7 +11,7 @@ export async function userTipCount(): Promise<[Error, IUserTips[]]> {
           select: {
             id: true,
             selectedTip: true,
-            game: { select: { result: true } },
+            game: { select: { result: true, roundId: true } },
           },
         },
       },
