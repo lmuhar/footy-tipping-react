@@ -4,3 +4,10 @@ export interface IUserData {
   email?: string;
   role?: string;
 }
+
+export interface IUserTips {
+  id?: string;
+  username?: string;
+  tips?: any[];
+  total?: number;
+}

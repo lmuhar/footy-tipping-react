@@ -8,31 +8,38 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
 import { IAFLLadder } from '../models/afl-ladder.model';
 import { aflLadderService } from './api/afl-ladder';
+import { userTipCount } from './api/user/user-tip-count';
+import { IUserTips } from '../models/user-data.model';
+import UserLadder from '../components/section/user-ladder';
 
 // Alias of the to(Axtios(...)) as an API method
 const fetchAFLLadder = () => to(Axios.get<IAFLLadder[]>(`/api/afl-ladder`));
+const fetchUserTips = () => to(Axios.get<IUserTips[]>('/api/user/user-tip-count'));
 
 interface PageProps {
   AFLLadder?: IAFLLadder[];
+  UserData?: IUserTips[];
 }
 
 // getServerSideProps is the new getInitialProps. It's essentially the same thing but more efficient.
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   // Destructure the data directly into a AFLLadder variable.
   const [err, AFLLadder] = await aflLadderService();
+  const [err2, UserData] = await userTipCount();
 
   // Return nothing if there was an error. Props understands "AFLLadder?:" might be undefined.
-  if (err) return { props: {} };
+  if (err || err2) return { props: {} };
 
   // If all is good in the good, return the AFLLadder data! Variable is named the same, we can omit the :
-  return { props: { AFLLadder } };
+  return { props: { AFLLadder, UserData } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ AFLLadder }) => {
+const IndexPage: NextPage<PageProps> = ({ AFLLadder, UserData }) => {
   // Store the ladder data in state using hooks. We can make use of this later!
   // We will set it null as a default, just in case the props returns nothing; such as a page load without SSR!
   // We not track the loading state too?
   const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
+  const [users, setUsers] = useState<IUserTips[]>(UserData || null);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   // We can't (or shouldn't) use async functions in useEffect.
@@ -54,21 +61,30 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder }) => {
     setLadder(AFLLadder);
   };
 
+  const getUserTipsFromAPI = async () => {
+    setLoading(true);
+
+    const [err, { data: UserData }] = await fetchUserTips();
+
+    setLoading(false);
+
+    if (err) setUsers([]);
+    setUsers(UserData);
+  };
+
   // useEffect with empty [] (dependencies) will trigger on component mount/ page load.
   useEffect(() => {
     // Since we shouldn't use async directly, we will just ask the data to be fetched off in it's own time.
     // If we did await and something wen't wrong we could potentially cause the component to hang. Bad news.
     if (!ladder) getLadderDataFromAPI();
+    if (!users) getUserTipsFromAPI();
   }, []);
 
   return (
     <DefaultLayout>
       {isLoading && <CircularProgress />}
-      {!isLoading && (
-        <Container>
-          <AflLadder aflData={AFLLadder} />
-        </Container>
-      )}
+      {!isLoading && <Container>{UserData && UserData.length > 0 && <UserLadder userData={UserData} />}</Container>}
+      {!isLoading && <Container>{AFLLadder && AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>}
     </DefaultLayout>
   );
 };
