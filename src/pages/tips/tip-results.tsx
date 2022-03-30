@@ -72,12 +72,10 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
     });
     await Promise.all(updateResults)
       .then((res) => {
-        console.log(res);
         setLoading(false);
       })
       .catch((e) => {
         setLoading(false);
-        console.log(e);
       });
   };
   return (

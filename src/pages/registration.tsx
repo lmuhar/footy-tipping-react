@@ -52,14 +52,11 @@ const IndexPage: NextPage = (_props) => {
     const [err, res] = await to(Axios.post(`/api/user/register`, data));
     if (err) {
       setLoading(false);
-      console.log(err);
     }
 
     if (res) {
-      console.log(res.data);
       localStorage.setItem('token', res.data.token);
       router.push('/');
-      console.log('Success');
     }
   };
   return (

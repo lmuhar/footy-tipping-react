@@ -150,12 +150,10 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
 
     await Promise.all(createAllTips)
       .then((res) => {
-        console.log(res);
         setLoading(false);
       })
       .catch((e) => {
         setLoading(false);
-        console.log(e);
       });
   };
 

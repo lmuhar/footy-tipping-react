@@ -57,7 +57,6 @@ const IndexPage: NextPage = (_props) => {
     const [err, res] = await to(Axios.post<UserToken>(`/api/user/login`, data));
     if (err) {
       setLoading(false);
-      console.log(err);
     }
 
     if (res && res.data) {

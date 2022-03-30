@@ -81,7 +81,7 @@ const IndexPage: NextPage<PageProps> = ({ LocationData }) => {
     setLoading(true);
     const [err, locationName] = await to(Axios.post<ILocationNames>('/api/location/create', data));
 
-    if (err) console.log(err);
+    if (err) console.error(err);
 
     if (locationName) {
       setLoading(false);
