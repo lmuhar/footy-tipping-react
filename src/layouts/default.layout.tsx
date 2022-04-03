@@ -155,6 +155,16 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         <Divider />
         <List>
           <div>
+            <Link href="/">
+              <ListItem button>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </Link>
+          </div>
+          <div>
             {!user ? (
               <Link href="/login">
                 <ListItem button>

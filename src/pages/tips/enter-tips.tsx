@@ -69,6 +69,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
   const user = useTokenData();
 
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(false);
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [indexes, setIndexes] = useState([]);
@@ -151,9 +152,11 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
     await Promise.all(createAllTips)
       .then(() => {
         setLoading(false);
+        setSaved(true);
       })
       .catch(() => {
         setLoading(false);
+        setSaved(false);
       });
   };
 
@@ -170,7 +173,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
           </div>
         </Container>
       )}
-      {!isLoading && (
+      {!isLoading && !saved && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
@@ -241,6 +244,15 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
                 Save
               </Button>
             </form>
+          </div>
+        </Container>
+      )}
+      {saved && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Tips successfully saved
+            </Typography>
           </div>
         </Container>
       )}
