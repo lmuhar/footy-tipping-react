@@ -67,21 +67,17 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
     });
 
     await Promise.all(createAllGames)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setLoading(false);
       })
-      .catch((e) => {
+      .catch(() => {
         setLoading(false);
-        console.log(e);
       });
   };
 
   const addGame = () => {
     setIndexes((prevIndexes) => [...prevIndexes, counter]);
     setCounter((prevCounter) => prevCounter + 1);
-    console.log(indexes);
-    console.log(counter);
   };
 
   const removeGame = (index) => () => {

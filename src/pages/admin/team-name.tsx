@@ -85,7 +85,7 @@ const IndexPage: NextPage<PageProps> = ({ TeamData }) => {
     setLoading(true);
     const [err, teamName] = await to(Axios.post<ITeamNames>(`/api/team/create`, data));
 
-    if (err) console.log(err);
+    if (err) console.error(err);
 
     if (teamName) {
       setLoading(false);

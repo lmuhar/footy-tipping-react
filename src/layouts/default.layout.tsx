@@ -155,6 +155,16 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         <Divider />
         <List>
           <div>
+            <Link href="/">
+              <ListItem button>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </Link>
+          </div>
+          <div>
             {!user ? (
               <Link href="/login">
                 <ListItem button>
@@ -257,6 +267,34 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Enter tips" />
+                  </ListItem>
+                </Link>
+              ) : (
+                ''
+              )}
+            </div>
+            <div>
+              {user ? (
+                <Link href="/tips/view-tips">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="View tips" />
+                  </ListItem>
+                </Link>
+              ) : (
+                ''
+              )}
+            </div>
+            <div>
+              {user && user.role === 'admin' ? (
+                <Link href="/tips/tip-results">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Enter results" />
                   </ListItem>
                 </Link>
               ) : (

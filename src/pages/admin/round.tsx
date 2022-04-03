@@ -102,7 +102,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
     setLoading(true);
     const [err, round] = await to(Axios.post<IRound>('/api/round/create', request));
 
-    if (err) console.log(err);
+    if (err) console.error(err);
 
     if (round) {
       setLoading(false);
