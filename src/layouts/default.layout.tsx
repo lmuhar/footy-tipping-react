@@ -1,26 +1,34 @@
+import { Collapse, Divider } from '@material-ui/core';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FunctionComponent, useState } from 'react';
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
+
+import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import BuildIcon from '@material-ui/icons/Build';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import useTokenData from '../custom-hooks/token.data';
-import { Divider } from '@material-ui/core';
+import CreateIcon from '@material-ui/icons/Create';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import Drawer from '@material-ui/core/Drawer';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
+import IconButton from '@material-ui/core/IconButton';
 import Link from 'next/link';
-import { useRouter } from 'next/dist/client/router';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AddIcon from '@material-ui/icons/Add';
+import MenuIcon from '@material-ui/icons/Menu';
+import PersonIcon from '@material-ui/icons/Person';
+import React from 'react';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import { useRouter } from 'next/dist/client/router';
+import useTokenData from '../custom-hooks/token.data';
 
 const drawerWidth = 240;
 
@@ -101,11 +109,25 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  listNest: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 const DefaultLayout: FunctionComponent = ({ children }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [openNested, setNested] = useState(false);
+
+  const handleClick = () => {
+    setNested(!openNested);
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -154,18 +176,16 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         </div>
         <Divider />
         <List>
-          <div>
             <Link href="/">
               <ListItem button>
                 <ListItemIcon>
-                  <DashboardIcon />
+                  <HomeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-          </div>
-          <div>
-            {!user ? (
+
+            {!user && (
               <Link href="/login">
                 <ListItem button>
                   <ListItemIcon>
@@ -174,12 +194,8 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
                   <ListItemText primary="Login" />
                 </ListItem>
               </Link>
-            ) : (
-              ''
             )}
-          </div>
-          <div>
-            {!user ? (
+            {!user && (
               <Link href="/registration">
                 <ListItem button>
                   <ListItemIcon>
@@ -188,120 +204,90 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
                   <ListItemText primary="Register" />
                 </ListItem>
               </Link>
-            ) : (
-              ''
             )}
-          </div>
-          <div>
-            {user ? (
+            {user && (
               <ListItem button onClick={logout}>
                 <ListItemIcon>
                   <ExitToAppIcon />
                 </ListItemIcon>
                 <ListItemText primary="Logout" />
               </ListItem>
-            ) : (
-              ''
             )}
-          </div>
-          <div>
-            {user && user.role === 'admin' ? (
-              <Link href="/admin/users">
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Users" />
-                </ListItem>
-              </Link>
-            ) : (
-              ''
-            )}
-          </div>
-          <div>
-            {user && user.role === 'admin' ? (
-              <Link href="/admin/team-name">
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Teams" />
-                </ListItem>
-              </Link>
-            ) : (
-              ''
-            )}
-          </div>
-          <div>
-            {user && user.role === 'admin' ? (
-              <Link href="/admin/locations">
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Locations" />
-                </ListItem>
-              </Link>
-            ) : (
-              ''
-            )}
-          </div>
-          <div>
-            {user && user.role === 'admin' ? (
+
+              {user && (
+                <Link href="/tips/enter-tips">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <CreateIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Enter tips" />
+                  </ListItem>
+                </Link>
+              )}
+
+              {user && (
+                <Link href="/tips/view-tips">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <VisibilityIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="View tips" />
+                  </ListItem>
+                </Link>
+              )}
+       {user && user.role === 'admin' && (<div>
+      <ListItem button onClick={handleClick}>
+        <ListItemIcon>
+          <BuildIcon />
+        </ListItemIcon>
+        <ListItemText primary="Admin" />
+        {openNested ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={openNested} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+                <Link href="/tips/tip-results">
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <DoneAllIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Enter results" />
+                  </ListItem>
+                </Link>
               <Link href="/admin/round">
-                <ListItem button>
+                <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
                   <ListItemText primary="Add Round" />
                 </ListItem>
               </Link>
-            ) : (
-              ''
-            )}
-            <div>
-              {user ? (
-                <Link href="/tips/enter-tips">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Enter tips" />
-                  </ListItem>
-                </Link>
-              ) : (
-                ''
-              )}
-            </div>
-            <div>
-              {user ? (
-                <Link href="/tips/view-tips">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="View tips" />
-                  </ListItem>
-                </Link>
-              ) : (
-                ''
-              )}
-            </div>
-            <div>
-              {user && user.role === 'admin' ? (
-                <Link href="/tips/tip-results">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Enter results" />
-                  </ListItem>
-                </Link>
-              ) : (
-                ''
-              )}
-            </div>
-          </div>
+              <Link href="/admin/locations">
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Locations" />
+                </ListItem>
+              </Link>
+              <Link href="/admin/team-name">
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Teams" />
+                </ListItem>
+              </Link>
+              <Link href="/admin/users">
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Users" />
+                </ListItem>
+              </Link>
+        </List>
+      </Collapse>
+      </div>)}
         </List>
       </Drawer>
       <main className={classes.content}>
