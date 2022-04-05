@@ -176,118 +176,131 @@ const DefaultLayout: FunctionComponent = ({ children }) => {
         </div>
         <Divider />
         <List>
-            <Link href="/">
+          <Link href="/">
+            <ListItem button>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+          </Link>
+
+          {!user && (
+            <Link href="/login">
               <ListItem button>
                 <ListItemIcon>
-                  <HomeIcon />
+                  <DashboardIcon />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <ListItemText primary="Login" />
               </ListItem>
             </Link>
-
-            {!user && (
-              <Link href="/login">
-                <ListItem button>
-                  <ListItemIcon>
-                    <DashboardIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Login" />
-                </ListItem>
-              </Link>
-            )}
-            {!user && (
-              <Link href="/registration">
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Register" />
-                </ListItem>
-              </Link>
-            )}
-            {user && (
-              <ListItem button onClick={logout}>
+          )}
+          {!user && (
+            <Link href="/registration">
+              <ListItem button>
                 <ListItemIcon>
-                  <ExitToAppIcon />
+                  <AddIcon />
                 </ListItemIcon>
-                <ListItemText primary="Logout" />
+                <ListItemText primary="Register" />
               </ListItem>
-            )}
+            </Link>
+          )}
+          {user && (
+            <ListItem button onClick={logout}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          )}
 
-              {user && (
-                <Link href="/tips/enter-tips">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <CreateIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Enter tips" />
-                  </ListItem>
-                </Link>
-              )}
+          {user && (
+            <Link href="/tips/enter-tips">
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon />
+                </ListItemIcon>
+                <ListItemText primary="Enter tips" />
+              </ListItem>
+            </Link>
+          )}
 
-              {user && (
-                <Link href="/tips/view-tips">
-                  <ListItem button>
-                    <ListItemIcon>
-                      <VisibilityIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="View tips" />
-                  </ListItem>
-                </Link>
-              )}
-       {user && user.role === 'admin' && (<div>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <BuildIcon />
-        </ListItemIcon>
-        <ListItemText primary="Admin" />
-        {openNested ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={openNested} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-                <Link href="/tips/tip-results">
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <DoneAllIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Enter results" />
-                  </ListItem>
-                </Link>
-              <Link href="/admin/round">
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Add Round" />
-                </ListItem>
-              </Link>
-              <Link href="/admin/locations">
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Locations" />
-                </ListItem>
-              </Link>
-              <Link href="/admin/team-name">
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Teams" />
-                </ListItem>
-              </Link>
-              <Link href="/admin/users">
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Users" />
-                </ListItem>
-              </Link>
-        </List>
-      </Collapse>
-      </div>)}
+          {user && (
+            <Link href="/tips/view-tips">
+              <ListItem button>
+                <ListItemIcon>
+                  <VisibilityIcon />
+                </ListItemIcon>
+                <ListItemText primary="View tips" />
+              </ListItem>
+            </Link>
+          )}
+
+          {user && (
+            <Link href="/users/my-profile">
+              <ListItem button>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="My profile" />
+              </ListItem>
+            </Link>
+          )}
+          {user && user.role === 'admin' && (
+            <div>
+              <ListItem button onClick={handleClick}>
+                <ListItemIcon>
+                  <BuildIcon />
+                </ListItemIcon>
+                <ListItemText primary="Admin" />
+                {openNested ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={openNested} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link href="/tips/tip-results">
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <DoneAllIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Enter results" />
+                    </ListItem>
+                  </Link>
+                  <Link href="/admin/round">
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <AddIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Add Round" />
+                    </ListItem>
+                  </Link>
+                  <Link href="/admin/locations">
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <AddIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Locations" />
+                    </ListItem>
+                  </Link>
+                  <Link href="/admin/team-name">
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <AddIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Teams" />
+                    </ListItem>
+                  </Link>
+                  <Link href="/admin/users">
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Users" />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
+            </div>
+          )}
         </List>
       </Drawer>
       <main className={classes.content}>
