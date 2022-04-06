@@ -28,5 +28,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (err) return res.status(500).json(err);
 
   const token = jwt.sign({ user: user }, process.env.SECRET_TOKEN);
-  return res.status(200).json(token);
+  return res.status(200).json({ token: token });
 }

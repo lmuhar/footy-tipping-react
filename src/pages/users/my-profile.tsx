@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Container, CssBaseline, TextField, Typography } from '@material-ui/core';
 import { Controller, useForm } from 'react-hook-form';
-import { IUserData, IUserNameUpdate } from '../../models/user-data.model';
+import { IUserNameUpdate } from '../../models/user-data.model';
 
 import Axios from 'axios';
 import DefaultLayout from '../../layouts/default.layout';
@@ -34,27 +34,30 @@ type FormValues = {
   newName: string;
 };
 
-const IndexPage: NextPage = (prop) => {
+const IndexPage: NextPage = () => {
   const classes = useStyles();
-  let user = useTokenData();
+  const user = useTokenData();
   const { control, handleSubmit } = useForm<FormValues>();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(false);
   const onSubmit = async (data) => {
-    setLoading(true);
-    const payload: IUserNameUpdate = {
-      id: user.id,
-      ...data,
-    };
-    const [err, res] = await to(Axios.post<UserToken>(`/api/user/update-name`, payload));
-    if (err) {
-      setLoading(false);
-    }
+    if (data.newName) {
+      setLoading(true);
+      const payload: IUserNameUpdate = {
+        id: user.id,
+        ...data,
+      };
+      const [err, res] = await to(Axios.post<UserToken>(`/api/user/update-name`, payload));
+      if (err) {
+        setLoading(false);
+        setSaved(false);
+      }
 
-    if (res && res.data) {
-      debugger;
-      localStorage.setItem('token', res.data.token);
-      user = useTokenData();
-      setLoading(false);
+      if (res && res.data) {
+        localStorage.setItem('token', res.data.token);
+        setLoading(false);
+        setSaved(true);
+      }
     }
   };
   return (
@@ -66,7 +69,7 @@ const IndexPage: NextPage = (prop) => {
           </div>
         </Container>
       )}
-      {!isLoading && (
+      {!isLoading && !saved && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Typography component="h1" variant="h5">
@@ -96,6 +99,15 @@ const IndexPage: NextPage = (prop) => {
               Save
             </Button>
           </form>
+        </Container>
+      )}
+      {saved && (
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Username saved
+            </Typography>
+          </div>
         </Container>
       )}
     </DefaultLayout>
