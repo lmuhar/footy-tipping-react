@@ -1,13 +1,14 @@
 import { Button, CircularProgress, Container, CssBaseline, TextField, Typography } from '@material-ui/core';
+import { Controller, useForm } from 'react-hook-form';
+import { IUserData, IUserNameUpdate } from '../../models/user-data.model';
+
+import Axios from 'axios';
+import DefaultLayout from '../../layouts/default.layout';
+import { NextPage } from 'next';
 import { makeStyles } from '@material-ui/core';
 import to from 'await-to-js';
-import Axios from 'axios';
-import { NextPage } from 'next';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import useTokenData from '../../custom-hooks/token.data';
-import DefaultLayout from '../../layouts/default.layout';
-import { IUserNameUpdate } from '../../models/user-data.model';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,27 +34,27 @@ type FormValues = {
   newName: string;
 };
 
-const IndexPage: NextPage = (props) => {
-  let user = useTokenData();
-  console.log(user);
+const IndexPage: NextPage = () => {
+  console.log(useTokenData());
+  const [user, setUser] = useState<IUserData>(useTokenData());
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const onSubmit = async (data) => {
     setLoading(true);
-    let payload: IUserNameUpdate = {
+    const payload: IUserNameUpdate = {
       id: user.id,
       ...data,
     };
-    console.log(payload);
     const [err, res] = await to(Axios.post<UserToken>(`/api/user/update-name`, payload));
     if (err) {
       setLoading(false);
     }
 
     if (res && res.data) {
+      debugger;
       localStorage.setItem('token', res.data.token);
-      user = useTokenData();
+      setUser(useTokenData());
       setLoading(false);
     }
   };
