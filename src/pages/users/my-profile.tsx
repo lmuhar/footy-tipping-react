@@ -34,10 +34,9 @@ type FormValues = {
   newName: string;
 };
 
-const IndexPage: NextPage = () => {
-  console.log(useTokenData());
-  const [user, setUser] = useState<IUserData>(useTokenData());
+const IndexPage: NextPage = (prop) => {
   const classes = useStyles();
+  let user = useTokenData();
   const { control, handleSubmit } = useForm<FormValues>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const onSubmit = async (data) => {
@@ -54,7 +53,7 @@ const IndexPage: NextPage = () => {
     if (res && res.data) {
       debugger;
       localStorage.setItem('token', res.data.token);
-      setUser(useTokenData());
+      user = useTokenData();
       setLoading(false);
     }
   };
