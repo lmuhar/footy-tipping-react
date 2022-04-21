@@ -82,7 +82,7 @@ const ViewTipsScreen: React.FunctionComponent<CompProp> = ({ tips }) => {
                 {userTips[key].map((tip) => {
                   const fieldName = `tip${tip.id}`;
                   return (
-                    <Typography variant="body1" key={fieldName} gutterBottom>
+                    <Typography variant="body2" key={fieldName} gutterBottom>
                       <span
                         className={
                           correct(tip, tip?.game.homeTeam?.id)
