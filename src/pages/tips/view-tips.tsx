@@ -20,6 +20,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  header: {
+    paddingBottom: '20px',
+  },
 }));
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
@@ -42,21 +50,23 @@ const IndexPage: NextPage<PageProps> = ({ RoundData }) => {
         </Container>
       )}
       {RoundData && (
-        <Container component="main" maxWidth="xs">
+        <Container className={classes.paper} component="main" maxWidth="xs">
           <CssBaseline />
-          <div className={classes.paper}>
-            <Typography component="h1" variant="h5">
-              View Tips
-            </Typography>
-            <Typography component="h5" variant="h5">
-              <div>Round {RoundData ? RoundData[0]?.roundNumber : ''}</div>
-              <div>
-                <Moment format="DD/MM/YY">{RoundData[0]?.dateStart}</Moment> -{' '}
-                <Moment format="DD/MM/YY">{RoundData[0]?.dateEnd}</Moment>
-              </div>
-            </Typography>
-            <ViewTipsScreen tips={RoundData[0].tips}></ViewTipsScreen>
+          <div className={classes.content}>
+            <div className={classes.header}>
+              <Typography component="h1" variant="h5">
+                View Tips
+              </Typography>
+              <Typography component="h5" variant="h5">
+                <div>Round {RoundData ? RoundData[0]?.roundNumber : ''}</div>
+                <div>
+                  <Moment format="D MMM">{RoundData[0]?.dateStart}</Moment> -{' '}
+                  <Moment format="D MMM">{RoundData[0]?.dateEnd}</Moment>
+                </div>
+              </Typography>
             </div>
+            <ViewTipsScreen tips={RoundData[0].tips}></ViewTipsScreen>
+          </div>
         </Container>
       )}
     </DefaultLayout>

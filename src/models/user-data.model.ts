@@ -11,3 +11,8 @@ export interface IUserTips {
   tips?: any[];
   total?: number;
 }
+
+export interface IUserNameUpdate {
+  id: string;
+  newName: string;
+}
