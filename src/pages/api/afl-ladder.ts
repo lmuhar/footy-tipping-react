@@ -1,8 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import * as cheerio from 'cheerio';
+
+import { NextApiRequest, NextApiResponse } from 'next';
+
+import Axios from 'axios';
 import { IAFLLadder } from '../../models/afl-ladder.model';
 import to from 'await-to-js';
-import Axios from 'axios';
 
 // Creating a service to do the actual logic
 // You can also import this from a page component and use in `getServerSideProps` !
@@ -20,7 +22,7 @@ export async function aflLadderService(): Promise<[Error, IAFLLadder[]]> {
 
   // Alrighty, getting into the good stuff!
   const list: IAFLLadder[] = [];
-
+  let j = 1;
   // Cheerio old chap!
   $('table')
     .find('tr')
@@ -29,7 +31,6 @@ export async function aflLadderService(): Promise<[Error, IAFLLadder[]]> {
       $(elem)
         .find('td')
         .each((t: any, element: any) => {
-          data.order = i;
           if (t === 0) {
             data.name = $(element).text();
           } else if (t === 1) {
@@ -50,10 +51,12 @@ export async function aflLadderService(): Promise<[Error, IAFLLadder[]]> {
             data.points = $(element).text();
           }
         });
-      list.push(data);
+      if (data.name && data.percent) {
+        data.order = j;
+        j++;
+        list.push(data);
+      }
     });
-  list.splice(0, 1);
-  list.splice(8, 1);
 
   // no error, but the response is good!
   return [null, list];
