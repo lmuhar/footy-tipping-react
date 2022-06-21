@@ -3,6 +3,8 @@ import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Button, FormControlLabel, makeStyles, Radio, RadioGroup } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
@@ -59,6 +61,10 @@ type FormValues = {
   tips: [{ tip: string; gameId: string }];
 };
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
   const [err2, AFLLadder] = await aflLadderService();
@@ -81,6 +87,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
   const [indexes, setIndexes] = useState([]);
   const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
+  const [open, setOpen] = React.useState(false);
 
   const getRoundDataFromAPI = async () => {
     setLoading(true);
@@ -145,6 +152,15 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     }
   };
 
+  const handleClose = (event, reason) => {
+    console.log(event);
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
 
@@ -171,10 +187,12 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     await Promise.all(createAllTips)
       .then(() => {
         setLoading(false);
+        setOpen(true);
         setSaved(true);
       })
       .catch(() => {
         setLoading(false);
+        setOpen(false);
         setSaved(false);
       });
   };
@@ -193,89 +211,84 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
           </div>
         </Container>
       )}
-      {!isLoading && !saved && (
+      {!isLoading && (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
               Enter Tips
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-              <div className={classes.form}>
-                <ReactSelect
-                  onChange={handleInputChange}
-                  name="round"
-                  label="Round"
-                  options={RoundData}
-                  getOptionLabel={(item) => `${item.roundNumber}`}
-                  getOptionValue={(item) => item['id']}
-                  control={control}
-                  variant="outlined"
-                  defaultValue=""
-                  value={RoundData?.filter((option) => {
-                    return option.id === selectedRound;
-                  })}
-                  required
-                  fullWidth
-                  isClearable
-                  instanceId="round"
-                  id="round"
-                />
-              </div>
+            {!saved && (
+              <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+                <div className={classes.form}>
+                  <ReactSelect
+                    onChange={handleInputChange}
+                    name="round"
+                    label="Round"
+                    options={RoundData}
+                    getOptionLabel={(item) => `${item.roundNumber}`}
+                    getOptionValue={(item) => item['id']}
+                    control={control}
+                    variant="outlined"
+                    defaultValue=""
+                    value={RoundData?.filter((option) => {
+                      return option.id === selectedRound;
+                    })}
+                    required
+                    fullWidth
+                    isClearable
+                    instanceId="round"
+                    id="round"
+                  />
+                </div>
 
-              {indexes.map((index) => {
-                const fieldName = `tips[${index}]`;
-                return (
-                  <fieldset name={fieldName} key={fieldName}>
-                    <div className={classes.form}>
-                      <label>Game {index + 1}</label>
-                      <div>
-                        <Moment format="DD/MM/YYYY hh:mm a">{game[index].startDateTime}</Moment>
+                {indexes.map((index) => {
+                  const fieldName = `tips[${index}]`;
+                  return (
+                    <fieldset name={fieldName} key={fieldName}>
+                      <div className={classes.form}>
+                        <label>Game {index + 1}</label>
+                        <div>
+                          <Moment format="DD/MM/YYYY hh:mm a">{game[index].startDateTime}</Moment>
+                        </div>
+                        <div>{game[index].location.name}</div>
+                        <section>
+                          <Controller
+                            name={`${fieldName}.tip`}
+                            control={control}
+                            required
+                            defaultValue={game[index]?.tip[0]?.selectedTipId || ''}
+                            as={
+                              <RadioGroup name={`${fieldName}.tip`}>
+                                <FormControlLabel
+                                  value={game[index].homeTeamId}
+                                  control={<Radio />}
+                                  label={game[index].homeTeam.name}
+                                />
+                                <FormControlLabel
+                                  value={game[index].awayTeamId}
+                                  control={<Radio />}
+                                  label={game[index].awayTeam.name}
+                                />
+                              </RadioGroup>
+                            }
+                          />
+                        </section>
                       </div>
-                      <div>{game[index].location.name}</div>
-                      <section>
-                        <Controller
-                          name={`${fieldName}.tip`}
-                          control={control}
-                          required
-                          defaultValue={game[index]?.tip[0]?.selectedTipId || ''}
-                          as={
-                            <RadioGroup name={`${fieldName}.tip`}>
-                              <FormControlLabel
-                                value={game[index].homeTeamId}
-                                control={<Radio />}
-                                label={game[index].homeTeam.name}
-                              />
-                              <FormControlLabel
-                                value={game[index].awayTeamId}
-                                control={<Radio />}
-                                label={game[index].awayTeam.name}
-                              />
-                            </RadioGroup>
-                          }
-                        />
-                      </section>
-                    </div>
-                  </fieldset>
-                );
-              })}
+                    </fieldset>
+                  );
+                })}
 
-              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                Save
-              </Button>
-            </form>
-
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                  Save
+                </Button>
+              </form>
+            )}
             {AFLLadder && AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}
           </div>
-        </Container>
-      )}
-      {saved && (
-        <Container component="main" maxWidth="xs">
-          <div className={classes.paper}>
-            <Typography component="h1" variant="h5">
-              Tips successfully saved
-            </Typography>
-          </div>
+          <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+            <Alert severity="success">Tips successfully saved!</Alert>
+          </Snackbar>
         </Container>
       )}
     </DefaultLayout>
