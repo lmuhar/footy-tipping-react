@@ -18,9 +18,13 @@ import Moment from 'react-moment';
 import { IUserData } from '../../models/user-data.model';
 import useTokenData from '../../custom-hooks/token.data';
 import { ITipCreate } from '../../models/tip.model';
+import AflLadder from '../../components/section/afl-ladder';
+import { IAFLLadder } from '../../models/afl-ladder.model';
+import { aflLadderService } from '../api/afl-ladder';
 
 const fetchGames = (data: IGameByRoundUser) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
+const fetchAFLLadder = () => to(Axios.get<IAFLLadder[]>(`/api/afl-ladder`));
 
 interface PageProps {
   RoundData?: IRound[];
@@ -28,6 +32,7 @@ interface PageProps {
   SelectedRound?: any;
   UserData?: IUserData;
   UserTips?: any;
+  AFLLadder?: IAFLLadder[];
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -56,14 +61,15 @@ type FormValues = {
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
+  const [err2, AFLLadder] = await aflLadderService();
   const GameData = [];
 
-  if (err) return { props: {} };
+  if (err || err2) return { props: {} };
 
-  return { props: { RoundData, GameData } };
+  return { props: { RoundData, GameData, AFLLadder } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) => {
+const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AFLLadder }) => {
   const classes = useStyles();
   const { control, handleSubmit } = useForm<FormValues>();
   const user = useTokenData();
@@ -73,6 +79,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
   const [round, setRound] = useState<IRound[]>(RoundData || null);
   const [game, setGame] = useState<IGame[]>(GameData || null);
   const [indexes, setIndexes] = useState([]);
+  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
   const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
 
   const getRoundDataFromAPI = async () => {
@@ -116,6 +123,18 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
     } else {
       setGame([]);
     }
+  };
+
+  const getLadderDataFromAPI = async () => {
+    setLoading(true);
+
+    const [err, { data: AFLLadder }] = await fetchAFLLadder();
+
+    setLoading(false);
+
+    if (err) setLadder([]);
+
+    setLadder(AFLLadder);
   };
 
   const handleInputChange = (inputValue) => {
@@ -162,6 +181,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
 
   useEffect(() => {
     if (!round) getRoundDataFromAPI();
+    if (!ladder) getLadderDataFromAPI();
   }, []);
 
   return (
@@ -244,6 +264,8 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound }) 
                 Save
               </Button>
             </form>
+
+            {AFLLadder && AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}
           </div>
         </Container>
       )}
