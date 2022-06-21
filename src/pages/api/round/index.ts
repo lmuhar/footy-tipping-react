@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../client';
 
 export async function roundDataService(): Promise<[Error, IRound[]]> {
-  const [err, rounds] = await to(prisma.round.findMany({}));
+  const [err, rounds] = await to(prisma.round.findMany({ orderBy: { dateEnd: 'desc' } }));
 
   if (err) return [new Error('Something went wrong fetching all rounds'), null];
 
