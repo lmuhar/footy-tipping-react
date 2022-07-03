@@ -9,6 +9,7 @@ export async function getLastRoundGames(): Promise<[Error, any]> {
       take: 1,
       include: {
         games: {
+          orderBy: { startDateTime: 'asc' },
           select: {
             id: true,
             homeTeam: true,
