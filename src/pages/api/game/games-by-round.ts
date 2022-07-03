@@ -9,6 +9,7 @@ export async function gameByDataService(data: IGameByRoundUser): Promise<[Error,
   const [err, games] = await to(
     prisma.game.findMany({
       where: { roundId: data.roundId },
+      orderBy: { startDateTime: 'asc' },
       include: {
         homeTeam: { select: { name: true } },
         awayTeam: { select: { name: true } },
