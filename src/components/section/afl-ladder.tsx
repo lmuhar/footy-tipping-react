@@ -1,6 +1,6 @@
 import { useTable } from 'react-table';
-import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import { useMemo } from 'react';
 
 interface CompProp {
   aflData: any[];
@@ -45,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AflLadder: React.FunctionComponent<CompProp> = ({ aflData }) => {
-  const data = React.useMemo(() => aflData, []);
+  const data = useMemo(() => aflData, [aflData]);
   const classes = useStyles();
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'No.',

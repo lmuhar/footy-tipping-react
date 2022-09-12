@@ -55,7 +55,7 @@ const IndexPage: NextPage<PageProps> = ({ LocationData }) => {
   const { control, handleSubmit } = useForm<FormValues>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [location, setLocation] = useState<ILocationNames[]>(LocationData || null);
+  const [location, setLocation] = useState<ILocationNames[]>(LocationData || []);
 
   const getLocationNameDataFromAPI = async () => {
     setLoading(true);
@@ -75,7 +75,7 @@ const IndexPage: NextPage<PageProps> = ({ LocationData }) => {
 
   useEffect(() => {
     if (!location) getLocationNameDataFromAPI();
-  }, []);
+  }, [location]);
 
   const onSubmit = async (data: ILocationNames) => {
     setLoading(true);
@@ -120,7 +120,7 @@ const IndexPage: NextPage<PageProps> = ({ LocationData }) => {
                 id="name"
                 autoComplete="name"
                 autoFocus
-                onChange={([event]) => {
+                onChange={([event]: any[]) => {
                   return event.target.value;
                 }}
               />

@@ -13,10 +13,10 @@ interface token {
 }
 
 export default function useTokenData(): any {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState<userData | null>(null);
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      const decoded: token = jwtDecode(localStorage.getItem('token'));
+      const decoded: token = jwtDecode(localStorage.getItem('token') || '');
       setToken(decoded.user);
     } else {
       setToken(null);

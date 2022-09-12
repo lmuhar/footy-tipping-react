@@ -1,7 +1,6 @@
 import { useTable } from 'react-table';
-import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import _ from 'lodash';
+import { useMemo, useState } from 'react';
 
 interface CompProp {
   userData: any[];
@@ -46,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserLadder: React.FunctionComponent<CompProp> = ({ userData, roundId }) => {
-  const info = [];
+const UserLadder = ({ userData, roundId }: CompProp) => {
+  const [info, setInfo] = useState<any[]>([]);
 
   userData.forEach((user) => {
     let total = 0;
     let lastRound = 0;
-    user.tips.forEach((tip) => {
+    user.tips.forEach((tip: any) => {
       if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
         total = total + 1;
         if (roundId[0].id === tip.game.roundId) {
@@ -61,17 +60,20 @@ const UserLadder: React.FunctionComponent<CompProp> = ({ userData, roundId }) =>
       }
     });
     if (total > 0) {
-      info.push({
-        id: user.id,
-        name: user.username,
-        lastRound: lastRound,
-        total: total,
-      });
+      setInfo([
+        ...info,
+        {
+          id: user.id,
+          name: user.username,
+          lastRound: lastRound,
+          total: total,
+        },
+      ]);
     }
   });
-  const data = React.useMemo(() => _.orderBy(info, 'total', 'desc'), []);
+  const data = useMemo(() => info.sort((a, b) => b.total - a.total), [info]);
   const classes = useStyles();
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Name',
@@ -99,7 +101,7 @@ const UserLadder: React.FunctionComponent<CompProp> = ({ userData, roundId }) =>
           {headerGroups.map((headerGroup) => (
             <tr className={classes.tr} key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th className={classes.th} key={column.header} {...column.getHeaderProps()}>
+                <th className={classes.th} key={column.Header} {...column.getHeaderProps()}>
                   {column.render('Header')}
                 </th>
               ))}

@@ -2,9 +2,7 @@ import { Avatar, CardHeader, Grid, makeStyles } from '@material-ui/core';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import _ from 'lodash';
 
 interface CompProp {
   tips: any;

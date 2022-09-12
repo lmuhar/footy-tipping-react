@@ -34,8 +34,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   return { props: { UserData } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ UserData }) => {
-  const [user, setUser] = useState<IUserData[]>(UserData || null);
+const IndexPage: NextPage<PageProps> = ({ UserData = [] }) => {
+  const [user, setUser] = useState<IUserData[]>(UserData);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const getUserDataFromApi = async () => {
@@ -56,7 +56,7 @@ const IndexPage: NextPage<PageProps> = ({ UserData }) => {
 
   useEffect(() => {
     if (!user) getUserDataFromApi();
-  }, []);
+  }, [user]);
 
   const classes = useStyles();
   return (

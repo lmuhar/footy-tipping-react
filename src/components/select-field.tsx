@@ -1,9 +1,18 @@
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import { OverrideProps } from '@material-ui/core/OverridableComponent';
 import Select from '@material-ui/core/Select';
+import { PropsWithChildren } from 'react';
 import { Controller } from 'react-hook-form';
 
-const ReactHookFormSelect = ({ name, label, control, defaultValue, children, ...props }) => {
+interface Props {
+  name: string;
+  label: string;
+  control: any;
+  defaultValue: any;
+}
+
+const ReactHookFormSelect = ({ name, label, control, defaultValue, children, ...props }: PropsWithChildren<Props>) => {
   const labelId = `${name}-label`;
   return (
     <FormControl {...props}>

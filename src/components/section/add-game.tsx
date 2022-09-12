@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '@material-ui/core/Container';
 import { InputLabel, makeStyles, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -43,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, locationData }) => {
   const classes = useStyles();
-  const [indexes, setIndexes] = React.useState([]);
-  const [counter, setCounter] = React.useState(0);
+  const [indexes, setIndexes] = useState([]);
+  const [counter, setCounter] = useState(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<FormValues>();
 

@@ -1,6 +1,6 @@
 import { Collapse, Divider } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, PropsWithChildren, useState } from 'react';
 
 import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DefaultLayout: FunctionComponent = ({ children }) => {
+const DefaultLayout = ({ children }: PropsWithChildren<{}>) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openNested, setNested] = useState(false);

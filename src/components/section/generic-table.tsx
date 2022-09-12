@@ -1,6 +1,5 @@
 import { useTable } from 'react-table';
 import { makeStyles } from '@material-ui/core';
-import React from 'react';
 
 export interface TableHeader {
   Header: string;

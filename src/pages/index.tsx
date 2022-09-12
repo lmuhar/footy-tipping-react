@@ -38,13 +38,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   return { props: { AFLLadder, UserData, RoundId } };
 };
 
-const IndexPage: NextPage<PageProps> = ({ AFLLadder, UserData, RoundId }) => {
+const IndexPage: NextPage<PageProps> = ({ AFLLadder = [], UserData = [], RoundId = [] }) => {
   // Store the ladder data in state using hooks. We can make use of this later!
   // We will set it null as a default, just in case the props returns nothing; such as a page load without SSR!
   // We not track the loading state too?
-  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
-  const [users, setUsers] = useState<IUserTips[]>(UserData || null);
-  const [roundId, setRoundId] = useState<any[]>(RoundId || null);
+  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || []);
+  const [users, setUsers] = useState<IUserTips[]>(UserData || []);
+  const [roundId, setRoundId] = useState<any[]>(RoundId || []);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   // We can't (or shouldn't) use async functions in useEffect.
@@ -95,19 +95,17 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder, UserData, RoundId }) => {
     if (!ladder) getLadderDataFromAPI();
     if (!users) getUserTipsFromAPI();
     if (!roundId) getLatestRoundId();
-  }, []);
+  }, [ladder, roundId, users]);
 
   return (
     <DefaultLayout>
       {isLoading && <CircularProgress />}
       {!isLoading && (
         <Container>
-          {UserData && UserData.length > 0 && RoundId && RoundId.length > 0 && (
-            <UserLadder userData={UserData} roundId={RoundId} />
-          )}
+          {UserData.length > 0 && RoundId && RoundId.length > 0 && <UserLadder userData={UserData} roundId={RoundId} />}
         </Container>
       )}
-      {!isLoading && <Container>{AFLLadder && AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>}
+      {!isLoading && <Container>{AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>}
     </DefaultLayout>
   );
 };

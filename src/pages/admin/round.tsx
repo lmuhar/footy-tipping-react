@@ -71,7 +71,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
   const { control, handleSubmit } = useForm<FormValues>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [round, setRound] = useState<IRound[]>(RoundData || null);
+  const [round, setRound] = useState<IRound[]>(RoundData || []);
 
   const getRoundDataFromAPI = async () => {
     setLoading(true);
@@ -91,7 +91,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
 
   useEffect(() => {
     if (!round) getRoundDataFromAPI();
-  }, []);
+  }, [round]);
 
   const onSubmit = async (data: IRound) => {
     const request: IRound = {

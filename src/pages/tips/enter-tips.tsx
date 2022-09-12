@@ -1,5 +1,4 @@
 import { NextPage, GetServerSideProps } from 'next';
-import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -23,6 +22,7 @@ import { ITipCreate } from '../../models/tip.model';
 import AflLadder from '../../components/section/afl-ladder';
 import { IAFLLadder } from '../../models/afl-ladder.model';
 import { aflLadderService } from '../api/afl-ladder';
+import { AlertProps } from '@material-ui/lab';
 
 const fetchGames = (data: IGameByRoundUser) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
@@ -61,14 +61,14 @@ type FormValues = {
   tips: [{ tip: string; gameId: string }];
 };
 
-const Alert = (props) => {
+const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
   const [err, RoundData] = await roundDataService();
   const [err2, AFLLadder] = await aflLadderService();
-  const GameData = [];
+  const GameData: any[] = [];
 
   if (err || err2) return { props: {} };
 
@@ -82,12 +82,12 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [saved, setSaved] = useState<boolean>(false);
-  const [round, setRound] = useState<IRound[]>(RoundData || null);
-  const [game, setGame] = useState<IGame[]>(GameData || null);
-  const [indexes, setIndexes] = useState([]);
-  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
-  const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || null);
-  const [open, setOpen] = React.useState(false);
+  const [round, setRound] = useState<IRound[]>(RoundData || []);
+  const [game, setGame] = useState<IGame[]>(GameData || []);
+  const [indexes, setIndexes] = useState<number[]>([]);
+  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || []);
+  const [selectedRound, setSelectedRound] = useState<string>(SelectedRound || []);
+  const [open, setOpen] = useState<boolean>(false);
 
   const getRoundDataFromAPI = async () => {
     setLoading(true);
@@ -105,7 +105,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     }
   };
 
-  const addGame = (number) => {
+  const addGame = (number: number) => {
     let i = 0;
     const index = [];
     while (i < number) {
@@ -115,7 +115,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     setIndexes(index);
   };
 
-  const getGameDataFromAPI = async (body) => {
+  const getGameDataFromAPI = async (body: any) => {
     setLoading(true);
 
     const [err, games] = await fetchGames(body);
@@ -144,7 +144,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     setLadder(AFLLadder);
   };
 
-  const handleInputChange = (inputValue) => {
+  const handleInputChange = (inputValue: any) => {
     if (inputValue && inputValue.id) {
       setSelectedRound(inputValue.id);
       setIndexes([]);
@@ -152,7 +152,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     }
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose = (event: any, reason: string) => {
     console.log(event);
     if (reason === 'clickaway') {
       return;
@@ -161,7 +161,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
     setOpen(false);
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
 
     const req: ITipCreate[] = [];
@@ -200,7 +200,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
   useEffect(() => {
     if (!round) getRoundDataFromAPI();
     if (!ladder) getLadderDataFromAPI();
-  }, []);
+  }, [ladder, round]);
 
   return (
     <DefaultLayout>
@@ -227,10 +227,10 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, GameData, SelectedRound, AF
                     label="Round"
                     options={RoundData}
                     getOptionLabel={(item) => `${item.roundNumber}`}
-                    getOptionValue={(item) => item['id']}
+                    getOptionValue={(item) => item['id'] || ''}
                     control={control}
                     variant="outlined"
-                    defaultValue=""
+                    defaultValue={undefined}
                     value={RoundData?.filter((option) => {
                       return option.id === selectedRound;
                     })}

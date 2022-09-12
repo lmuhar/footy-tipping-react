@@ -59,7 +59,7 @@ const IndexPage: NextPage<PageProps> = ({ TeamData }) => {
   const { control, handleSubmit } = useForm<FormValues>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [team, setTeam] = useState<ITeamNames[]>(TeamData || null);
+  const [team, setTeam] = useState<ITeamNames[]>(TeamData || []);
 
   const getTeamNameDataFromAPI = async () => {
     setLoading(true);
@@ -79,7 +79,7 @@ const IndexPage: NextPage<PageProps> = ({ TeamData }) => {
 
   useEffect(() => {
     if (!team) getTeamNameDataFromAPI();
-  }, []);
+  }, [team]);
 
   const onSubmit = async (data: ITeamNames) => {
     setLoading(true);
