@@ -1,6 +1,7 @@
 import { useTable } from 'react-table';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, TableContainer } from '@material-ui/core';
 import { useMemo, useState } from 'react';
+import { Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot } from '@chakra-ui/react';
 
 interface CompProp {
   userData: any[];
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserLadder = ({ userData, roundId }: CompProp) => {
   const [info, setInfo] = useState<any[]>([]);
+  debugger;
 
   userData.forEach((user) => {
     let total = 0;
@@ -72,68 +74,36 @@ const UserLadder = ({ userData, roundId }: CompProp) => {
     }
   });
   const data = useMemo(() => info.sort((a, b) => b.total - a.total), [info]);
-  const classes = useStyles();
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Name',
-        accessor: 'name',
-      },
-      {
-        Header: 'Last Round',
-        accessor: 'lastRound',
-      },
-      {
-        Header: 'Total',
-        accessor: 'total',
-      },
-    ],
-    [],
-  );
 
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
   return (
-    <div className={classes.paper}>
-      <table className={classes.table} {...getTableProps()}>
-        <thead className={classes.thead}>
-          {headerGroups.map((headerGroup) => {
-            const { key, ...props } = headerGroup.getHeaderGroupProps()
-            return (
-              <tr className={classes.tr} key={key} {...props}>
-                {headerGroup.headers.map((column) => {
-                  const { key, ...props } = headerGroup.getHeaderProps()
-                  return (
-                    <th className={classes.th} key={key} {...props}>
-                      {column.render('Header')}
-                    </th>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            const { key, ...props } = row.getRowProps()
-            return (
-              <tr key={key} {...props} className={classes.tr}>
-                {row.cells.map((cell) => {
-                  const { key, ...props } = cell.getCellProps()
-                  return (
-                    <td className={classes.td} key={key} {...props}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <TableContainer>
+      <Table variant="simple">
+        <TableCaption>Leaderboard</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th isNumeric>Last Round</Th>
+            <Th isNumeric>Total</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((row) => (
+            <Tr key={row.id}>
+              <Td>row.name</Td>
+              <Td isNumeric>row.lastRound</Td>
+              <Td isNumeric>row.total</Td>
+            </Tr>
+          ))}
+        </Tbody>
+        <Tfoot>
+          <Tr>
+            <Th>Name</Th>
+            <Th isNumeric>Last Round</Th>
+            <Th isNumeric>Total</Th>
+          </Tr>
+        </Tfoot>
+      </Table>
+    </TableContainer>
   );
 };
 

@@ -1,37 +1,19 @@
+import { fetchAllUsersTipCount } from '@data';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IUserTips } from '../../../models/user-data.model';
-import { APIResponse } from '../../../utils/types';
-import prisma from '../client';
+import { unknownRequestHandler } from 'src/utils/web';
 
-export async function userTipCount(): Promise<APIResponse<IUserTips[]>> {
-  const [err, users] = await to(
-    prisma.user.findMany({
-      include: {
-        tips: {
-          select: {
-            id: true,
-            selectedTip: true,
-            game: { select: { result: true, roundId: true } },
-          },
-        },
-      },
-    }),
-  );
-
-  if (err) return [new Error("Something wen't wrong fetching all Users"), null];
-
-  if (!users) return [new Error("Something wen't wrong fetching all Users"), null];
-
-  if (Array.isArray(users)) return [null, users];
-
-  return [null, [users]];
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const [err, users] = await userTipCount();
+const fetchUserTipCountHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Fetch All Users Tip count Request');
+  const [err, users] = await to(fetchAllUsersTipCount());
 
   if (err) return res.status(500).json(err);
+  if (!users) return res.status(404).send(null);
 
   return res.status(200).json(users);
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  if (req.method === 'GET') return fetchUserTipCountHandler(req, res);
+  return unknownRequestHandler(req, res);
 }

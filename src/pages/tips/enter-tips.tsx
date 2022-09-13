@@ -21,7 +21,7 @@ import useTokenData from '../../custom-hooks/token.data';
 import { ITipCreate } from '../../models/tip.model';
 import AflLadder from '../../components/section/afl-ladder';
 import { IAFLLadder } from '../../models/afl-ladder.model';
-import { aflLadderService } from '../api/afl-ladder';
+import { aflLadderService } from '../api/ladder';
 import { AlertProps } from '@material-ui/lab';
 
 const fetchGames = (data: IGameByRoundUser) => to(Axios.post<IGame[]>('/api/game/games-by-round', data));

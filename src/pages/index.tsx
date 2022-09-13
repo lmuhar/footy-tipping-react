@@ -7,13 +7,13 @@ import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
 import { IAFLLadder } from '../models/afl-ladder.model';
-import { aflLadderService } from './api/afl-ladder';
+import { aflLadderService } from './api/ladder';
 import { userTipCount } from './api/user/user-tip-count';
 import { IUserTips } from '../models/user-data.model';
 import UserLadder from '../components/section/user-ladder';
 import { latestRoundId } from './api/round/get-latest-round-id';
 
-// Alias of the to(Axtios(...)) as an API method
+// Alias of the to(Axios(...)) as an API method
 const fetchAFLLadder = async () => (await Axios.get<IAFLLadder[]>(`/api/afl-ladder`)).data;
 const fetchUserTips = async () => (await Axios.get<IUserTips[]>('/api/user/user-tip-count')).data;
 const fetchLatestRoundId = async () => (await Axios.get<IUserTips[]>('/api/round/get-latest-round-id')).data;
@@ -128,7 +128,7 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder = [], UserData = [], RoundId
           {UserData.length > 0 && RoundId && RoundId.length > 0 && <UserLadder userData={UserData} roundId={RoundId} />}
         </Container>
       )}
-      {!isLoading && <Container>{AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>}
+      {/* {!isLoading && <Container>{AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>} */}
     </DefaultLayout>
   );
 };

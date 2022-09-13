@@ -1,24 +1,32 @@
-import prisma from '../client';
-import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ILocationNames } from '../../../models/location-name.model';
-import { APIResponse } from '../../../utils/types';
+import { createLocation, fetchAllLocations } from '@data';
+import to from 'await-to-js';
+import { unknownRequestHandler } from 'src/utils/web';
 
-export async function locationDataService(): Promise<APIResponse<ILocationNames[]>> {
-  const [err, locations] = await to(prisma.location.findMany({}));
+const fetchAllLocationsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Fetch All Locations Request');
 
-  if (err) return [new Error('Something went wrong fetching all locations'), null];
+  const [err, locationNames] = await to(fetchAllLocations());
 
-  if (!locations) return [new Error('Something went wrong fetching all locations'), null];
-
-  if (Array.isArray(locations)) return [null, locations];
-
-  return [null, [locations]];
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const [err, locationNames] = await locationDataService();
   if (err) return res.status(500).json(err);
+  if (!locationNames) return res.status(404).send(null);
 
   return res.status(200).json(locationNames);
+};
+
+const createLocationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Create Location Request');
+
+  const [err, location] = await to(createLocation(req.body.name));
+
+  if (err) return res.status(500).json(err);
+  if (!location) return res.status(404).send(null);
+
+  return res.status(200).json(location);
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  if (req.method === 'POST') return createLocationHandler(req, res);
+  if (req.method === 'GET') return fetchAllLocationsHandler(req, res);
+  return unknownRequestHandler(req, res);
 }

@@ -1,33 +1,36 @@
+import { fetchAllUsers, updateUsername } from '@data';
 import to from 'await-to-js';
+import * as jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IUserData } from '../../../models/user-data.model';
-import { APIResponse } from '../../../utils/types';
-import prisma from '../client';
+import { unknownRequestHandler } from 'src/utils/web';
 
-export async function userDataService(): Promise<APIResponse<IUserData[]>> {
-  const [err, users] = await to(
-    prisma.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        role: true,
-      },
-    }),
-  );
+const updateUsernameHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Update Username Request');
 
-  if (err) return [new Error("Something wen't wrong fetching all Users"), null];
+  const { id, newName } = req.body;
+  if (!id || !newName) return res.status(400).send(null);
 
-  if (!users) return [new Error("Something wen't wrong fetching all Users"), null];
+  const [err, user] = await to(updateUsername(id, newName));
 
-  if (Array.isArray(users)) return [null, users];
-
-  return [null, [users]];
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const [err, users] = await userDataService();
   if (err) return res.status(500).json(err);
+  if (!user) return res.status(404).send(null);
+
+  const token = jwt.sign({ user }, String(process.env.SECRET_TOKEN));
+  return res.status(200).json({ token: token });
+};
+
+const fetchAllUsersHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Fetch Users Request');
+  const [err, users] = await to(fetchAllUsers());
+
+  if (err) return res.status(500).json(err);
+  if (!users) return res.status(404).send(null);
 
   return res.status(200).json(users);
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  if (req.method === 'GET') return fetchAllUsersHandler(req, res);
+  if (req.method === 'PUT') return updateUsernameHandler(req, res);
+  return unknownRequestHandler(req, res);
 }

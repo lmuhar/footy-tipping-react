@@ -1,24 +1,35 @@
-import prisma from '../client';
-import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ITeamNames } from '../../../models/team-names.model';
-import { APIResponse } from '../../../utils/types';
+import { createTeamName, fetchAllTeamNames } from '@data';
+import to from 'await-to-js';
+import { unknownRequestHandler } from 'src/utils/web';
 
-export async function teamDataService(): Promise<APIResponse<ITeamNames[]>> {
-  const [err, teamNames] = await to(prisma.teamName.findMany({}));
+const createTeamNameHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Create Team Name Request');
 
-  if (err) return [new Error('Something went wrong fetching all team names'), null];
+  const { name } = req.body;
+  if (!name) res.status(400).send(null);
 
-  if (!teamNames) return [new Error('Something went wrong fetching all team names'), null];
+  const [err, games] = await to(createTeamName(name));
 
-  if (Array.isArray(teamNames)) return [null, teamNames];
+  if (err) return res.status(500).json(err);
+  if (!games) return res.status(404).send(null);
 
-  return [null, [teamNames]];
-}
+  return res.status(200).json(games);
+};
+
+const fetchTeamNamesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.info('Fetch Team Names Request');
+  
+  const [err, names] = await to(fetchAllTeamNames());
+
+  if (err) return res.status(500).json(err);
+  if (!names) return res.status(404).send(null);
+
+  return res.status(200).json(names);
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const [err, teamNames] = await teamDataService();
-  if (err) return res.status(500).json(err);
-
-  return res.status(200).json(teamNames);
+  if (req.method === 'POST') return createTeamNameHandler(req, res);
+  if (req.method === 'GET') return fetchTeamNamesHandler(req, res);
+  return unknownRequestHandler(req, res);
 }

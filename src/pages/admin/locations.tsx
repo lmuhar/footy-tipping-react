@@ -1,5 +1,4 @@
 import { NextPage, GetServerSideProps } from 'next';
-import React from 'react';
 import DefaultLayout from '../../layouts/default.layout';
 import { useForm, Controller } from 'react-hook-form';
 import Button from '@material-ui/core/Button';
