@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createRound, fetchAllRounds, fetchLatestRound } from '@data';
+import { createRound, fetchAllRounds } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const createRoundHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Create Round Request');

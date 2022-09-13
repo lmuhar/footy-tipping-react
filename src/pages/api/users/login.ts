@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { compareSync } from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { fetchUserByEmail } from '@data';
+import { fetchUserByEmail } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const loginUserHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Login Request');

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fetchLadder } from '@data';
+import { fetchLadder } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchLadderHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const [err, ladder] = await to(fetchLadder());

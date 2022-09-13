@@ -1,7 +1,7 @@
-import { createTip, fetchTipsForUserByRound } from '@data';
+import { createTip } from 'data';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const createTipHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Create Tip Request');

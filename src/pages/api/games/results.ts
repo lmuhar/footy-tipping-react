@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { updateGameResult } from '@data';
+import { updateGameResult } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const updateGameResultHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Update Game Result Request');
@@ -15,6 +15,6 @@ const updateGameResultHandler = async (req: NextApiRequest, res: NextApiResponse
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  if (req.method === 'PUT') updateGameResultHandler(req, res)
+  if (req.method === 'PUT') updateGameResultHandler(req, res);
   return unknownRequestHandler(req, res);
 }

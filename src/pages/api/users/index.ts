@@ -1,8 +1,8 @@
-import { fetchAllUsers, updateUsername } from '@data';
+import { fetchAllUsers, updateUsername } from 'data';
 import to from 'await-to-js';
 import * as jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const updateUsernameHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Update Username Request');

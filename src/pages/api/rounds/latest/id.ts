@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fetchLatestRoundId } from '@data';
+import { fetchLatestRoundId } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchLatestRoundIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch Latest Round Ids Request');

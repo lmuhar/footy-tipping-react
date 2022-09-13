@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fetchLatestRoundGames } from '@data';
+import { fetchLatestRoundGames } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchLatestRoundGamesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch Latest Round Games Request');

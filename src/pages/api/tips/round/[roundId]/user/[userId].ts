@@ -1,7 +1,7 @@
-import { fetchTipsForUserByRound } from '@data';
+import { fetchTipsForUserByRound } from 'data';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchTipsForUserByRoundHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch Tips For User By Round Request');

@@ -1,7 +1,7 @@
-import { fetchAllUsersTipCount } from '@data';
+import { fetchAllUsersTipCount } from 'data';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchUserTipCountHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch All Users Tip count Request');

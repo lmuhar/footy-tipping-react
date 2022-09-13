@@ -76,7 +76,9 @@ export const updateUsername = async (id: string, username: string) => {
 export const fetchAllUsersTipCount = async () => {
   const [err, users] = await to(
     prisma.user.findMany({
-      include: {
+      select: {
+        id: true,
+        username: true,
         tips: {
           select: {
             id: true,

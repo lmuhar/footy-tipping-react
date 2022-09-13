@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { createNewUser } from '@data';
+import { createNewUser } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const registerUserHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Register Request');

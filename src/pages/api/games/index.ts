@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createGame, fetchAllGames, fetchGamesForRoundByUser } from '@data';
+import { createGame, fetchAllGames } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const createGameHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Create Game Request');

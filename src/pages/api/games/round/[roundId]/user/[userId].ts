@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createGame, fetchAllGames, fetchGamesForRoundWithTipsUser } from '@data';
+import { fetchGamesForRoundWithTipsUser } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchGamesForRoundWithTipsForUserHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch Game For User & Round Request');

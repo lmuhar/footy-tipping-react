@@ -1,7 +1,7 @@
-import { deleteTip, updateTip } from '@data';
+import { deleteTip, updateTip } from 'data';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const deleteTipHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Delete Tip Request');

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createLocation, fetchAllLocations } from '@data';
+import { createLocation, fetchAllLocations } from 'data';
 import to from 'await-to-js';
-import { unknownRequestHandler } from 'src/utils/web';
+import { unknownRequestHandler } from 'utils/web';
 
 const fetchAllLocationsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Fetch All Locations Request');

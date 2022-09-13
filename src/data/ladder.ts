@@ -1,8 +1,11 @@
 import to from 'await-to-js';
 import axios from 'axios';
 import * as Cheerio from 'cheerio';
+import { get, put } from 'memory-cache';
 
-export interface Ladder {
+const ladderUrl = 'http://www.fanfooty.com.au/game/ladder.php';
+
+export interface Rung {
   order: number;
   name?: string;
   played?: string;
@@ -15,20 +18,25 @@ export interface Ladder {
   points?: string;
 }
 
-export const fetchLadder = async () => {
-  const [err, res] = await to(axios.get<string>('http://www.fanfooty.com.au/game/ladder.php'));
+export type Ladder = Rung[];
 
-  if (err) throw err
+export const fetchLadder = async () => {
+  const cachedLadder = get(ladderUrl);
+  if (cachedLadder) return cachedLadder;
+
+  const [err, res] = await to(axios.get<string>(ladderUrl));
+
+  if (err) throw err;
 
   const htmlString = await res.data;
   const $ = Cheerio.load(htmlString);
 
-  const ladder: Ladder[] = [];
+  const ladder: Ladder = [];
   let j = 1;
   $('table')
     .find('tr')
     .each((_i: any, elem: any) => {
-      const data: Ladder = { order: 0 };
+      const data: Rung = { order: 0 };
       $(elem)
         .find('td')
         .each((t: any, element: any) => {
@@ -59,5 +67,6 @@ export const fetchLadder = async () => {
       }
     });
 
+  put(ladderUrl, ladder, 6 * 1000 * 60 * 60);
   return ladder;
 };
