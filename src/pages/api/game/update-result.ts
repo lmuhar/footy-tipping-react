@@ -1,9 +1,10 @@
 import { to } from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SaveResult } from '../../../models/round.model';
+import { APIResponse } from '../../../utils/types';
 import prisma from '../client';
 
-export async function updateGameResult(req: SaveResult): Promise<[Error, boolean]> {
+export async function updateGameResult(req: SaveResult): Promise<APIResponse<boolean>> {
   if (!req.id || !req.result) return [new Error('Something went wrong updating the record'), null];
 
   const [err, tip] = await to(

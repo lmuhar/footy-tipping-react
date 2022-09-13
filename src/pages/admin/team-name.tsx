@@ -123,7 +123,7 @@ const IndexPage: NextPage<PageProps> = ({ TeamData }) => {
                 id="name"
                 autoComplete="name"
                 autoFocus
-                onChange={([event]) => {
+                onChange={([event]: any[]) => {
                   return event.target.value;
                 }}
               />

@@ -2,8 +2,9 @@ import { IGameCreate } from './../../../models/game.model';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../client';
+import { APIResponse } from '../../../utils/types';
 
-export async function creatGameService(data: IGameCreate): Promise<[Error, IGameCreate]> {
+export async function creatGameService(data: IGameCreate): Promise<APIResponse<IGameCreate>> {
   const { round, homeTeam, awayTeam, location, startDateTime } = data;
 
   if (!homeTeam || !round || !awayTeam || !location || !startDateTime)

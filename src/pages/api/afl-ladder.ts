@@ -5,11 +5,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Axios from 'axios';
 import { IAFLLadder } from '../../models/afl-ladder.model';
 import to from 'await-to-js';
+import { APIResponse } from '../../utils/types';
 
 // Creating a service to do the actual logic
 // You can also import this from a page component and use in `getServerSideProps` !
 // Also created a [err, res] pattern for the service!
-export async function aflLadderService(): Promise<[Error, IAFLLadder[]]> {
+
+export const aflLadderService = async (): Promise<APIResponse<IAFLLadder[]>> => {
   // Lets use Axios! Because it's juicy
   const [err, res] = await to(Axios.get<string>('http://www.fanfooty.com.au/game/ladder.php'));
 

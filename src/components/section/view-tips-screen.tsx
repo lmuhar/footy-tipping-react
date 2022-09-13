@@ -3,9 +3,10 @@ import { Avatar, CardHeader, Grid, makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { ITip } from '../../models/tip.model';
 
 interface CompProp {
-  tips: any;
+  tips: ITip[];
 }
 
 const useStyles = makeStyles(() => ({
@@ -40,17 +41,20 @@ const useStyles = makeStyles(() => ({
 const randomColour = () => {
   const hex = Math.floor(Math.random() * 0xffffff);
   const color = '#' + hex.toString(16);
-
   return color;
 };
 
-const ViewTipsScreen: React.FunctionComponent<CompProp> = ({ tips }) => {
+const ViewTipsScreen = ({ tips }: CompProp) => {
   const classes = useStyles();
-  const sortedTips = _.orderBy(tips, 'game.startDateTime');
-  const userTips = _.groupBy(sortedTips, 'user.username');
+  const sortedTips = tips.sort((a, b) => b.startDateTime.getTime() - a.startDateTime.getTime())
+  const userTips = sortedTips.reduce<Record<string, ITip[]>>((acc, curr) => {
+    if (!acc[curr.user.username]) acc[curr.user.username] = []
+    acc[curr.user.username] = [...acc[curr.user.username], curr]
+    return acc;
+  }, {})
   const keys = Object.keys(userTips);
 
-  const correct = (tip, fieldId) => {
+  const correct = (tip: any, fieldId: string) => {
     if (tip.game.result && tip.game.result.id) {
       return fieldId === tip.selectedTip.id && tip.game.result.id === tip.selectedTip.id;
     }
@@ -83,11 +87,11 @@ const ViewTipsScreen: React.FunctionComponent<CompProp> = ({ tips }) => {
                     <Typography variant="body2" key={fieldName} gutterBottom>
                       <span
                         className={
-                          correct(tip, tip?.game.homeTeam?.id)
+                          correct(tip, tip?.game.homeTeam?.id || '')
                             ? classes.correct
                             : tip?.game.homeTeam?.name === tip?.selectedTip.name
-                            ? classes.selected
-                            : null
+                              ? classes.selected
+                              : undefined
                         }
                       >
                         {tip?.game.homeTeam?.name}
@@ -95,11 +99,11 @@ const ViewTipsScreen: React.FunctionComponent<CompProp> = ({ tips }) => {
                       - V -{' '}
                       <span
                         className={
-                          correct(tip, tip?.game.awayTeam?.id)
+                          correct(tip, tip?.game.awayTeam?.id || '')
                             ? classes.correct
                             : tip?.game.awayTeam?.name === tip?.selectedTip.name
-                            ? classes.selected
-                            : null
+                              ? classes.selected
+                              : undefined
                         }
                       >
                         {tip?.game.awayTeam?.name}

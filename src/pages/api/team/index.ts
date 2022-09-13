@@ -2,8 +2,9 @@ import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ITeamNames } from '../../../models/team-names.model';
+import { APIResponse } from '../../../utils/types';
 
-export async function teamDataService(): Promise<[Error, ITeamNames[]]> {
+export async function teamDataService(): Promise<APIResponse<ITeamNames[]>> {
   const [err, teamNames] = await to(prisma.teamName.findMany({}));
 
   if (err) return [new Error('Something went wrong fetching all team names'), null];

@@ -14,9 +14,9 @@ import UserLadder from '../components/section/user-ladder';
 import { latestRoundId } from './api/round/get-latest-round-id';
 
 // Alias of the to(Axtios(...)) as an API method
-const fetchAFLLadder = () => to(Axios.get<IAFLLadder[]>(`/api/afl-ladder`));
-const fetchUserTips = () => to(Axios.get<IUserTips[]>('/api/user/user-tip-count'));
-const fetchLatestRoundId = () => to(Axios.get<IUserTips[]>('/api/round/get-latest-round-id'));
+const fetchAFLLadder = async () => (await Axios.get<IAFLLadder[]>(`/api/afl-ladder`)).data;
+const fetchUserTips = async () => (await Axios.get<IUserTips[]>('/api/user/user-tip-count')).data;
+const fetchLatestRoundId = async () => (await Axios.get<IUserTips[]>('/api/round/get-latest-round-id')).data;
 
 interface PageProps {
   AFLLadder?: IAFLLadder[];
@@ -35,7 +35,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
   if (err || err2 || err3) return { props: {} };
 
   // If all is good in the good, return the AFLLadder data! Variable is named the same, we can omit the :
-  return { props: { AFLLadder, UserData, RoundId } };
+  return {
+    props: {
+      AFLLadder: JSON.parse(JSON.stringify(AFLLadder)),
+      UserData: JSON.parse(JSON.stringify(UserData)),
+      RoundId,
+    },
+  };
 };
 
 const IndexPage: NextPage<PageProps> = ({ AFLLadder = [], UserData = [], RoundId = [] }) => {
@@ -54,13 +60,16 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder = [], UserData = [], RoundId
     setLoading(true);
 
     // Okay, we need to get some data...
-    const [err, { data: AFLLadder }] = await fetchAFLLadder();
+    const [err, AFLLadder] = await to(fetchAFLLadder());
 
     // We're done, no more loading shenanigans
     setLoading(false);
 
     // We fucked it, lets just set it to be empty
-    if (err) setLadder([]);
+    if (err || !AFLLadder) {
+      setLadder([]);
+      return;
+    }
 
     // Sweet! GO SAINTS!
     setLadder(AFLLadder);
@@ -69,26 +78,40 @@ const IndexPage: NextPage<PageProps> = ({ AFLLadder = [], UserData = [], RoundId
   const getUserTipsFromAPI = async () => {
     setLoading(true);
 
-    const [err, { data: UserData }] = await fetchUserTips();
+    const [err, UserData] = await to(fetchUserTips());
 
     setLoading(false);
 
-    if (err) setUsers([]);
+    if (err || !UserData) {
+      setUsers([]);
+      return;
+    }
+
     setUsers(UserData);
   };
 
   const getLatestRoundId = async () => {
     setLoading(true);
 
-    const [err, { data: RoundId }] = await fetchLatestRoundId();
+    const [err, RoundId] = await to(fetchLatestRoundId());
 
     setLoading(false);
 
-    if (err) setRoundId([]);
+    if (err || !RoundId) {
+      setRoundId([]);
+      return;
+    }
+
     setRoundId(RoundId);
   };
 
   // useEffect with empty [] (dependencies) will trigger on component mount/ page load.
+  useEffect(() => {
+    // Since we shouldn't use async directly, we will just ask the data to be fetched off in it's own time.
+    // If we did await and something wen't wrong we could potentially cause the component to hang. Bad news.
+    getLadderDataFromAPI();
+  }, []);
+
   useEffect(() => {
     // Since we shouldn't use async directly, we will just ask the data to be fetched off in it's own time.
     // If we did await and something wen't wrong we could potentially cause the component to hang. Bad news.

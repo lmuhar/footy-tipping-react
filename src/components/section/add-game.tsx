@@ -42,16 +42,16 @@ const useStyles = makeStyles((theme) => ({
 
 const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, locationData }) => {
   const classes = useStyles();
-  const [indexes, setIndexes] = useState([]);
-  const [counter, setCounter] = useState(0);
+  const [indexes, setIndexes] = useState<number[]>([]);
+  const [counter, setCounter] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<FormValues>();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
     const req: IGameCreate[] = [];
 
-    data.games.forEach((item) => {
+    data.games.forEach((item: any) => {
       req.push({
         homeTeam: item.homeTeam.id,
         awayTeam: item.awayTeam.id,
@@ -79,7 +79,7 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
     setCounter((prevCounter) => prevCounter + 1);
   };
 
-  const removeGame = (index) => () => {
+  const removeGame = (index: number) => () => {
     setIndexes((prevIndexes) => [...prevIndexes.filter((item) => item !== index)]);
     setCounter((prevCounter) => prevCounter - 1);
   };
@@ -106,8 +106,8 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
               name="round"
               label="Round"
               options={roundData}
-              getOptionLabel={(item) => `${item.roundNumber}`}
-              getOptionValue={(item) => item['id']}
+              getOptionLabel={(item: any) => `${item.roundNumber}`}
+              getOptionValue={(item: any) => item['id']}
               control={control}
               value={''}
               variant="outlined"
@@ -129,8 +129,8 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
                     name={`${fieldName}.homeTeam`}
                     label="Home Team"
                     options={teamData}
-                    getOptionLabel={(item) => `${item.name}`}
-                    getOptionValue={(item) => item['id']}
+                    getOptionLabel={(item: any) => `${item.name}`}
+                    getOptionValue={(item: any) => item['id']}
                     control={control}
                     value={''}
                     variant="outlined"
@@ -148,8 +148,8 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
                     name={`${fieldName}.awayTeam`}
                     label="Away Team"
                     options={teamData}
-                    getOptionLabel={(item) => `${item.name}`}
-                    getOptionValue={(item) => item['id']}
+                    getOptionLabel={(item: any) => `${item.name}`}
+                    getOptionValue={(item: any) => item['id']}
                     control={control}
                     value={''}
                     variant="outlined"
@@ -167,8 +167,8 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
                     name={`${fieldName}.location`}
                     label="Location"
                     options={locationData}
-                    getOptionLabel={(item) => `${item.name}`}
-                    getOptionValue={(item) => item['id']}
+                    getOptionLabel={(item: any) => `${item.name}`}
+                    getOptionValue={(item: any) => item['id']}
                     control={control}
                     value={''}
                     variant="outlined"
@@ -196,7 +196,7 @@ const AddGameForm: React.FunctionComponent<CompProp> = ({ roundData, teamData, l
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  onChange={([event]) => {
+                  onChange={([event]: any[]) => {
                     return event.target.value;
                   }}
                 />

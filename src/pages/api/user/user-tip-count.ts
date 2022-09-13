@@ -1,9 +1,10 @@
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { IUserTips } from '../../../models/user-data.model';
+import { APIResponse } from '../../../utils/types';
 import prisma from '../client';
 
-export async function userTipCount(): Promise<[Error, IUserTips[]]> {
+export async function userTipCount(): Promise<APIResponse<IUserTips[]>> {
   const [err, users] = await to(
     prisma.user.findMany({
       include: {

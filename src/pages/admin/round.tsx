@@ -158,7 +158,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={([event]) => {
+                onChange={([event]: any[]) => {
                   return event.target.value;
                 }}
               />
@@ -179,7 +179,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={([event]) => {
+                onChange={([event]: any[]) => {
                   return event.target.value;
                 }}
               />
@@ -187,7 +187,7 @@ const IndexPage: NextPage<PageProps> = ({ RoundData, LocationData, TeamData }) =
                 Save Round
               </Button>
             </form>
-            <AddGameForm roundData={round} locationData={LocationData} teamData={TeamData}></AddGameForm>
+            <AddGameForm roundData={round} locationData={LocationData || []} teamData={TeamData || []} />
             <List component="nav" className={classes.paper}>
               {round.map((d) => (
                 <ListItem button key={d.roundNumber}>

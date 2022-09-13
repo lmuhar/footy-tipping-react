@@ -1,9 +1,10 @@
 import { to } from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ITipCreate } from '../../../models/tip.model';
+import { APIResponse } from '../../../utils/types';
 import prisma from '../client';
 
-export async function updateTipService(req: ITipCreate): Promise<[Error, boolean]> {
+export async function updateTipService(req: ITipCreate): Promise<APIResponse<boolean>> {
   if (!req.id || !req.selectedTip) return [new Error('Something went wrong updating the record'), null];
 
   const [err, tip] = await to(

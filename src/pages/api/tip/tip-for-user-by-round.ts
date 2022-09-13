@@ -2,8 +2,9 @@ import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { IUserTipsRound } from '../../../models/tip.model';
+import { APIResponse } from '../../../utils/types';
 
-export async function tipsByUserRoundService(roundId: string, userId: string): Promise<[Error, IUserTipsRound[]]> {
+export async function tipsByUserRoundService(roundId: string, userId: string): Promise<APIResponse<IUserTipsRound[]>> {
   if (!roundId || !userId) return [new Error('Something went wrong creating the record'), null];
 
   const [err, tips] = await to(

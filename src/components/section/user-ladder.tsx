@@ -98,24 +98,32 @@ const UserLadder = ({ userData, roundId }: CompProp) => {
     <div className={classes.paper}>
       <table className={classes.table} {...getTableProps()}>
         <thead className={classes.thead}>
-          {headerGroups.map((headerGroup) => (
-            <tr className={classes.tr} key={headerGroup.header} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th className={classes.th} key={column.Header} {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
+          {headerGroups.map((headerGroup) => {
+            const { key, ...props } = headerGroup.getHeaderGroupProps()
+            return (
+              <tr className={classes.tr} key={key} {...props}>
+                {headerGroup.headers.map((column) => {
+                  const { key, ...props } = headerGroup.getHeaderProps()
+                  return (
+                    <th className={classes.th} key={key} {...props}>
+                      {column.render('Header')}
+                    </th>
+                  )
+                })}
+              </tr>
+            )
+          })}
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
+            const { key, ...props } = row.getRowProps()
             return (
-              <tr key={row} {...row.getRowProps()} className={classes.tr}>
+              <tr key={key} {...props} className={classes.tr}>
                 {row.cells.map((cell) => {
+                  const { key, ...props } = cell.getCellProps()
                   return (
-                    <td className={classes.td} key={cell.order} {...cell.getCellProps()}>
+                    <td className={classes.td} key={key} {...props}>
                       {cell.render('Cell')}
                     </td>
                   );

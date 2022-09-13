@@ -1,6 +1,5 @@
-import { CssBaseline } from '@material-ui/core';
+import { Container, CssBaseline } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
-import { Container } from 'next/app';
 import DefaultLayout from '../../layouts/default.layout';
 import { makeStyles } from '@material-ui/core';
 import { IUserData } from '../../models/user-data.model';

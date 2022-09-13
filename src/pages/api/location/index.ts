@@ -2,8 +2,9 @@ import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ILocationNames } from '../../../models/location-name.model';
+import { APIResponse } from '../../../utils/types';
 
-export async function locationDataService(): Promise<[Error, ILocationNames[]]> {
+export async function locationDataService(): Promise<APIResponse<ILocationNames[]>> {
   const [err, locations] = await to(prisma.location.findMany({}));
 
   if (err) return [new Error('Something went wrong fetching all locations'), null];

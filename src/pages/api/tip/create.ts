@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import to from 'await-to-js';
 import prisma from '../client';
 import { ITipCreate } from '../../../models/tip.model';
+import { APIResponse } from '../../../utils/types';
 
-export async function createTipsService(data: ITipCreate): Promise<[Error, ITipCreate]> {
+export async function createTipsService(data: ITipCreate): Promise<APIResponse<ITipCreate>> {
   const { round, selectedTip, user, game } = data;
   if (!data) return [new Error('Something went wrong creating the team'), null];
 

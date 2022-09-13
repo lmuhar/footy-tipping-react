@@ -1,8 +1,9 @@
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { APIResponse } from '../../../utils/types';
 import prisma from '../client';
 
-export async function getLastRoundGames(): Promise<[Error, any]> {
+export async function getLastRoundGames(): Promise<APIResponse<any>> {
   const [err, round] = await to(
     prisma.round.findMany({
       orderBy: { dateEnd: 'desc' },

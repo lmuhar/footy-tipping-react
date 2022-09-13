@@ -16,7 +16,7 @@ export interface ViewGame {
   homeTeam: ViewTeam;
   awayTeam: ViewTeam;
   id: string;
-  selectedTip;
+  selectedTip: any;
 }
 
 export interface ViewTeam {

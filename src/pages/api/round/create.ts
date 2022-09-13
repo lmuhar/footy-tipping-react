@@ -2,8 +2,9 @@ import { IRound } from './../../../models/round.model';
 import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { APIResponse } from '../../../utils/types';
 
-export async function createRoundService(data: IRound): Promise<[Error, IRound]> {
+export async function createRoundService(data: IRound): Promise<APIResponse<IRound>> {
   if (!data.roundNumber || !data.dateStart || !data.dateEnd)
     return [new Error('Something went wrong creating the round'), null];
 

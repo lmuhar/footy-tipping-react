@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import to from 'await-to-js';
 import prisma from '../client';
 import { ITipDelete } from '../../../models/tip.model';
+import { APIResponse } from '../../../utils/types';
 
-export async function deleteTipService(data: ITipDelete): Promise<[Error, ITipDelete]> {
+export async function deleteTipService(data: ITipDelete): Promise<APIResponse<ITipDelete>> {
   const { id } = data;
   if (!data) return [new Error('Something went wrong creating the team'), null];
 

@@ -1,8 +1,9 @@
 import prisma from '../client';
 import to from 'await-to-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { APIResponse } from '../../../utils/types';
 
-export async function gameDataService(): Promise<[Error, any[]]> {
+export async function gameDataService(): Promise<APIResponse<any[]>> {
   const [err, games] = await to(
     prisma.game.findMany({
       include: {
