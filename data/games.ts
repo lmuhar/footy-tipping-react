@@ -23,7 +23,7 @@ export const fetchAllGames = async () => {
   return games;
 };
 
-export const fetchGamesForRoundByUser = async (roundId: string, userId: string) => {
+export const fetchGamesForRoundWithTipsUser = async (roundId: string, userId: string) => {
   const [err, games] = await to(
     prisma.game.findMany({
       where: { roundId },

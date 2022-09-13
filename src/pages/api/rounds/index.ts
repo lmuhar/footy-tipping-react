@@ -6,7 +6,10 @@ import { unknownRequestHandler } from 'src/utils/web';
 const createRoundHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Create Round Request');
 
-  const [err, round] = await to(createRound(req.body.roundNumber, req.body.dateStart, req.body.dateEnd));
+  const { roundNumber, dateStart, dateEnd } = req.body;
+  if (!roundNumber || !dateStart || !dateEnd) return res.status(400).send(null);
+
+  const [err, round] = await to(createRound(parseInt(roundNumber), new Date(dateStart), new Date(dateEnd)));
 
   if (err) return res.status(500).json(err);
   if (!round) return res.status(404).send(null);

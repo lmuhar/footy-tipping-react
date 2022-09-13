@@ -12,7 +12,7 @@ import { ILocationNames } from '../../models/location-name.model';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
-import { locationDataService } from './../api/location';
+import { locationDataService } from '../api/locations';
 import GenericTable from '../../components/section/generic-table';
 
 const fetchLocations = () => to(Axios.get<ILocationNames[]>('/api/location'));

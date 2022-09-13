@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import { IUserData } from '../../models/user-data.model';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
-import { userDataService } from './../api/user';
+import { userDataService } from '../api/users';
 import to from 'await-to-js';
 import Axios from 'axios';
 import GenericTable from '../../components/section/generic-table';

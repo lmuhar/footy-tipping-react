@@ -17,6 +17,9 @@ const fetchAllLocationsHandler = async (req: NextApiRequest, res: NextApiRespons
 const createLocationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.info('Create Location Request');
 
+  const { name } = req.body;
+  if (!name) return res.status(400).send(null);
+
   const [err, location] = await to(createLocation(req.body.name));
 
   if (err) return res.status(500).json(err);

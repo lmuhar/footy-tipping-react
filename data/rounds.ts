@@ -83,11 +83,11 @@ export const fetchLatestRoundGames = async () => {
   if (err) throw err;
 
   if (!round) {
-    console.error(`failed to fetch rounds`);
+    console.error(`Failed to fetch latest round games`);
     return null;
   }
 
-  return round;
+  return round.games;
 };
 
 export const createRound = async (roundNumber: number, dateStart: Date, dateEnd: Date) => {
@@ -95,8 +95,8 @@ export const createRound = async (roundNumber: number, dateStart: Date, dateEnd:
     prisma.round.create({
       data: {
         roundNumber,
-        dateStart,
-        dateEnd,
+        dateStart: new Date(dateStart),
+        dateEnd: new Date(dateEnd),
       },
     }),
   );

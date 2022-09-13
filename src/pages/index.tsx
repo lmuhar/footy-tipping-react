@@ -8,7 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useEffect, useState } from 'react';
 import { IAFLLadder } from '../models/afl-ladder.model';
 import { aflLadderService } from './api/ladder';
-import { userTipCount } from './api/user/user-tip-count';
+import { userTipCount } from './api/users/tips';
 import { IUserTips } from '../models/user-data.model';
 import UserLadder from '../components/section/user-ladder';
 import { latestRoundId } from './api/round/get-latest-round-id';

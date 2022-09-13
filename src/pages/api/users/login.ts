@@ -17,7 +17,7 @@ const loginUserHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!user) return res.status(403).send(null);
 
   const isMatch = compareSync(password, user.password);
-  if (!isMatch) return res.status(403).send(null);
+  if (!isMatch) return res.status(401).send(null);
 
   const token = jwt.sign({ user }, String(process.env.SECRET_TOKEN));
   return res.status(200).json({ token: token });

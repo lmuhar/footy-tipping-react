@@ -21,8 +21,8 @@ import Divider from '@material-ui/core/Divider';
 import AddGameForm from '../../components/section/add-game';
 import { ILocationNames } from '../../models/location-name.model';
 import { ITeamNames } from '../../models/team-names.model';
-import { teamDataService } from '../api/team';
-import { locationDataService } from '../api/location';
+import { teamDataService } from '../api/teams';
+import { locationDataService } from '../api/locations';
 
 const fetchRounds = () => to(Axios.get<IRound[]>('/api/round'));
 

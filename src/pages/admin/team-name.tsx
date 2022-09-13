@@ -13,7 +13,7 @@ import { ITeamNames } from '../../models/team-names.model';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 import Axios from 'axios';
-import { teamDataService } from './../api/team';
+import { teamDataService } from '../api/teams';
 import GenericTable from '../../components/section/generic-table';
 
 const fetchTeams = () => to(Axios.get<ITeamNames[]>('/api/team'));
