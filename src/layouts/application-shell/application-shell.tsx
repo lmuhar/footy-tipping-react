@@ -7,13 +7,11 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
   Heading,
   HStack,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -22,13 +20,21 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import NextLink from 'next/link';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import useTokenData from 'custom-hooks/useTokenData.hook';
+import { useRouter } from 'next/router';
 
 const Navigation = () => {
+  const { asPath, push } = useRouter();
+  const { user, logout } = useTokenData();
   const isDesktop = useBreakpointValue({ base: false, lg: true });
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    onClose();
+  }, [asPath, onClose]);
 
   return (
     <>
@@ -42,7 +48,7 @@ const Navigation = () => {
                     Footy Tipping 2022 🏉
                   </Heading>
                 </NextLink>
-                {isDesktop && (
+                {isDesktop && user && (
                   <>
                     <Menu variant="solid">
                       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -65,16 +71,24 @@ const Navigation = () => {
               <HStack spacing={4}>
                 {isDesktop && (
                   <>
-                    <NextLink href="/login" passHref>
-                      <Button as="a">Log in</Button>
-                    </NextLink>
-                    <Button as="a">Log out</Button>
-                    <NextLink href="/" passHref>
-                      <Button as="a">Register</Button>
-                    </NextLink>
-                    <NextLink href="/me" passHref>
-                      <Button as="a">My Profile</Button>
-                    </NextLink>
+                    {user && (
+                      <>
+                        <NextLink href="/me" passHref>
+                          <Button as="a">My Profile</Button>
+                        </NextLink>
+                        <Button onClick={logout}>Log out</Button>
+                      </>
+                    )}
+                    {!user && (
+                      <>
+                        <NextLink href="/login" passHref>
+                          <Button as="a">Log in</Button>
+                        </NextLink>
+                        <NextLink href="/" passHref>
+                          <Button as="a">Register</Button>
+                        </NextLink>
+                      </>
+                    )}
                   </>
                 )}
                 {!isDesktop && <Button onClick={onOpen}>Open Menu</Button>}
@@ -104,43 +118,55 @@ const Navigation = () => {
                 </VStack>
               </ButtonGroup>
               {/* Tips Menu */}
-              <Heading size="md">Tips</Heading>
-              <ButtonGroup variant="ghost" w="full">
-                <VStack w="full">
-                  <NextLink href="/tips" passHref>
-                    <Button as="a" w="full" justifyContent="flex-start">
-                      View Tips
-                    </Button>
-                  </NextLink>
-                  <NextLink href="/tips/enter" passHref>
-                    <Button as="a" w="full" justifyContent="flex-start">
-                      Enter Tips
-                    </Button>
-                  </NextLink>
-                </VStack>
-              </ButtonGroup>
+              {user && (
+                <>
+                  <Heading size="md">Tips</Heading>
+                  <ButtonGroup variant="ghost" w="full">
+                    <VStack w="full">
+                      <NextLink href="/tips" passHref>
+                        <Button as="a" w="full" justifyContent="flex-start">
+                          View Tips
+                        </Button>
+                      </NextLink>
+                      <NextLink href="/tips/enter" passHref>
+                        <Button as="a" w="full" justifyContent="flex-start">
+                          Enter Tips
+                        </Button>
+                      </NextLink>
+                    </VStack>
+                  </ButtonGroup>
+                </>
+              )}
               {/* Account Menu */}
               <Heading size="md">Account</Heading>
               <ButtonGroup variant="ghost" w="full">
                 <VStack w="full">
-                  <NextLink href="/login" passHref>
-                    <Button as="a" w="full" justifyContent="flex-start">
-                      Log in
-                    </Button>
-                  </NextLink>
-                  <Button as="a" w="full" justifyContent="flex-start">
-                    Log out
-                  </Button>
-                  <NextLink href="/" passHref>
-                    <Button as="a" w="full" justifyContent="flex-start">
-                      Register
-                    </Button>
-                  </NextLink>
-                  <NextLink href="/me" passHref>
-                    <Button as="a" w="full" justifyContent="flex-start">
-                      My Profile
-                    </Button>
-                  </NextLink>
+                  {!user && (
+                    <>
+                      <NextLink href="/login" passHref>
+                        <Button as="a" w="full" justifyContent="flex-start">
+                          Log in
+                        </Button>
+                      </NextLink>
+                      <NextLink href="/" passHref>
+                        <Button as="a" w="full" justifyContent="flex-start">
+                          Register
+                        </Button>
+                      </NextLink>
+                    </>
+                  )}
+                  {user && (
+                    <>
+                      <NextLink href="/me" passHref>
+                        <Button as="a" w="full" justifyContent="flex-start">
+                          My Profile
+                        </Button>
+                      </NextLink>
+                      <Button as="a" w="full" justifyContent="flex-start" onClick={logout}>
+                        Log out
+                      </Button>
+                    </>
+                  )}
                 </VStack>
               </ButtonGroup>
             </VStack>
