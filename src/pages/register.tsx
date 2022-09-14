@@ -19,8 +19,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 
-interface LoginFormInputs {
+interface RegisterFormInputs {
   email: string;
+  username: string;
   password: string;
 }
 
@@ -28,26 +29,26 @@ const LoginPage: NextPage = () => {
   const { user } = useTokenData();
   const { push } = useRouter();
 
-  const [loginError, setLoginError] = useState<boolean>(false);
+  const [registerError, setRegisterError] = useState<boolean>(false);
 
-  const loginMutation = useMutation(async (input: LoginFormInputs) => {
-    return await axios.post('/api/users/login', input);
+  const registerMutation = useMutation(async (input: RegisterFormInputs) => {
+    return await axios.post('/api/users/register', input);
   });
 
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>();
+  } = useForm<RegisterFormInputs>();
 
-  const onSubmit = (input: LoginFormInputs) => {
-    setLoginError(false);
-    loginMutation.mutateAsync(input, {
+  const onSubmit = (input: RegisterFormInputs) => {
+    setRegisterError(false);
+    registerMutation.mutateAsync(input, {
       onSuccess: (res) => {
         localStorage.setItem('token', res.data.token);
         push('/');
       },
-      onError: () => setLoginError(true),
+      onError: () => setRegisterError(true),
     });
   };
 
@@ -61,8 +62,8 @@ const LoginPage: NextPage = () => {
         {/*  Hero */}
         <Stack spacing="6">
           <Stack spacing="3" textAlign="center">
-            <Heading size="md">Log in to your account</Heading>
-            <Text color="muted">There are tips to be made</Text>
+            <Heading size="md">Register for an account</Heading>
+            <Text color="muted">Start tipping with friends today</Text>
           </Stack>
         </Stack>
 
@@ -76,6 +77,22 @@ const LoginPage: NextPage = () => {
               type="email"
               placeholder="Enter your email"
               {...register('email', {
+                required: 'This is required',
+
+                minLength: { value: 5, message: 'Minimum length should be 5' },
+              })}
+            />
+            <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+          </FormControl>
+
+          {/* Username */}
+          <FormControl isInvalid={!!errors.username}>
+            <FormLabel htmlFor="username">Username</FormLabel>
+            <Input
+              id="username"
+              type="username"
+              placeholder="Choose a memorable username"
+              {...register('username', {
                 required: 'This is required',
 
                 minLength: { value: 5, message: 'Minimum length should be 5' },
@@ -102,9 +119,9 @@ const LoginPage: NextPage = () => {
             <Button colorScheme="blue" isLoading={isSubmitting} type="submit">
               Sign in
             </Button>
-            {loginError && (
+            {registerError && (
               <Text color="red.500" fontSize="sm" textAlign="center">
-                Oops! Something went wrong trying to log in. Try again shortly.
+                Oops! Something went wrong trying to register your account. Try again shortly.
               </Text>
             )}
           </Stack>
@@ -113,11 +130,11 @@ const LoginPage: NextPage = () => {
         {/* Register */}
         <HStack spacing="1" justify="center">
           <Text fontSize="sm" color="muted">
-            Don&apos;t have an account?
+            Already have an account?
           </Text>
-          <NextLink href="/register" passHref>
+          <NextLink href="/login" passHref>
             <Button as="a" variant="link" colorScheme="blue" size="sm">
-              Sign up
+              Log in
             </Button>
           </NextLink>
         </HStack>

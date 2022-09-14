@@ -84,7 +84,7 @@ const Navigation = () => {
                         <NextLink href="/login" passHref>
                           <Button as="a">Log in</Button>
                         </NextLink>
-                        <NextLink href="/" passHref>
+                        <NextLink href="/register" passHref>
                           <Button as="a">Register</Button>
                         </NextLink>
                       </>
@@ -148,7 +148,7 @@ const Navigation = () => {
                           Log in
                         </Button>
                       </NextLink>
-                      <NextLink href="/" passHref>
+                      <NextLink href="/register" passHref>
                         <Button as="a" w="full" justifyContent="flex-start">
                           Register
                         </Button>
