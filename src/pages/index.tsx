@@ -1,6 +1,5 @@
 import to from 'await-to-js';
 import { GetServerSideProps, NextPage } from 'next';
-import DefaultLayout from '../layouts/default.layout';
 import { fetchAllUsersTipCount, fetchLadder, fetchLatestRoundId, Ladder } from 'data';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
@@ -11,18 +10,16 @@ import {
   Th,
   Tbody,
   Td,
-  Tfoot,
   TableContainer,
   Table,
-  Box,
   Spinner,
   Stack,
   Center,
-  Container,
   VStack,
   Divider,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
+import { ApplicationShell } from 'layouts/application-shell';
 
 const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string }) => {
   const { data: usersWithTips, isLoading: isLoadingUsersWithTips } = useQuery(
@@ -164,15 +161,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (_context
 
 const IndexPage: NextPage<PageProps> = (props) => {
   return (
-    <DefaultLayout>
-      <Container mt="8" minW="sm" px="4">
-        <VStack spacing={8}>
-          <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
-          <Divider />
-          <AFLLadder initialLadder={props.ladder} />
-        </VStack>
-      </Container>
-    </DefaultLayout>
+    <ApplicationShell>
+      <VStack spacing={8}>
+        <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
+        <Divider />
+        <AFLLadder initialLadder={props.ladder} />
+      </VStack>
+    </ApplicationShell>
   );
 };
 
