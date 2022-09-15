@@ -19,6 +19,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
+import { CreateRoundForm } from 'components/forms/create-round-form';
+import { CreateLocationForm } from 'components/forms/create-location-form';
 
 interface UpdateProfileInputs {
   username: string;
@@ -58,58 +60,14 @@ const LoginPage: NextPage = () => {
 
   return (
     <ApplicationShell>
-      <Card>
-        <Stack spacing="8">
-          {/*  Hero */}
-          <Stack spacing="6">
-            <Stack spacing="3" textAlign="center">
-              <Heading size="md">Hey, {user?.username}</Heading>
-              <Text color="muted">Did you want to change your username?</Text>
-            </Stack>
-          </Stack>
-
-          {/*  Form */}
-          <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing="5">
-            {/* Username */}
-            <FormControl isInvalid={!!errors.username}>
-              <FormLabel htmlFor="email">Username</FormLabel>
-              <Input
-                id="username"
-                placeholder="Enter a new username"
-                {...register('username', {
-                  required: 'This is required',
-
-                  minLength: { value: 5, message: 'Minimum length should be 5' },
-                })}
-              />
-              <FormErrorMessage>{errors.username && errors.username.message}</FormErrorMessage>
-            </FormControl>
-
-            <Stack spacing="4">
-              <Button colorScheme="blue" isLoading={isSubmitting} type="submit">
-                Update
-              </Button>
-              {updateError && (
-                <Text color="red.500" fontSize="sm" textAlign="center">
-                  Oops! Something went wrong. Try again shortly.
-                </Text>
-              )}
-            </Stack>
-          </Stack>
-
-          {/* Register */}
-          <HStack spacing="1" justify="center">
-            <Text fontSize="sm" color="muted">
-              Don&apos;t have an account?
-            </Text>
-            <NextLink href="/register" passHref>
-              <Button as="a" variant="link" colorScheme="blue" size="sm">
-                Sign up
-              </Button>
-            </NextLink>
-          </HStack>
-        </Stack>
-      </Card>
+      <Stack spacing={12}>
+        <Card>
+          <CreateRoundForm />
+        </Card>
+        <Card>
+          <CreateLocationForm />
+        </Card>
+      </Stack>
     </ApplicationShell>
   );
 };

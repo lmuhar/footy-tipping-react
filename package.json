@@ -10,7 +10,8 @@
     "lint:check": "next lint",
     "lint:fix": "next lint --fix",
     "format:check": "prettier .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "db:deploy": "prisma migrate deploy && prisma db seed"
   },
   "keywords": [],
   "author": "",
