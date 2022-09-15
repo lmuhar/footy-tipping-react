@@ -11,7 +11,6 @@ const UserList = () => {
 
   const handleRoundSelect: ChangeEventHandler<HTMLSelectElement> = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
     setRoundId(e.target.value);
   };
 

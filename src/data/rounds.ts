@@ -94,6 +94,39 @@ export const fetchLatestRoundWithGames = async () => {
   return round;
 };
 
+export const fetchRoundsWithGamesForUser = async (userId: string) => {
+  const [err, round] = await to(
+    prisma.round.findMany({
+      orderBy: { dateEnd: 'desc' },
+      select: {
+        id: true,
+        roundNumber: true,
+        dateStart: true,
+        dateEnd: true,
+        games: {
+          orderBy: { startDateTime: 'desc' },
+          select: {
+            id: true,
+            homeTeam: true,
+            awayTeam: true,
+            result: true,
+            tip: { where: { userId }}
+          },
+        },
+      },
+    }),
+  );
+
+  if (err) throw err;
+
+  if (!round) {
+    console.error(`Failed to fetch latest round games`);
+    return null;
+  }
+
+  return round;
+};
+
 export const createRound = async (roundNumber: number, dateStart: Date, dateEnd: Date) => {
   const [err, round] = await to(
     prisma.round.create({

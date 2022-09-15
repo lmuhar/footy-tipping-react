@@ -60,6 +60,46 @@ export const updateTip = async (id: string, selectedTipId: string) => {
   return tip;
 };
 
+export const upsertTip = async (roundId: string, selectedTipId: string, userId: string, gameId: string) => {
+  const [foundTipErr, foundTip] = await to(
+    prisma.tip.findFirst({
+      where: { userId, AND: { gameId } },
+      select: { id: true }
+    }),
+  );
+
+  if (foundTipErr) throw foundTipErr;
+
+  if (!foundTip) {
+    console.error(new Error(`No tip found to update`));
+    return null;
+  }
+
+  const [err, tip] = await to(
+    prisma.tip.upsert({
+      where: { id: foundTip.id },
+      create: {
+        round: { connect: { id: roundId } },
+        selectedTip: { connect: { id: selectedTipId } },
+        user: { connect: { id: userId } },
+        game: { connect: { id: gameId } },
+      },
+      update: {
+        selectedTip: { connect: { id: selectedTipId } },
+      },
+    }),
+  );
+
+  if (err) throw err;
+
+  if (!tip) {
+    console.error(new Error(`No tip updated to return`));
+    return null;
+  }
+
+  return tip;
+};
+
 export const fetchTipsForUserByRound = async (roundId: string, userId: string) => {
   const [err, tips] = await to(
     prisma.tip.findMany({
