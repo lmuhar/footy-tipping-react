@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Avatar,
   Center,
   Spinner,
   Stack,
@@ -14,9 +13,10 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { format, parseISO } from 'date-fns';
 
-const UserList = () => {
-  const { data, isLoading } = useQuery(['users'], async () => (await axios.get('/api/users')).data);
+const RoundList = () => {
+  const { data, isLoading } = useQuery(['rounds'], async () => (await axios.get('/api/rounds')).data);
 
   return (
     <Stack>
@@ -30,21 +30,20 @@ const UserList = () => {
       {data && (
         <TableContainer borderRadius="md" overflow="hidden" w="full">
           <Table position="relative">
-            <TableCaption>Users</TableCaption>
+            <TableCaption>Rounds</TableCaption>
             <Thead>
               <Tr>
-                <Th>Username</Th>
-                <Th>Email</Th>
+                <Th isNumeric>No.</Th>
+                <Th>Start</Th>
+                <Th>End</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((user: any) => (
-                <Tr key={user.username}>
-                  <Td display="flex" alignItems="center">
-                    <Avatar name={user.username} size="xs" mr="2" />
-                    {user.username}
-                  </Td>
-                  <Td>{user.email}</Td>
+              {data.map((round: any) => (
+                <Tr key={round.id}>
+                  <Td isNumeric>{round.roundNumber}</Td>
+                  <Td>{format(parseISO(round.dateStart), "dd/MM/yyyy")}</Td>
+                  <Td>{format(parseISO(round.dateEnd), "dd/MM/yyyy")}</Td>
                 </Tr>
               ))}
             </Tbody>
@@ -55,4 +54,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default RoundList;

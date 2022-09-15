@@ -17,7 +17,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -27,7 +27,9 @@ interface CreateRoundInputs {
   dateEnd: Date;
 }
 
-const LoginPage: NextPage = () => {
+const CreateRoundForm = () => {
+  const queryClient = useQueryClient()
+
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
@@ -55,6 +57,7 @@ const LoginPage: NextPage = () => {
           isClosable: true,
           position: 'bottom-left'
         });
+        queryClient.invalidateQueries(['rounds'])
       },
       onError: () => setSubmitError(true),
     });
@@ -63,13 +66,12 @@ const LoginPage: NextPage = () => {
   return (
     <Stack spacing="8">
       <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing="5">
-        <Heading size="md">Create Round</Heading>
-        <Divider />
         {/* Round Number */}
         <FormControl isInvalid={!!errors.roundNumber}>
-          <FormLabel htmlFor="email">Round Number</FormLabel>
+          <FormLabel htmlFor="round-number">Round Number</FormLabel>
           <NumberInput>
             <NumberInputField
+              id="round-number"
               {...register('roundNumber', {
                 valueAsNumber: true,
                 value: 0,
@@ -85,9 +87,9 @@ const LoginPage: NextPage = () => {
 
         {/* Date Start */}
         <FormControl isInvalid={!!errors.dateStart}>
-          <FormLabel htmlFor="email">Date Start</FormLabel>
+          <FormLabel htmlFor="date-start">Date Start</FormLabel>
           <Input
-            id="username"
+            id="date-start"
             type="date"
             {...register('dateStart', {
               required: 'This is required',
@@ -98,9 +100,9 @@ const LoginPage: NextPage = () => {
 
         {/* Date End */}
         <FormControl isInvalid={!!errors.dateEnd}>
-          <FormLabel htmlFor="email">Date End</FormLabel>
+          <FormLabel htmlFor="end-start">Date End</FormLabel>
           <Input
-            id="username"
+            id="end-start"
             type="date"
             {...register('dateEnd', {
               required: 'This is required',
@@ -125,4 +127,4 @@ const LoginPage: NextPage = () => {
   );
 };
 
-export default LoginPage;
+export default CreateRoundForm;

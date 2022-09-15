@@ -5,10 +5,10 @@ export const fetchAllGames = async () => {
   const [err, games] = await to(
     prisma.game.findMany({
       include: {
-        homeTeam: { select: { name: true } },
-        awayTeam: { select: { name: true } },
-        location: { select: { name: true } },
-        result: { select: { name: true } },
+        homeTeam: { select: { id: true, name: true } },
+        awayTeam: { select: { id: true, name: true } },
+        location: { select: { id: true, name: true } },
+        result: { select: { id: true, name: true } },
       },
     }),
   );

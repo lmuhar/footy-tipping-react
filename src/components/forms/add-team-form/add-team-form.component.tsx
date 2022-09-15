@@ -15,17 +15,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 
-interface CreateLocationInputs {
+interface AddTeamInputs {
   name: string;
 }
 
-const CreateLocationForm = () => {
+const AddTeamForm = () => {
   const queryClient = useQueryClient()
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = useMutation(async (input: CreateLocationInputs) => {
-    return await axios.post(`/api/locations`, input);
+  const updateMutation = useMutation(async (input: AddTeamInputs) => {
+    return await axios.post(`/api/teams`, input);
   });
 
   const {
@@ -33,22 +33,22 @@ const CreateLocationForm = () => {
     register,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<CreateLocationInputs>();
+  } = useForm<AddTeamInputs>();
 
-  const onSubmit = (input: CreateLocationInputs) => {
+  const onSubmit = (input: AddTeamInputs) => {
     setSubmitError(false);
     updateMutation.mutateAsync(input, {
       onSuccess: () => {
         reset();
         toast({
-          title: 'Location created.',
-          description: "We've created a new location.",
+          title: 'Team Name created.',
+          description: "We've created a new team name.",
           status: 'success',
           duration: 5000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'bottom-left'
         });
-        queryClient.invalidateQueries(['locations'])
+        queryClient.invalidateQueries(['teams'])
       },
       onError: () => setSubmitError(true),
     });
@@ -57,24 +57,24 @@ const CreateLocationForm = () => {
   return (
     <Stack spacing="8">
       <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing="5">
-        <Heading size="md">Create Location</Heading>
+        <Heading size="md">Create Team</Heading>
         <Divider />
         <FormControl isInvalid={!!errors.name}>
-          <FormLabel htmlFor="location">Location Name</FormLabel>
+          <FormLabel htmlFor="team-name">Team Name</FormLabel>
           <Input
-            id="location"
-            type="text"
-            placeholder='MCG'
+            id="team-name"
+            type="string"
+            placeholder='Richmond Tigers'
             {...register('name', {
               required: 'This is required',
-              minLength: { value: 3, message: 'Name must be no shorter than 3 characters' },
+              minLength: { value: 5, message: 'Name must be no shorter than 5 characters'}
             })}
           />
           <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
         </FormControl>
         <Stack spacing="4">
           <Button colorScheme="blue" isLoading={isSubmitting} type="submit">
-            Create Location
+            Create Team
           </Button>
           {submitError && (
             <Text color="red.500" fontSize="sm" textAlign="center">
@@ -87,4 +87,4 @@ const CreateLocationForm = () => {
   );
 };
 
-export default CreateLocationForm;
+export default AddTeamForm;

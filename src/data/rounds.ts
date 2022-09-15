@@ -62,11 +62,15 @@ export const fetchLatestRoundId = async () => {
   return round.id;
 };
 
-export const fetchLatestRoundGames = async () => {
+export const fetchLatestRoundWithGames = async () => {
   const [err, round] = await to(
     prisma.round.findFirst({
       orderBy: { dateEnd: 'desc' },
-      include: {
+      select: {
+        id: true,
+        roundNumber: true,
+        dateStart: true,
+        dateEnd: true,
         games: {
           orderBy: { startDateTime: 'asc' },
           select: {
@@ -87,7 +91,7 @@ export const fetchLatestRoundGames = async () => {
     return null;
   }
 
-  return round.games;
+  return round;
 };
 
 export const createRound = async (roundNumber: number, dateStart: Date, dateEnd: Date) => {

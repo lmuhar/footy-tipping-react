@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Avatar,
   Center,
   Spinner,
   Stack,
@@ -15,8 +14,8 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
-const UserList = () => {
-  const { data, isLoading } = useQuery(['users'], async () => (await axios.get('/api/users')).data);
+const LocationList = () => {
+  const { data, isLoading } = useQuery(['locations'], async () => (await axios.get('/api/locations')).data);
 
   return (
     <Stack>
@@ -30,21 +29,16 @@ const UserList = () => {
       {data && (
         <TableContainer borderRadius="md" overflow="hidden" w="full">
           <Table position="relative">
-            <TableCaption>Users</TableCaption>
+            <TableCaption>Locations</TableCaption>
             <Thead>
               <Tr>
-                <Th>Username</Th>
-                <Th>Email</Th>
+                <Th>Name</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((user: any) => (
-                <Tr key={user.username}>
-                  <Td display="flex" alignItems="center">
-                    <Avatar name={user.username} size="xs" mr="2" />
-                    {user.username}
-                  </Td>
-                  <Td>{user.email}</Td>
+              {data.map((location: any) => (
+                <Tr key={location.id}>
+                  <Td>{location.name}</Td>
                 </Tr>
               ))}
             </Tbody>
@@ -55,4 +49,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default LocationList;

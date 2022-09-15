@@ -4,6 +4,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { useRouter } from 'next/router';
 import {
+  Badge,
   Box,
   Button,
   ButtonGroup,
@@ -18,6 +19,7 @@ import {
   HStack,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   useBreakpointValue,
@@ -60,11 +62,22 @@ const Navigation = () => {
                         <NextLink href="/tips/enter" passHref>
                           <MenuItem as="a">Enter Tips</MenuItem>
                         </NextLink>
+                        <MenuDivider />
+                        {user.role === 'admin' && (
+                          <NextLink href="/admin/results" passHref>
+                            <MenuItem as="a">
+                              Enter Results
+                              <Badge ml="1" variant="subtle" rounded="sm">
+                                Admin
+                              </Badge>
+                            </MenuItem>
+                          </NextLink>
+                        )}
                       </MenuList>
                     </Menu>
                     {user.role === 'admin' && (
                       <NextLink href="/admin" passHref>
-                        <Button as="a">Admin</Button>
+                        <Button as="a" isActive={asPath === '/admin'}>Admin</Button>
                       </NextLink>
                     )}
                   </>
@@ -78,7 +91,9 @@ const Navigation = () => {
                     {user && (
                       <>
                         <NextLink href="/me" passHref>
-                          <Button as="a" isActive={asPath === '/me'}>My Profile</Button>
+                          <Button as="a" isActive={asPath === '/me'}>
+                            My Profile
+                          </Button>
                         </NextLink>
                         <Button onClick={logout}>Log out</Button>
                       </>
@@ -148,6 +163,16 @@ const Navigation = () => {
                           Enter Tips
                         </Button>
                       </NextLink>
+                      {user.role === 'admin' && (
+                        <NextLink href="/admin/results" passHref>
+                          <Button as="a" w="full" justifyContent="flex-start" isActive={asPath === '/admin/results'}>
+                            Enter Results
+                            <Badge ml="1" variant="subtle" rounded="sm">
+                              Admin
+                            </Badge>
+                          </Button>
+                        </NextLink>
+                      )}
                     </VStack>
                   </ButtonGroup>
                 </>
