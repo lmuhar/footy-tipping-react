@@ -21,6 +21,7 @@ import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
 import { CreateRoundForm } from 'components/forms/create-round-form';
 import { CreateLocationForm } from 'components/forms/create-location-form';
+import { UserList } from 'components/user-list';
 
 interface UpdateProfileInputs {
   username: string;
@@ -66,6 +67,9 @@ const LoginPage: NextPage = () => {
         </Card>
         <Card>
           <CreateLocationForm />
+        </Card>
+        <Card>
+          <UserList />
         </Card>
       </Stack>
     </ApplicationShell>
