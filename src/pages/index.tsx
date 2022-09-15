@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { ApplicationShell } from 'layouts/application-shell';
+import { Card } from 'components/card';
 
 const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string }) => {
   const { data: usersWithTips, isLoading: isLoadingUsersWithTips } = useQuery(
@@ -163,9 +164,13 @@ const IndexPage: NextPage<PageProps> = (props) => {
   return (
     <ApplicationShell>
       <VStack spacing={8}>
-        <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
+        <Card w="full">
+          <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
+        </Card>
         <Divider />
-        <AFLLadder initialLadder={props.ladder} />
+        <Card w="full">
+          <AFLLadder initialLadder={props.ladder} />
+        </Card>
       </VStack>
     </ApplicationShell>
   );
