@@ -70,14 +70,11 @@ export const upsertTip = async (roundId: string, selectedTipId: string, userId: 
 
   if (foundTipErr) throw foundTipErr;
 
-  if (!foundTip) {
-    console.error(new Error(`No tip found to update`));
-    return null;
-  }
+  const id = foundTip ? foundTip.id : '';
 
   const [err, tip] = await to(
     prisma.tip.upsert({
-      where: { id: foundTip.id },
+      where: { id: id },
       create: {
         round: { connect: { id: roundId } },
         selectedTip: { connect: { id: selectedTipId } },

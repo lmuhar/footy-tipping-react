@@ -3,23 +3,34 @@ import { GetServerSideProps, NextPage } from 'next';
 import { fetchAllUsersTipCount, fetchLadder, fetchLatestRoundId, Ladder } from 'data';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { TableCaption, Thead, Tr, Th, Tbody, Td, TableContainer, Table, VStack, Divider } from '@chakra-ui/react';
+import {
+  TableCaption,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  TableContainer,
+  Table,
+  VStack,
+  HStack,
+  Text,
+  Avatar,
+} from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { Card } from 'components/card';
+import { AFLLadder } from 'components/afl-ladder';
 
-const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string }) => {
-  const { data: usersWithTips } = useQuery(['usersWithTips'], async () => (await axios.get('/api/users/tips')).data, {
-    initialData: props.initialUsersWithTips,
-  });
+const UserLadder = () => {
+  const { data: usersWithTips } = useQuery(['usersWithTips'], async () => (await axios.get('/api/users/tips')).data);
 
-  const { data: roundId } = useQuery(['roundId'], async () => (await axios.get('/api/rounds/latest/id')).data, {
-    initialData: props.initialRoundId,
-  });
+  const { data: roundId } = useQuery(['roundId'], async () => (await axios.get('/api/rounds/latest')).data.id);
 
   const tableData = useMemo(() => {
-    const info: any[] = [];
+    if (!usersWithTips || !usersWithTips.length || !roundId) return [];
 
+    const info: any[] = [];
     usersWithTips.forEach((userWithTip: any) => {
       let total = 0;
       let lastRound = 0;
@@ -61,41 +72,14 @@ const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string
         <Tbody>
           {tableData.map((rowData: any) => (
             <Tr key={rowData.id}>
-              <Td>{rowData.name}</Td>
+              <Td>
+                <HStack>
+                  <Avatar size="xs" name={rowData.name} />
+                  <Text>{rowData.name}</Text>
+                </HStack>
+              </Td>
               <Td isNumeric>{rowData.lastRound}</Td>
               <Td isNumeric>{rowData.total}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
-  );
-};
-
-const AFLLadder = (props: { initialLadder: any[] }) => {
-  const { data } = useQuery(['ladder'], async () => (await axios.get<Ladder>('/api/ladder')).data, {
-    initialData: props.initialLadder,
-  });
-
-  return (
-    <TableContainer borderRadius="md" overflow="hidden" w="full">
-      <Table position="relative">
-        <TableCaption>AFL Ladder</TableCaption>
-        <Thead>
-          <Tr>
-            <Th isNumeric>No.</Th>
-            <Th>Team</Th>
-            <Th isNumeric>Percent</Th>
-            <Th isNumeric>Points</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((rowData: any) => (
-            <Tr key={rowData.name}>
-              <Td isNumeric>{rowData.order}</Td>
-              <Td>{rowData.name}</Td>
-              <Td isNumeric>{rowData.percent}</Td>
-              <Td isNumeric>{rowData.points}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -131,7 +115,6 @@ const IndexPage: NextPage<PageProps> = (props) => {
         <Card w="full">
           <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
         </Card>
-        <Divider />
         <Card w="full">
           <AFLLadder initialLadder={props.ladder} />
         </Card>

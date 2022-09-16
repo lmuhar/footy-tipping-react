@@ -71,49 +71,50 @@ const LoginPage: NextPage = () => {
               </HStack>
               <Divider />
               <VStack w="full" spacing="4">
-                {data.games.map((game: any) => (
-                  <HStack key={game.id} w="full" bg="gray.100" px="2" py="4" rounded="md">
-                    {/*  HOME  */}
-                    <Flex flex="1" alignItems="center" justifyContent="center">
-                      {game.result && game.result.id === game.homeTeam.id && (
-                        <Text fontSize="2xl" mr="2">
-                          👑
-                        </Text>
-                      )}
-                      <VStack>
-                        <Heading size="md">{game.homeTeam.name}</Heading>
-                        <Button
-                          size="xs"
-                          variant="solid"
-                          colorScheme="blue"
-                          onClick={handleSetWinnerOnClick(game.id, game.homeTeam.id)}
-                        >
-                          Set Winner
-                        </Button>
-                      </VStack>
-                    </Flex>
+                {data.games &&
+                  data.games.map((game: any) => (
+                    <HStack key={game.id} w="full" bg="gray.100" px="2" py="4" rounded="md">
+                      {/*  HOME  */}
+                      <Flex flex="1" alignItems="center" justifyContent="center">
+                        {game.result && game.result.id === game.homeTeam.id && (
+                          <Text fontSize="2xl" mr="2">
+                            👑
+                          </Text>
+                        )}
+                        <VStack>
+                          <Heading size="md">{game.homeTeam.name}</Heading>
+                          <Button
+                            size="xs"
+                            variant="solid"
+                            colorScheme="blue"
+                            onClick={handleSetWinnerOnClick(game.id, game.homeTeam.id)}
+                          >
+                            Set Winner
+                          </Button>
+                        </VStack>
+                      </Flex>
 
-                    {/* AWAY */}
-                    <Flex flex="1" alignItems="center" justifyContent="center">
-                      {game.result && game.result.id === game.awayTeam.id && (
-                        <Text fontSize="2xl" mr="2">
-                          👑
-                        </Text>
-                      )}
-                      <VStack>
-                        <Heading size="md">{game.awayTeam.name}</Heading>
-                        <Button
-                          size="xs"
-                          variant="solid"
-                          colorScheme="blue"
-                          onClick={handleSetWinnerOnClick(game.id, game.awayTeam.id)}
-                        >
-                          Set Winner
-                        </Button>
-                      </VStack>
-                    </Flex>
-                  </HStack>
-                ))}
+                      {/* AWAY */}
+                      <Flex flex="1" alignItems="center" justifyContent="center">
+                        {game.result && game.result.id === game.awayTeam.id && (
+                          <Text fontSize="2xl" mr="2">
+                            👑
+                          </Text>
+                        )}
+                        <VStack>
+                          <Heading size="md">{game.awayTeam.name}</Heading>
+                          <Button
+                            size="xs"
+                            variant="solid"
+                            colorScheme="blue"
+                            onClick={handleSetWinnerOnClick(game.id, game.awayTeam.id)}
+                          >
+                            Set Winner
+                          </Button>
+                        </VStack>
+                      </Flex>
+                    </HStack>
+                  ))}
               </VStack>
             </VStack>
           )}

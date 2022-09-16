@@ -7,6 +7,7 @@ import { Card } from 'components/card';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { format, parseISO } from 'date-fns';
+import { AFLLadder } from 'components/afl-ladder';
 
 const LoginPage: NextPage = () => {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ const LoginPage: NextPage = () => {
     ['roundsForUser', user?.id],
     async () => (await axios.get(`/api/rounds/user/${user?.id}`)).data,
     {
-      enabled: false,
+      enabled: !!user,
     },
   );
 
@@ -39,11 +40,9 @@ const LoginPage: NextPage = () => {
 
   const enterTipMutation = useMutation(
     async (input: { round: string; game: string; selectedTip: string; user: string }) => {
-      return await axios.put('/api/tips', {
-        round: input.round,
-        game: input.game,
-        selectedTip: input.selectedTip,
-        user: input.user,
+      return await axios.put(`/api/tips/round/${input.round}/user/${input.user}`, {
+        gameId: input.game,
+        selectedTipId: input.selectedTip,
       });
     },
   );
@@ -122,16 +121,21 @@ const LoginPage: NextPage = () => {
                         )}
                         <VStack>
                           <Heading size="md">{game.homeTeam.name}</Heading>
-                          <Text>{JSON.stringify(game.tip)}</Text>
                           <Button
                             size="xs"
                             variant="solid"
                             colorScheme="blue"
+                            isDisabled={game.tip.length}
                             onClick={handleSetTipOnClick(round.id, game.id, game.homeTeam.id)}
                           >
-                            Set Winner
+                            Place Tip
                           </Button>
                         </VStack>
+                        {!!game.tip.length && game.tip[0].selectedTipId === game.homeTeam.id && (
+                          <Text fontSize="2xl" mr="2">
+                            👈
+                          </Text>
+                        )}
                       </Flex>
 
                       {/* AWAY */}
@@ -147,17 +151,26 @@ const LoginPage: NextPage = () => {
                             size="xs"
                             variant="solid"
                             colorScheme="blue"
+                            isDisabled={game.tip.length}
                             onClick={handleSetTipOnClick(round.id, game.id, game.awayTeam.id)}
                           >
-                            Set Winner
+                            Place Tip
                           </Button>
                         </VStack>
+                        {!!game.tip.length && game.tip[0].selectedTipId === game.awayTeam.id && (
+                          <Text fontSize="2xl" mr="2">
+                            👈
+                          </Text>
+                        )}
                       </Flex>
                     </HStack>
                   ))}
               </VStack>
             </VStack>
           )}
+        </Card>
+        <Card>
+          <AFLLadder />
         </Card>
       </Stack>
     </ApplicationShell>

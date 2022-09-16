@@ -52,7 +52,6 @@ const CreateGameForm = () => {
   const onSubmit = (input: CreateGameInputs) => {
     const { startDate, startTime, ...rest } = input;
     const startDateTime = `${startDate}T${startTime}:00`;
-    console.log({ ...rest, startDateTime });
     setSubmitError(false);
     updateMutation.mutateAsync(
       { ...rest, startDateTime },
@@ -175,7 +174,7 @@ const CreateGameForm = () => {
         {/* Submit */}
         <Stack spacing="4">
           <Button colorScheme="blue" isLoading={isSubmitting} type="submit">
-            Create Round
+            Create Game
           </Button>
           {submitError && (
             <Text color="red.500" fontSize="sm" textAlign="center">

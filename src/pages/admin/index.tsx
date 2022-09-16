@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Button, Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -14,14 +14,26 @@ import CreateGameForm from 'components/forms/create-game-form/create-game-form.c
 import { GameList } from 'components/game-list';
 import { LocationList } from 'components/location-list';
 import { TeamList } from 'components/team-list';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 const LoginPage: NextPage = () => {
+  const queryClient = useQueryClient();
   const { user } = useTokenData();
   const { push } = useRouter();
 
   useEffect(() => {
     if (user && user?.role !== 'admin') push('/');
   }, [user, push]);
+
+  const primeMutation = useMutation(async () => {
+    return await axios.post('/api/ladder/prime');
+  });
+
+  const handlePrimeTeamsOnClick = () => {
+    primeMutation.mutate();
+    queryClient.invalidateQueries(['teams']);
+  };
 
   return (
     <ApplicationShell>
@@ -91,9 +103,12 @@ const LoginPage: NextPage = () => {
 
         {/* Teams */}
         <Card>
-          <Heading size="md" mb="2">
-            Teams
-          </Heading>
+          <HStack mb="2">
+            <Heading size="md">Teams</Heading>
+            <Button size="xs" colorScheme="blue" onClick={handlePrimeTeamsOnClick} isLoading={primeMutation.isLoading}>
+              Prime Teams
+            </Button>
+          </HStack>
           <Tabs isFitted>
             <TabList mb="1em">
               <Tab>Create Team</Tab>

@@ -1,6 +1,7 @@
 import to from 'await-to-js';
 import axios from 'axios';
 import * as Cheerio from 'cheerio';
+import prisma from 'data';
 import { get, put } from 'memory-cache';
 
 const ladderUrl = 'http://www.fanfooty.com.au/game/ladder.php';
@@ -69,4 +70,37 @@ export const fetchLadder = async () => {
 
   put(ladderUrl, ladder, 6 * 1000 * 60 * 60);
   return ladder;
+};
+
+export const primeTeamNames = async () => {
+  const [err, res] = await to(axios.get<string>(ladderUrl));
+  if (err) throw err;
+
+  const htmlString = await res.data;
+  const $ = Cheerio.load(htmlString);
+
+  const names: string[] = [];
+  $('table')
+    .find('tr')
+    .each((_i, elem) =>
+      $(elem).hasClass('odd') || $(elem).hasClass('even')
+        ? $(elem)
+            .find('td')
+            .each((i, element) => (i === 0 ? names.push($(element).text()) : undefined))
+        : undefined,
+    );
+
+  const [_createNamesErr, createdNames] = await to(
+    Promise.all(
+      names.map((name) =>
+        prisma.teamName.upsert({
+          where: { name },
+          create: { name },
+          update: {},
+        }),
+      ),
+    ),
+  );
+
+  return createdNames;
 };
