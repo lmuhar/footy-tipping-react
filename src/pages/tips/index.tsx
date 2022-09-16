@@ -5,8 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const ViewTips: NextPage = () => {
-  const { user } = useTokenData();
-  const { data } = useQuery(['latestRoundWithGames'], async () => (await axios.get('/api/rounds/latest/games')).data);
+  const { user: _user } = useTokenData();
+  const { data: _data } = useQuery(
+    ['latestRoundWithGames'],
+    async () => (await axios.get('/api/rounds/latest/games')).data,
+  );
 
   return <ApplicationShell></ApplicationShell>;
 };

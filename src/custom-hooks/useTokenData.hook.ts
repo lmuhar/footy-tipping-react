@@ -14,7 +14,7 @@ interface Token {
 }
 
 export default function useTokenData() {
-  const { push } = useRouter()
+  const { push } = useRouter();
   const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ export default function useTokenData() {
 
   const logout = () => {
     localStorage.removeItem('token');
-    push('/login')
-  }
+    push('/login');
+  };
 
   return { user, logout };
 }

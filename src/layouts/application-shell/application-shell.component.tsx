@@ -1,6 +1,5 @@
 import { Box, Container } from '@chakra-ui/react';
 import { Navigation } from 'components/navigation';
-import useTokenData from 'custom-hooks/useTokenData.hook';
 import { PropsWithChildren } from 'react';
 
 const ApplicationShell = ({ children }: PropsWithChildren<{ isLoggedInOnly?: boolean; isAdminOnly?: boolean }>) => {

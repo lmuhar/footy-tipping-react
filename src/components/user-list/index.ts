@@ -1,1 +1,1 @@
-export { default as UserList } from './user-list.component'
+export { default as UserList } from './user-list.component';

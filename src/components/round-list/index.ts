@@ -1,1 +1,1 @@
-export { default as RoundList } from './round-list.components'
+export { default as RoundList } from './round-list.components';

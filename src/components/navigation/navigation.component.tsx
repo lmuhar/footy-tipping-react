@@ -77,7 +77,9 @@ const Navigation = () => {
                     </Menu>
                     {user.role === 'admin' && (
                       <NextLink href="/admin" passHref>
-                        <Button as="a" isActive={asPath === '/admin'}>Admin</Button>
+                        <Button as="a" isActive={asPath === '/admin'}>
+                          Admin
+                        </Button>
                       </NextLink>
                     )}
                   </>

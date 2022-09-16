@@ -35,21 +35,26 @@ const LOCATION_NAMES = ['SCG', 'MCG', 'Backyard'];
           password: hashSync(password, genSaltSync(10)),
         },
       }),
-      ...TEAM_NAMES.map((name) =>
-        prisma.teamName.upsert({
-          where: { name },
-          create: { name },
-          update: { name },
-        }),
-      ),
-      ...LOCATION_NAMES.map((name) =>
-        prisma.location.upsert({
-          where: { name },
-          create: { name },
-          update: { name },
-        }),
-      ),
     ]);
+
+    // DEV ONLY SEED DATA
+    if (process.env.NODE_ENV === 'development')
+      await Promise.all([
+        ...TEAM_NAMES.map((name) =>
+          prisma.teamName.upsert({
+            where: { name },
+            create: { name },
+            update: { name },
+          }),
+        ),
+        ...LOCATION_NAMES.map((name) =>
+          prisma.location.upsert({
+            where: { name },
+            create: { name },
+            update: { name },
+          }),
+        ),
+      ]);
   } catch (error) {
     console.error(error);
     process.exit(1);

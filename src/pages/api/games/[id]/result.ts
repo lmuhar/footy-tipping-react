@@ -8,7 +8,7 @@ const updateGameResultHandler = async (req: NextApiRequest, res: NextApiResponse
 
   const { winner } = req.body;
   if (!winner) res.status(400).send(null);
-  
+
   const { id } = req.query;
   const [err, game] = await to(updateGameResult(String(id), winner));
 

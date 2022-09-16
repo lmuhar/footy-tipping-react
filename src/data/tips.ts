@@ -64,7 +64,7 @@ export const upsertTip = async (roundId: string, selectedTipId: string, userId: 
   const [foundTipErr, foundTip] = await to(
     prisma.tip.findFirst({
       where: { userId, AND: { gameId } },
-      select: { id: true }
+      select: { id: true },
     }),
   );
 

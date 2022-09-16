@@ -20,7 +20,7 @@ interface CreateLocationInputs {
 }
 
 const CreateLocationForm = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
@@ -48,7 +48,7 @@ const CreateLocationForm = () => {
           isClosable: true,
           position: 'bottom-left',
         });
-        queryClient.invalidateQueries(['locations'])
+        queryClient.invalidateQueries(['locations']);
       },
       onError: () => setSubmitError(true),
     });
@@ -64,7 +64,7 @@ const CreateLocationForm = () => {
           <Input
             id="location"
             type="text"
-            placeholder='MCG'
+            placeholder="MCG"
             {...register('name', {
               required: 'This is required',
               minLength: { value: 3, message: 'Name must be no shorter than 3 characters' },

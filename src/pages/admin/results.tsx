@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { Box, Button, Divider, Flex, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, HStack, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -75,7 +75,7 @@ const LoginPage: NextPage = () => {
                   <HStack key={game.id} w="full" bg="gray.100" px="2" py="4" rounded="md">
                     {/*  HOME  */}
                     <Flex flex="1" alignItems="center" justifyContent="center">
-                      {game.result && (game.result.id === game.homeTeam.id) && (
+                      {game.result && game.result.id === game.homeTeam.id && (
                         <Text fontSize="2xl" mr="2">
                           👑
                         </Text>
@@ -95,7 +95,7 @@ const LoginPage: NextPage = () => {
 
                     {/* AWAY */}
                     <Flex flex="1" alignItems="center" justifyContent="center">
-                    {game.result && (game.result.id === game.awayTeam.id) && (
+                      {game.result && game.result.id === game.awayTeam.id && (
                         <Text fontSize="2xl" mr="2">
                           👑
                         </Text>

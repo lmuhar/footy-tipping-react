@@ -1,18 +1,6 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Center,
-  Spinner,
-  Stack,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 const LocationList = () => {
   const { data } = useQuery(['teams'], async () => (await axios.get('/api/teams')).data);

@@ -1,1 +1,1 @@
-export type APIResponse<T = {}> = [Error, null] | [null, T];
+export type APIResponse<T = unknown> = [Error, null] | [null, T];

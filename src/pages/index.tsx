@@ -3,41 +3,19 @@ import { GetServerSideProps, NextPage } from 'next';
 import { fetchAllUsersTipCount, fetchLadder, fetchLatestRoundId, Ladder } from 'data';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import {
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  TableContainer,
-  Table,
-  Spinner,
-  Stack,
-  Center,
-  VStack,
-  Divider,
-} from '@chakra-ui/react';
+import { TableCaption, Thead, Tr, Th, Tbody, Td, TableContainer, Table, VStack, Divider } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { Card } from 'components/card';
 
 const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string }) => {
-  const { data: usersWithTips, isLoading: isLoadingUsersWithTips } = useQuery(
-    ['usersWithTips'],
-    async () => (await axios.get('/api/users/tips')).data,
-    {
-      initialData: props.initialUsersWithTips,
-    },
-  );
+  const { data: usersWithTips } = useQuery(['usersWithTips'], async () => (await axios.get('/api/users/tips')).data, {
+    initialData: props.initialUsersWithTips,
+  });
 
-  const { data: roundId, isLoading: isLoadingRoundId } = useQuery(
-    ['roundId'],
-    async () => (await axios.get('/api/rounds/latest/id')).data,
-    {
-      initialData: props.initialRoundId,
-    },
-  );
+  const { data: roundId } = useQuery(['roundId'], async () => (await axios.get('/api/rounds/latest/id')).data, {
+    initialData: props.initialRoundId,
+  });
 
   const tableData = useMemo(() => {
     const info: any[] = [];
@@ -72,13 +50,6 @@ const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string
   return (
     <TableContainer borderRadius="md" overflow="hidden" w="full">
       <Table position="relative">
-        {(isLoadingUsersWithTips || isLoadingRoundId) && (
-          <Stack position="absolute" bg="gray.300" opacity="70%" top="0" bottom="0" left="0" right="0">
-            <Center my="auto">
-              <Spinner size="lg" />
-            </Center>
-          </Stack>
-        )}
         <TableCaption>Leader board</TableCaption>
         <Thead>
           <Tr>
@@ -102,20 +73,13 @@ const UserLadder = (props: { initialUsersWithTips: any[]; initialRoundId: string
 };
 
 const AFLLadder = (props: { initialLadder: any[] }) => {
-  const { data, isLoading } = useQuery(['ladder'], async () => (await axios.get<Ladder>('/api/ladder')).data, {
+  const { data } = useQuery(['ladder'], async () => (await axios.get<Ladder>('/api/ladder')).data, {
     initialData: props.initialLadder,
   });
 
   return (
     <TableContainer borderRadius="md" overflow="hidden" w="full">
       <Table position="relative">
-        {isLoading && (
-          <Stack position="absolute" bg="gray.300" opacity="70%" top="0" bottom="0" left="0" right="0">
-            <Center my="auto">
-              <Spinner size="lg" />
-            </Center>
-          </Stack>
-        )}
         <TableCaption>AFL Ladder</TableCaption>
         <Thead>
           <Tr>

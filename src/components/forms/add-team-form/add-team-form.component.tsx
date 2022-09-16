@@ -20,7 +20,7 @@ interface AddTeamInputs {
 }
 
 const AddTeamForm = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
@@ -46,9 +46,9 @@ const AddTeamForm = () => {
           status: 'success',
           duration: 5000,
           isClosable: true,
-          position: 'bottom-left'
+          position: 'bottom-left',
         });
-        queryClient.invalidateQueries(['teams'])
+        queryClient.invalidateQueries(['teams']);
       },
       onError: () => setSubmitError(true),
     });
@@ -64,10 +64,10 @@ const AddTeamForm = () => {
           <Input
             id="team-name"
             type="string"
-            placeholder='Richmond Tigers'
+            placeholder="Richmond Tigers"
             {...register('name', {
               required: 'This is required',
-              minLength: { value: 5, message: 'Name must be no shorter than 5 characters'}
+              minLength: { value: 5, message: 'Name must be no shorter than 5 characters' },
             })}
           />
           <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>

@@ -110,7 +110,7 @@ export const fetchRoundsWithGamesForUser = async (userId: string) => {
             homeTeam: true,
             awayTeam: true,
             result: true,
-            tip: { where: { userId }}
+            tip: { where: { userId } },
           },
         },
       },

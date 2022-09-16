@@ -1,6 +1,5 @@
-import { fetchAllUsers, updateUsername } from 'data';
+import { fetchAllUsers } from 'data';
 import to from 'await-to-js';
-import * as jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { unknownRequestHandler } from 'utils/web';
 

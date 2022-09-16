@@ -1,1 +1,1 @@
-export { default as ApplicationShell} from './application-shell.component'
+export { default as ApplicationShell } from './application-shell.component';

@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { Box, Button, Divider, Flex, Heading, HStack, Select, Stack, Text, useToast, VStack } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, HStack, Select, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';

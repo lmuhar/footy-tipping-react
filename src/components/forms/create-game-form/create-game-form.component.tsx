@@ -25,22 +25,13 @@ interface CreateGameInputs {
 }
 
 const CreateGameForm = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  const { data: rounds, isLoading: isRoundsLoading } = useQuery(
-    ['rounds'],
-    async () => (await axios.get('/api/rounds')).data,
-  );
+  const { data: rounds } = useQuery(['rounds'], async () => (await axios.get('/api/rounds')).data);
 
-  const { data: teams, isLoading: isTeamsLoading } = useQuery(
-    ['teams'],
-    async () => (await axios.get('/api/teams')).data,
-  );
+  const { data: teams } = useQuery(['teams'], async () => (await axios.get('/api/teams')).data);
 
-  const { data: locations, isLoading: isLocationsLoading } = useQuery(
-    ['locations'],
-    async () => (await axios.get('/api/locations')).data,
-  );
+  const { data: locations } = useQuery(['locations'], async () => (await axios.get('/api/locations')).data);
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
@@ -76,7 +67,7 @@ const CreateGameForm = () => {
             isClosable: true,
             position: 'bottom-left',
           });
-          queryClient.invalidateQueries(['games'])
+          queryClient.invalidateQueries(['games']);
         },
         onError: () => setSubmitError(true),
       },

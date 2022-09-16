@@ -1,12 +1,9 @@
-import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 import {
   Button,
-  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -28,7 +25,7 @@ interface CreateRoundInputs {
 }
 
 const CreateRoundForm = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
@@ -55,9 +52,9 @@ const CreateRoundForm = () => {
           status: 'success',
           duration: 5000,
           isClosable: true,
-          position: 'bottom-left'
+          position: 'bottom-left',
         });
-        queryClient.invalidateQueries(['rounds'])
+        queryClient.invalidateQueries(['rounds']);
       },
       onError: () => setSubmitError(true),
     });
