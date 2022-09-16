@@ -113,7 +113,7 @@ const IndexPage: NextPage<PageProps> = (props) => {
     <ApplicationShell>
       <VStack spacing={8}>
         <Card w="full">
-          <UserLadder initialUsersWithTips={props.usersWithTips} initialRoundId={props.roundId} />
+          <UserLadder />
         </Card>
         <Card w="full">
           <AFLLadder initialLadder={props.ladder} />
