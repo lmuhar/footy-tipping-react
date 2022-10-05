@@ -1,114 +1,125 @@
 import to from 'await-to-js';
-import Axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
-import AflLadder from '../components/section/afl-ladder';
-import DefaultLayout from '../layouts/default.layout';
-import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useEffect, useState } from 'react';
-import { IAFLLadder } from '../models/afl-ladder.model';
-import { aflLadderService } from './api/afl-ladder';
-import { userTipCount } from './api/user/user-tip-count';
-import { IUserTips } from '../models/user-data.model';
-import UserLadder from '../components/section/user-ladder';
-import { latestRoundId } from './api/round/get-latest-round-id';
+import { fetchAllUsersTipCount, fetchLadder, fetchLatestRoundId, Ladder } from 'data';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import {
+  TableCaption,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  TableContainer,
+  Table,
+  VStack,
+  HStack,
+  Text,
+  Avatar,
+} from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { ApplicationShell } from 'layouts/application-shell';
+import { Card } from 'components/card';
+import { AFLLadder } from 'components/afl-ladder';
 
-// Alias of the to(Axtios(...)) as an API method
-const fetchAFLLadder = () => to(Axios.get<IAFLLadder[]>(`/api/afl-ladder`));
-const fetchUserTips = () => to(Axios.get<IUserTips[]>('/api/user/user-tip-count'));
-const fetchLatestRoundId = () => to(Axios.get<IUserTips[]>('/api/round/get-latest-round-id'));
+const UserLadder = () => {
+  const { data: usersWithTips } = useQuery(['usersWithTips'], async () => (await axios.get('/api/users/tips')).data);
 
-interface PageProps {
-  AFLLadder?: IAFLLadder[];
-  UserData?: IUserTips[];
-  RoundId?: any[];
-}
+  const { data: roundId } = useQuery(['roundId'], async () => (await axios.get('/api/rounds/latest')).data.id);
 
-// getServerSideProps is the new getInitialProps. It's essentially the same thing but more efficient.
-export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
-  // Destructure the data directly into a AFLLadder variable.
-  const [err, AFLLadder] = await aflLadderService();
-  const [err2, UserData] = await userTipCount();
-  const [err3, RoundId] = await latestRoundId();
+  const tableData = useMemo(() => {
+    if (!usersWithTips || !usersWithTips.length || !roundId) return [];
 
-  // Return nothing if there was an error. Props understands "AFLLadder?:" might be undefined.
-  if (err || err2 || err3) return { props: {} };
+    const info: any[] = [];
+    usersWithTips.forEach((userWithTip: any) => {
+      let total = 0;
+      let lastRound = 0;
 
-  // If all is good in the good, return the AFLLadder data! Variable is named the same, we can omit the :
-  return { props: { AFLLadder, UserData, RoundId } };
-};
+      userWithTip.tips.forEach((tip: any) => {
+        if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
+          total = total + 1;
+          if (roundId[0].id === tip.game.roundId) {
+            lastRound = lastRound + 1;
+          }
+        }
+      });
 
-const IndexPage: NextPage<PageProps> = ({ AFLLadder, UserData, RoundId }) => {
-  // Store the ladder data in state using hooks. We can make use of this later!
-  // We will set it null as a default, just in case the props returns nothing; such as a page load without SSR!
-  // We not track the loading state too?
-  const [ladder, setLadder] = useState<IAFLLadder[]>(AFLLadder || null);
-  const [users, setUsers] = useState<IUserTips[]>(UserData || null);
-  const [roundId, setRoundId] = useState<any[]>(RoundId || null);
-  const [isLoading, setLoading] = useState<boolean>(false);
+      const { id, username: name } = userWithTip;
 
-  // We can't (or shouldn't) use async functions in useEffect.
-  // Instead we will use a separate async function that we know will update the state when it completes.
-  const getLadderDataFromAPI = async () => {
-    // Load, load I say!
-    setLoading(true);
+      if (total > 0)
+        info.push({
+          id,
+          name,
+          lastRound,
+          total,
+        });
+    });
 
-    // Okay, we need to get some data...
-    const [err, { data: AFLLadder }] = await fetchAFLLadder();
-
-    // We're done, no more loading shenanigans
-    setLoading(false);
-
-    // We fucked it, lets just set it to be empty
-    if (err) setLadder([]);
-
-    // Sweet! GO SAINTS!
-    setLadder(AFLLadder);
-  };
-
-  const getUserTipsFromAPI = async () => {
-    setLoading(true);
-
-    const [err, { data: UserData }] = await fetchUserTips();
-
-    setLoading(false);
-
-    if (err) setUsers([]);
-    setUsers(UserData);
-  };
-
-  const getLatestRoundId = async () => {
-    setLoading(true);
-
-    const [err, { data: RoundId }] = await fetchLatestRoundId();
-
-    setLoading(false);
-
-    if (err) setRoundId([]);
-    setRoundId(RoundId);
-  };
-
-  // useEffect with empty [] (dependencies) will trigger on component mount/ page load.
-  useEffect(() => {
-    // Since we shouldn't use async directly, we will just ask the data to be fetched off in it's own time.
-    // If we did await and something wen't wrong we could potentially cause the component to hang. Bad news.
-    if (!ladder) getLadderDataFromAPI();
-    if (!users) getUserTipsFromAPI();
-    if (!roundId) getLatestRoundId();
-  }, []);
+    return info.sort((a, b) => b.total - a.total);
+  }, [roundId, usersWithTips]);
 
   return (
-    <DefaultLayout>
-      {isLoading && <CircularProgress />}
-      {!isLoading && (
-        <Container>
-          {UserData && UserData.length > 0 && RoundId && RoundId.length > 0 && (
-            <UserLadder userData={UserData} roundId={RoundId} />
-          )}
-        </Container>
-      )}
-      {!isLoading && <Container>{AFLLadder && AFLLadder.length > 0 && <AflLadder aflData={AFLLadder} />}</Container>}
-    </DefaultLayout>
+    <TableContainer borderRadius="md" overflow="hidden" w="full">
+      <Table position="relative">
+        <TableCaption>Leader board</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th isNumeric>Last Round</Th>
+            <Th isNumeric>Total</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {tableData.map((rowData: any) => (
+            <Tr key={rowData.id}>
+              <Td>
+                <HStack>
+                  <Avatar size="xs" name={rowData.name} />
+                  <Text>{rowData.name}</Text>
+                </HStack>
+              </Td>
+              <Td isNumeric>{rowData.lastRound}</Td>
+              <Td isNumeric>{rowData.total}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+interface PageProps {
+  ladder: Ladder;
+  usersWithTips: any[];
+  roundId: string;
+}
+
+export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
+  const [_fetchLadderErr, ladder] = await to(fetchLadder());
+  const [_fetchUsersWithTipsError, usersWithTips] = await to(fetchAllUsersTipCount());
+  const [_fetchLatestRoundIdError, roundId] = await to(fetchLatestRoundId());
+
+  return {
+    props: {
+      ladder: ladder || [],
+      usersWithTips: usersWithTips || [],
+      roundId: roundId || '',
+    },
+  };
+};
+
+const IndexPage: NextPage<PageProps> = (props) => {
+  return (
+    <ApplicationShell>
+      <VStack spacing={8}>
+        <Card w="full">
+          <UserLadder />
+        </Card>
+        <Card w="full">
+          <AFLLadder initialLadder={props.ladder} />
+        </Card>
+      </VStack>
+    </ApplicationShell>
   );
 };
 

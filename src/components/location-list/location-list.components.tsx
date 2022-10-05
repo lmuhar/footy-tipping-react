@@ -1,0 +1,33 @@
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+
+const LocationList = () => {
+  const { data } = useQuery(['locations'], async () => (await axios.get('/api/locations')).data);
+
+  return (
+    <Stack>
+      {data && (
+        <TableContainer borderRadius="md" overflow="hidden" w="full">
+          <Table position="relative">
+            <TableCaption>Locations</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data.map((location: any) => (
+                <Tr key={location.id}>
+                  <Td>{location.name}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
+    </Stack>
+  );
+};
+
+export default LocationList;

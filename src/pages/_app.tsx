@@ -1,14 +1,21 @@
-import NextApp from 'next/app';
-import { ThemeProvider } from '@material-ui/core/styles';
-import customTheme from '../utils/theme';
+import { AppProps } from 'next/app';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+import theme from 'theme/theme';
 
-export default class App extends NextApp {
-  render(): JSX.Element {
-    const { Component, pageProps } = this.props;
-    return (
-      <ThemeProvider theme={customTheme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
-    );
-  }
+function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: any }>) {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <ChakraProvider resetCSS theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
+      </QueryClientProvider>
+    </ChakraProvider>
+  );
 }
+
+export default MyApp;

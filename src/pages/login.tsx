@@ -1,143 +1,132 @@
 import { NextPage } from 'next';
-import React from 'react';
-import DefaultLayout from '../layouts/default.layout';
-import { useForm, Controller } from 'react-hook-form';
-import to from 'await-to-js';
-import Axios from 'axios';
-import { useRouter } from 'next/dist/client/router';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import { useState } from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { useForm } from 'react-hook-form';
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
+import { ApplicationShell } from 'layouts/application-shell';
+import NextLink from 'next/link';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import useTokenData from 'custom-hooks/useTokenData.hook';
+import { Card } from 'components/card';
 
-interface UserToken {
-  token: string;
-}
-
-type FormValues = {
+interface LoginFormInputs {
   email: string;
   password: string;
-};
+}
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+const LoginPage: NextPage = () => {
+  const { user } = useTokenData();
+  const { push } = useRouter();
 
-const IndexPage: NextPage = (_props) => {
-  const classes = useStyles();
-  const router = useRouter();
-  const { control, handleSubmit } = useForm<FormValues>();
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const onSubmit = async (data) => {
-    setLoading(true);
-    const [err, res] = await to(Axios.post<UserToken>(`/api/user/login`, data));
-    if (err) {
-      setLoading(false);
-    }
+  const [loginError, setLoginError] = useState<boolean>(false);
 
-    if (res && res.data) {
-      localStorage.setItem('token', res.data.token);
-      router.push('/');
-    }
+  const loginMutation = useMutation(async (input: LoginFormInputs) => {
+    return await axios.post('/api/users/login', input);
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormInputs>();
+
+  const onSubmit = (input: LoginFormInputs) => {
+    setLoginError(false);
+    loginMutation.mutateAsync(input, {
+      onSuccess: (res) => {
+        localStorage.setItem('token', res.data.token);
+        push('/');
+      },
+      onError: () => setLoginError(true),
+    });
   };
+
+  useEffect(() => {
+    if (user) push('/');
+  }, [user, push]);
+
   return (
-    <DefaultLayout>
-      {isLoading && (
-        <Container component="main" maxWidth="xs">
-          <div className={classes.paper}>
-            <CircularProgress />
-          </div>
-        </Container>
-      )}
-      {!isLoading && (
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-              <Controller
-                as={<TextField />}
-                name="email"
-                label="Email Address"
-                control={control}
-                value={''}
-                variant="outlined"
-                margin="normal"
-                defaultValue=""
-                required
-                fullWidth
+    <ApplicationShell>
+      <Card>
+        <Stack spacing="8">
+          {/*  Hero */}
+          <Stack spacing="6">
+            <Stack spacing="3" textAlign="center">
+              <Heading size="md">Log in to your account</Heading>
+              <Text color="muted">There are tips to be made</Text>
+            </Stack>
+          </Stack>
+
+          {/*  Form */}
+          <Stack as="form" onSubmit={handleSubmit(onSubmit)} spacing="5">
+            {/* Email */}
+            <FormControl isInvalid={!!errors.email}>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <Input
                 id="email"
-                autoComplete="email"
-                autoFocus
-                onChange={([event]) => {
-                  return event.target.value;
-                }}
-              />
+                type="email"
+                placeholder="Enter your email"
+                {...register('email', {
+                  required: 'This is required',
 
-              <Controller
-                as={<TextField />}
-                name="password"
-                label="Password"
-                type="password"
+                  minLength: { value: 5, message: 'Minimum length should be 5' },
+                })}
+              />
+              <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+            </FormControl>
+
+            {/* Password */}
+            <FormControl isInvalid={!!errors.password}>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <Input
                 id="password"
-                control={control}
-                value={''}
-                defaultValue=""
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                autoFocus
-                onChange={([event]) => {
-                  return event.target.value;
-                }}
+                type="password"
+                placeholder="********"
+                {...register('password', {
+                  required: 'This is required',
+                  minLength: { value: 8, message: 'Minimum length should be 8' },
+                })}
               />
-
-              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                Sign In
+              <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
+            </FormControl>
+            <Stack spacing="4">
+              <Button colorScheme="blue" isLoading={isSubmitting} type="submit">
+                Sign in
               </Button>
-              <Grid container>
-                <Grid item>
-                  <Link href="/registration" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
-        </Container>
-      )}
-    </DefaultLayout>
+              {loginError && (
+                <Text color="red.500" fontSize="sm" textAlign="center">
+                  Oops! Something went wrong trying to log in. Try again shortly.
+                </Text>
+              )}
+            </Stack>
+          </Stack>
+
+          {/* Register */}
+          <HStack spacing="1" justify="center">
+            <Text fontSize="sm" color="muted">
+              Don&apos;t have an account?
+            </Text>
+            <NextLink href="/register" passHref>
+              <Button as="a" variant="link" colorScheme="blue" size="sm">
+                Sign up
+              </Button>
+            </NextLink>
+          </HStack>
+        </Stack>
+      </Card>
+    </ApplicationShell>
   );
 };
 
-export default IndexPage;
+export default LoginPage;

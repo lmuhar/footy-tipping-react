@@ -1,3 +1,4 @@
+import type { ITeamNames } from './team-names.model';
 export interface ITipCreate {
   id?: string;
   selectedTip: string;
@@ -12,10 +13,11 @@ export interface ITip {
   selectedTipId?: string;
   round: { name: number };
   roundId?: string;
-  user: { name: string };
+  user: { name: string; username: string };
   userId?: string;
-  game: { name: string };
+  game: { name: string; homeTeam: ITeamNames; awayTeam: ITeamNames };
   gameId?: string;
+  startDateTime: Date;
 }
 
 export interface IUserTipsRound {
