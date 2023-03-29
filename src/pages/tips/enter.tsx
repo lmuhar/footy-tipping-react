@@ -141,6 +141,7 @@ const LoginPage: NextPage = () => {
                       <Flex flex="1" alignItems="center" justifyContent="center">
                         <VStack>
                           <Heading size="sm">{game.location.name}</Heading>
+                          <Heading size="sm">{format(parseISO(game.startDateTime), 'dd/MM hh:mm aa')}</Heading>
                         </VStack>
                       </Flex>
 
