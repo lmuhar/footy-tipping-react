@@ -2,7 +2,11 @@ import to from 'await-to-js';
 import prisma from '.';
 
 export const fetchAllLocations = async () => {
-  const [err, locations] = await to(prisma.location.findMany());
+  const [err, locations] = await to(
+    prisma.location.findMany({
+      orderBy: { name: 'asc' },
+    }),
+  );
 
   if (err) throw err;
 

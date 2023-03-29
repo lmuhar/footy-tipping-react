@@ -2,7 +2,11 @@ import to from 'await-to-js';
 import prisma from '.';
 
 export const fetchAllTeamNames = async () => {
-  const [err, teamNames] = await to(prisma.teamName.findMany());
+  const [err, teamNames] = await to(
+    prisma.teamName.findMany({
+      orderBy: { name: 'asc' },
+    }),
+  );
 
   if (err) throw err;
 
