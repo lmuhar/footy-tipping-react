@@ -138,6 +138,12 @@ const LoginPage: NextPage = () => {
                         )}
                       </Flex>
 
+                      <Flex flex="1" alignItems="center" justifyContent="center">
+                        <VStack>
+                          <Heading size="sm">{game.location.name}</Heading>
+                        </VStack>
+                      </Flex>
+
                       {/* AWAY */}
                       <Flex flex="1" alignItems="center" justifyContent="center">
                         {game.result && game.result.id === game.awayTeam.id && (
