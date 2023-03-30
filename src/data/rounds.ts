@@ -1,5 +1,5 @@
-import to from 'await-to-js';
 import prisma from '.';
+import to from 'await-to-js';
 
 export const fetchAllRounds = async () => {
   const [err, rounds] = await to(prisma.round.findMany({ orderBy: { dateEnd: 'desc' } }));
@@ -59,7 +59,7 @@ export const fetchLatestRoundId = async () => {
     return null;
   }
 
-  return round.id;
+  return round?.id;
 };
 
 export const fetchLatestRoundWithGames = async () => {
