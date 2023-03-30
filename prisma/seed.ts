@@ -1,4 +1,4 @@
-import { PrismaClient, Role, User } from '@prisma/client';
+/*import { PrismaClient, Role, User } from '@prisma/client';
 import { genSaltSync, hashSync } from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -62,3 +62,4 @@ const LOCATION_NAMES = ['SCG', 'MCG', 'Backyard'];
     await prisma.$disconnect();
   }
 })();
+*/
