@@ -59,7 +59,7 @@ export const fetchLatestRoundId = async () => {
     return null;
   }
 
-  return round?.id;
+  return round.id;
 };
 
 export const fetchLatestRoundWithGames = async () => {
