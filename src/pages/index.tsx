@@ -38,7 +38,7 @@ const UserLadder = () => {
       userWithTip.tips.forEach((tip: any) => {
         if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
           total = total + 1;
-          if (roundId[0].id === tip.game.roundId) {
+          if (roundId === tip.game.roundId) {
             lastRound = lastRound + 1;
           }
         }
@@ -59,13 +59,13 @@ const UserLadder = () => {
   }, [roundId, usersWithTips]);
 
   return (
-    <TableContainer borderRadius="md" overflow="hidden" w="full">
-      <Table position="relative">
+    <TableContainer borderRadius="md" w="full">
+      <Table size="sm" position="relative">
         <TableCaption>Leader board</TableCaption>
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th isNumeric>Last Round</Th>
+            <Th isNumeric>Last</Th>
             <Th isNumeric>Total</Th>
           </Tr>
         </Thead>
