@@ -37,13 +37,12 @@ const ViewTips: NextPage = () => {
               {format(parseISO(data.dateStart), 'dd/MM/yyyy')} - {format(parseISO(data.dateEnd), 'dd/MM/yyyy')}
             </Text>
             <TableContainer>
-              <Table variant="simple">
+              <Table size="sm" variant="simple">
                 <TableCaption>Round {data.roundNumber} Tips</TableCaption>
                 <Thead>
                   <Tr>
                     <Th>User</Th>
-                    <Th>Home</Th>
-                    <Th>Away</Th>
+                    <Th>Tip</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -56,18 +55,24 @@ const ViewTips: NextPage = () => {
                             <Text>{tip.user.username}</Text>
                           </HStack>
                         </Td>
-                        <Td>
-                          <HStack>
-                            <Text>{tip.game.homeTeam.name}</Text>
-                            {tip.selectedTip.id === tip.game.homeTeam.id && <Text>👈</Text>}
-                          </HStack>
-                        </Td>
-                        <Td>
-                          <HStack>
-                            <Text>{tip.game.awayTeam.name}</Text>
-                            {tip.selectedTip.id === tip.game.awayTeam.id && <Text>👈</Text>}{' '}
-                          </HStack>
-                        </Td>
+                        {tip.selectedTip.id === tip.game.homeTeam.id && (
+                          <Td>
+                            <HStack>
+                              <Text>{tip.game.homeTeam.name}</Text>
+                              {tip.game?.result?.id && tip.selectedTip.id === tip.game?.result?.id && <Text>✔️</Text>}
+                              {''}
+                            </HStack>
+                          </Td>
+                        )}
+                        {tip.selectedTip.id === tip.game.awayTeam.id && (
+                          <Td>
+                            <HStack>
+                              <Text>{tip.game.awayTeam.name}</Text>
+                              {tip.game?.result?.id && tip.selectedTip.id === tip.game?.result?.id && <Text>✔️</Text>}
+                              {''}
+                            </HStack>
+                          </Td>
+                        )}
                       </Tr>
                     ))}
                 </Tbody>
