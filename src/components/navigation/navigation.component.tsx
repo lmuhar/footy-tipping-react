@@ -46,7 +46,7 @@ const Navigation = () => {
               <HStack spacing={4}>
                 <NextLink href="/" passHref>
                   <Heading size="md" as="a" color="white">
-                    Footy Tipping 2022 🏉
+                    Footy Tipping 2024 🏉
                   </Heading>
                 </NextLink>
                 {isDesktop && user && (
