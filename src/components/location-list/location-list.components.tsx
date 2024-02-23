@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { trpc } from 'utils/trpc';
 
 const LocationList = () => {
-  const { data } = useQuery(['locations'], async () => (await axios.get('/api/locations')).data);
+  const { data } = trpc.getLocations.useQuery();
 
   return (
     <Stack>
@@ -17,7 +16,7 @@ const LocationList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((location: any) => (
+              {data.map((location) => (
                 <Tr key={location.id}>
                   <Td>{location.name}</Td>
                 </Tr>

@@ -1,8 +1,6 @@
 import { NextPage } from 'next';
 import { ApplicationShell } from 'layouts/application-shell';
 import useTokenData from 'custom-hooks/useTokenData.hook';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import {
   Avatar,
   Heading,
@@ -20,10 +18,11 @@ import {
 } from '@chakra-ui/react';
 import { Card } from 'components/card';
 import { format, parseISO } from 'date-fns';
+import { trpc } from 'utils/trpc';
 
 const ViewTips: NextPage = () => {
   const { user: _user } = useTokenData();
-  const { data } = useQuery(['latestRoundWithGames'], async () => (await axios.get('/api/rounds/latest')).data);
+  const { data } = trpc.fetchLatestRound.useQuery();
 
   return (
     <ApplicationShell>

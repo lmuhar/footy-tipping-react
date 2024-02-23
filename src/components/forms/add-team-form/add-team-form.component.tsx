@@ -11,22 +11,19 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
+import { trpc } from 'utils/trpc';
 
 interface AddTeamInputs {
   name: string;
 }
 
 const AddTeamForm = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = useMutation(async (input: AddTeamInputs) => {
-    return await axios.post(`/api/teams`, input);
-  });
+  const updateMutation = trpc.addTeam.useMutation();
 
   const {
     handleSubmit,
@@ -37,7 +34,7 @@ const AddTeamForm = () => {
 
   const onSubmit = (input: AddTeamInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(input, {
+    updateMutation.mutateAsync(input.name, {
       onSuccess: () => {
         reset();
         toast({
@@ -48,7 +45,7 @@ const AddTeamForm = () => {
           isClosable: true,
           position: 'bottom-left',
         });
-        queryClient.invalidateQueries(['teams']);
+        utils.getTeams.invalidate();
       },
       onError: () => setSubmitError(true),
     });

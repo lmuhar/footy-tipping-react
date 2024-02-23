@@ -2,12 +2,11 @@ import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
+import { trpc } from 'utils/trpc';
 
 interface UpdateProfileInputs {
   username: string;
@@ -19,10 +18,7 @@ const LoginPage: NextPage = () => {
 
   const [updateError, setUpdateError] = useState<boolean>(false);
 
-  const updateMutation = useMutation(async (input: UpdateProfileInputs) => {
-    if (!user) throw new Error('No user stored');
-    return await axios.put(`/api/users/${user.id}`, input);
-  });
+  const updateMutation = trpc.updateUsername.useMutation();
 
   const {
     handleSubmit,
@@ -32,13 +28,19 @@ const LoginPage: NextPage = () => {
 
   const onSubmit = (input: UpdateProfileInputs) => {
     setUpdateError(false);
-    updateMutation.mutateAsync(input, {
-      onSuccess: (res) => {
-        localStorage.setItem('token', res.data.token);
-        push('/');
+    updateMutation.mutateAsync(
+      {
+        userId: user?.id || '',
+        username: input.username,
       },
-      onError: () => setUpdateError(true),
-    });
+      {
+        onSuccess: (res) => {
+          localStorage.setItem('token', res.token);
+          push('/');
+        },
+        onError: () => setUpdateError(true),
+      },
+    );
   };
 
   return (

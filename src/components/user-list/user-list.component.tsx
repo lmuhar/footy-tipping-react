@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { Avatar, Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { trpc } from 'utils/trpc';
 
 const UserList = () => {
-  const { data } = useQuery(['users'], async () => (await axios.get('/api/users')).data);
+  const { data } = trpc.getUsers.useQuery();
 
   return (
     <Stack>
@@ -18,7 +17,7 @@ const UserList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((user: any) => (
+              {data.map((user) => (
                 <Tr key={user.username}>
                   <Td display="flex" alignItems="center">
                     <Avatar name={user.username} size="xs" mr="2" />

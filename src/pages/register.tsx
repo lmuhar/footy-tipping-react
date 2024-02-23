@@ -13,12 +13,11 @@ import {
 } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
 import NextLink from 'next/link';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
+import { trpc } from 'utils/trpc';
 
 interface RegisterFormInputs {
   email: string;
@@ -32,9 +31,7 @@ const LoginPage: NextPage = () => {
 
   const [registerError, setRegisterError] = useState<boolean>(false);
 
-  const registerMutation = useMutation(async (input: RegisterFormInputs) => {
-    return await axios.post('/api/users/register', input);
-  });
+  const registerMutation = trpc.register.useMutation();
 
   const {
     handleSubmit,
@@ -46,7 +43,7 @@ const LoginPage: NextPage = () => {
     setRegisterError(false);
     registerMutation.mutateAsync(input, {
       onSuccess: (res) => {
-        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('token', res.token);
         push('/');
       },
       onError: () => setRegisterError(true),

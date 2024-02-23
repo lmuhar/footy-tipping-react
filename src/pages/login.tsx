@@ -13,12 +13,11 @@ import {
 } from '@chakra-ui/react';
 import { ApplicationShell } from 'layouts/application-shell';
 import NextLink from 'next/link';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
+import { trpc } from 'utils/trpc';
 
 interface LoginFormInputs {
   email: string;
@@ -31,9 +30,7 @@ const LoginPage: NextPage = () => {
 
   const [loginError, setLoginError] = useState<boolean>(false);
 
-  const loginMutation = useMutation(async (input: LoginFormInputs) => {
-    return await axios.post('/api/users/login', input);
-  });
+  const loginMutation = trpc.login.useMutation();
 
   const {
     handleSubmit,
@@ -45,7 +42,7 @@ const LoginPage: NextPage = () => {
     setLoginError(false);
     loginMutation.mutateAsync(input, {
       onSuccess: (res) => {
-        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('token', res.token);
         push('/');
       },
       onError: () => setLoginError(true),

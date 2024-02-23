@@ -1,12 +1,8 @@
 import { TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { Ladder } from 'data';
+import { trpc } from 'utils/trpc';
 
-const AFLLadder = (props: { initialLadder?: any[] }) => {
-  const { data } = useQuery(['ladder'], async () => (await axios.get<Ladder>('/api/ladder')).data, {
-    initialData: props.initialLadder,
-  });
+const AFLLadder = () => {
+  const { data } = trpc.ladder.useQuery();
 
   return (
     <TableContainer borderRadius="md" overflow="hidden" w="full">
@@ -22,7 +18,7 @@ const AFLLadder = (props: { initialLadder?: any[] }) => {
         </Thead>
         <Tbody>
           {data &&
-            data.map((rowData: any) => (
+            data.map((rowData) => (
               <Tr key={rowData.name}>
                 <Td isNumeric>{rowData.order}</Td>
                 <Td>{rowData.name}</Td>

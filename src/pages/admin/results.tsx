@@ -5,21 +5,18 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { format, parseISO } from 'date-fns';
+import { trpc } from 'utils/trpc';
 
 const LoginPage: NextPage = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const toast = useToast();
   const { user } = useTokenData();
   const { push } = useRouter();
 
-  const { data } = useQuery(['latestRoundWithGames'], async () => (await axios.get('/api/rounds/latest/games')).data);
+  const { data } = trpc.getLatestRoundWithGames.useQuery();
 
-  const updateMutation = useMutation(async (input: { gameId: string; teamId: string }) => {
-    return await axios.put(`/api/games/${input.gameId}/result`, { winner: input.teamId });
-  });
+  const updateMutation = trpc.updateGameResult.useMutation();
 
   useEffect(() => {
     if (user && user?.role !== 'admin') push('/');
@@ -38,7 +35,7 @@ const LoginPage: NextPage = () => {
             isClosable: true,
             position: 'bottom-left',
           });
-          queryClient.invalidateQueries(['latestRoundWithGames']);
+          utils.getLatestRoundWithGames.invalidate();
         },
         onError: () => {
           toast({
@@ -72,7 +69,7 @@ const LoginPage: NextPage = () => {
               <Divider />
               <VStack w="full" spacing="4">
                 {data.games &&
-                  data.games.map((game: any) => (
+                  data.games.map((game) => (
                     <HStack key={game.id} w="full" bg="gray.100" px="2" py="4" rounded="md">
                       {/*  HOME  */}
                       <Flex flex="1" alignItems="center" justifyContent="center">

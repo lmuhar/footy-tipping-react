@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { trpc } from 'utils/trpc';
 
 const LocationList = () => {
-  const { data } = useQuery(['teams'], async () => (await axios.get('/api/teams')).data);
+  const { data } = trpc.getTeams.useQuery();
 
   return (
     <Stack>
@@ -17,7 +16,7 @@ const LocationList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((team: any) => (
+              {data.map((team) => (
                 <Tr key={team.id}>
                   <Td>{team.name}</Td>
                 </Tr>
