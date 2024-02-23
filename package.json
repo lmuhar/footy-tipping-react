@@ -11,7 +11,7 @@
     "lint:fix": "next lint --fix",
     "format:check": "prettier .",
     "format:fix": "prettier --write .",
-    "db:deploy": "prisma migrate deploy && prisma db seed",
+    "db:deploy": "prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "keywords": [],
