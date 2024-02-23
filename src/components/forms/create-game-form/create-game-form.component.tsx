@@ -79,7 +79,7 @@ const CreateGameForm = () => {
             {...register('round', { value: '', required: { value: true, message: 'Please select a round' } })}
           >
             {rounds &&
-              rounds.map((round: any) => (
+              rounds.map((round) => (
                 <option key={round.id} value={round.id}>
                   {round.roundNumber}
                 </option>
@@ -96,7 +96,7 @@ const CreateGameForm = () => {
             {...register('homeTeam', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
             {teams &&
-              teams.map((team: any) => (
+              teams.map((team) => (
                 <option key={team.id} value={team.id}>
                   {team.name}
                 </option>
@@ -113,7 +113,7 @@ const CreateGameForm = () => {
             {...register('awayTeam', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
             {teams &&
-              teams.map((team: any) => (
+              teams.map((team) => (
                 <option key={team.id} value={team.id}>
                   {team.name}
                 </option>
@@ -130,7 +130,7 @@ const CreateGameForm = () => {
             {...register('location', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
             {locations &&
-              locations.map((location: any) => (
+              locations.map((location) => (
                 <option key={location.id} value={location.id}>
                   {location.name}
                 </option>

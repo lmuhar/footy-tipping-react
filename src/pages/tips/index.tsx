@@ -46,7 +46,7 @@ const ViewTips: NextPage = () => {
                 </Thead>
                 <Tbody>
                   {data.tips &&
-                    data.tips.map((tip: any) => (
+                    data.tips.map((tip) => (
                       <Tr key={tip.id}>
                         <Td>
                           <HStack>

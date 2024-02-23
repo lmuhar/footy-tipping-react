@@ -1,7 +1,7 @@
 import { Styles } from '@chakra-ui/theme-tools';
 
 const styles: Styles = {
-  global: (_props: any) => ({
+  global: (_props) => ({
     body: {
       bg: 'gray.200',
     },

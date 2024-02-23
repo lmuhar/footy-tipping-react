@@ -111,7 +111,7 @@ const LoginPage: NextPage = () => {
                             size="xs"
                             variant="solid"
                             colorScheme="blue"
-                            isDisabled={game.tip.length}
+                            isDisabled={!!game.tip.length}
                             onClick={handleSetTipOnClick(round.id, game.id, game.homeTeam.id)}
                           >
                             Place Tip
@@ -144,7 +144,7 @@ const LoginPage: NextPage = () => {
                             size="xs"
                             variant="solid"
                             colorScheme="blue"
-                            isDisabled={game.tip.length}
+                            isDisabled={!!game.tip.length}
                             onClick={handleSetTipOnClick(round.id, game.id, game.awayTeam.id)}
                           >
                             Place Tip

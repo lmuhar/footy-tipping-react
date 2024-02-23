@@ -2,7 +2,7 @@ import { ComponentStyleConfig } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
 
 const Card: ComponentStyleConfig = {
-  baseStyle: (props: any) => ({
+  baseStyle: (props) => ({
     display: 'flex',
     flexDirection: 'column',
     background: [mode('white', 'gray.900')(props)],
