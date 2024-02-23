@@ -1,42 +1,25 @@
 # fly.toml file generated for muhar-tipping on 2022-09-14T02:21:03+10:00
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 
 app = "muhar-tipping"
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
+primary_region = "syd"
 
-[env]
-  PORT = "8080"
+[processes]
+  web = "yarn start"
 
 [deploy]
   release_command = "yarn db:deploy"
 
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["web"]
 
-[[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
-
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+  processes = ["web"]
