@@ -1,10 +1,9 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { format, parseISO } from 'date-fns';
+import { trpc } from 'utils/trpc';
 
 const RoundList = () => {
-  const { data } = useQuery(['rounds'], async () => (await axios.get('/api/rounds')).data);
+  const { data } = trpc.getRounds.useQuery();
 
   return (
     <Stack>
@@ -20,7 +19,7 @@ const RoundList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((round: any) => (
+              {data.map((round) => (
                 <Tr key={round.id}>
                   <Td isNumeric>{round.roundNumber}</Td>
                   <Td>{format(parseISO(round.dateStart), 'dd/MM/yyyy')}</Td>

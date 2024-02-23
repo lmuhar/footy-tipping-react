@@ -11,22 +11,19 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
+import { trpc } from 'utils/trpc';
 
 interface CreateLocationInputs {
   name: string;
 }
 
 const CreateLocationForm = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = useMutation(async (input: CreateLocationInputs) => {
-    return await axios.post(`/api/locations`, input);
-  });
+  const updateMutation = trpc.addLocation.useMutation();
 
   const {
     handleSubmit,
@@ -37,7 +34,7 @@ const CreateLocationForm = () => {
 
   const onSubmit = (input: CreateLocationInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(input, {
+    updateMutation.mutateAsync(input.name, {
       onSuccess: () => {
         reset();
         toast({
@@ -48,7 +45,7 @@ const CreateLocationForm = () => {
           isClosable: true,
           position: 'bottom-left',
         });
-        queryClient.invalidateQueries(['locations']);
+        utils.getLocations.invalidate();
       },
       onError: () => setSubmitError(true),
     });

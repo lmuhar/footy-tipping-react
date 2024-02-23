@@ -21,7 +21,7 @@ export interface Rung {
 
 export type Ladder = Rung[];
 
-export const fetchLadder = async () => {
+export const fetchLadder = async (): Promise<Ladder> => {
   const cachedLadder = get(ladderUrl);
   if (cachedLadder) return cachedLadder;
 
@@ -36,11 +36,11 @@ export const fetchLadder = async () => {
   let j = 1;
   $('table')
     .find('tr')
-    .each((_i: any, elem: any) => {
+    .each((_i, elem) => {
       const data: Rung = { order: 0 };
       $(elem)
         .find('td')
-        .each((t: any, element: any) => {
+        .each((t, element) => {
           if (t === 0) {
             data.name = $(element).text();
           } else if (t === 1) {

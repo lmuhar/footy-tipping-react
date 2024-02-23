@@ -1,11 +1,10 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { Select, Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { ChangeEventHandler, useMemo, useState } from 'react';
+import { trpc } from 'utils/trpc';
 
 const UserList = () => {
-  const { data: rounds } = useQuery(['rounds'], async () => (await axios.get('/api/rounds')).data);
-  const { data: games } = useQuery(['games'], async () => (await axios.get('/api/games')).data);
+  const { data: rounds } = trpc.getRounds.useQuery();
+  const { data: games } = trpc.getGames.useQuery();
 
   const [roundId, setRoundId] = useState<string | null>(null);
 
@@ -16,14 +15,14 @@ const UserList = () => {
 
   const roundGames = useMemo(() => {
     if (!games) return [];
-    return games.filter((game: any) => game.roundId === roundId);
+    return games.filter((game) => game.roundId === roundId);
   }, [roundId, games]);
 
   return (
     <Stack>
       <Select placeholder="Select Round" onChange={handleRoundSelect}>
         {rounds &&
-          rounds.map((round: any) => (
+          rounds.map((round) => (
             <option key={round.id} value={round.id}>
               {round.roundNumber}
             </option>
@@ -41,7 +40,7 @@ const UserList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {roundGames.map((game: any) => (
+              {roundGames.map((game) => (
                 <Tr key={game.id}>
                   <Td>{game.location.name}</Td>
                   <Td>{game.homeTeam.name}</Td>

@@ -1,8 +1,4 @@
-import to from 'await-to-js';
-import { GetServerSideProps, NextPage } from 'next';
-import { fetchAllUsersTipCount, fetchLadder, fetchLatestRoundId, Ladder } from 'data';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { NextPage } from 'next';
 import {
   TableCaption,
   Thead,
@@ -21,21 +17,27 @@ import { useMemo } from 'react';
 import { ApplicationShell } from 'layouts/application-shell';
 import { Card } from 'components/card';
 import { AFLLadder } from 'components/afl-ladder';
+import { trpc } from 'utils/trpc';
 
 const UserLadder = () => {
-  const { data: usersWithTips } = useQuery(['usersWithTips'], async () => (await axios.get('/api/users/tips')).data);
+  const { data: usersWithTips } = trpc.usersWithTips.useQuery();
 
-  const { data: roundId } = useQuery(['roundId'], async () => (await axios.get('/api/rounds/latest')).data.id);
+  const { data: roundId } = trpc.roundId.useQuery();
 
   const tableData = useMemo(() => {
     if (!usersWithTips || !usersWithTips.length || !roundId) return [];
 
-    const info: any[] = [];
-    usersWithTips.forEach((userWithTip: any) => {
+    const info: {
+      id: string;
+      name: string;
+      lastRound: number;
+      total: number;
+    }[] = [];
+    usersWithTips.forEach((userWithTip) => {
       let total = 0;
       let lastRound = 0;
 
-      userWithTip.tips.forEach((tip: any) => {
+      userWithTip.tips.forEach((tip) => {
         if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
           total = total + 1;
           if (roundId === tip.game.roundId) {
@@ -70,7 +72,7 @@ const UserLadder = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {tableData.map((rowData: any) => (
+          {tableData.map((rowData) => (
             <Tr key={rowData.id}>
               <Td>
                 <HStack>
@@ -88,27 +90,7 @@ const UserLadder = () => {
   );
 };
 
-interface PageProps {
-  ladder: Ladder;
-  usersWithTips: any[];
-  roundId: string;
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps> = async (_context) => {
-  const [_fetchLadderErr, ladder] = await to(fetchLadder());
-  const [_fetchUsersWithTipsError, usersWithTips] = await to(fetchAllUsersTipCount());
-  const [_fetchLatestRoundIdError, roundId] = await to(fetchLatestRoundId());
-
-  return {
-    props: {
-      ladder: ladder || [],
-      usersWithTips: usersWithTips || [],
-      roundId: roundId || '',
-    },
-  };
-};
-
-const IndexPage: NextPage<PageProps> = (props) => {
+const IndexPage: NextPage = () => {
   return (
     <ApplicationShell>
       <VStack spacing={8}>
@@ -116,7 +98,7 @@ const IndexPage: NextPage<PageProps> = (props) => {
           <UserLadder />
         </Card>
         <Card w="full">
-          <AFLLadder initialLadder={props.ladder} />
+          <AFLLadder />
         </Card>
       </VStack>
     </ApplicationShell>

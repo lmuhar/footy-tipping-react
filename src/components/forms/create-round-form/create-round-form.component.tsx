@@ -14,9 +14,8 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
+import { trpc } from 'utils/trpc';
 
 interface CreateRoundInputs {
   roundNumber: number;
@@ -25,14 +24,12 @@ interface CreateRoundInputs {
 }
 
 const CreateRoundForm = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = useMutation(async (input: CreateRoundInputs) => {
-    return await axios.post(`/api/rounds`, input);
-  });
+  const updateMutation = trpc.addRound.useMutation();
 
   const {
     handleSubmit,
@@ -43,21 +40,28 @@ const CreateRoundForm = () => {
 
   const onSubmit = (input: CreateRoundInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(input, {
-      onSuccess: () => {
-        reset();
-        toast({
-          title: 'Round created.',
-          description: "We've created a new round.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-left',
-        });
-        queryClient.invalidateQueries(['rounds']);
+    updateMutation.mutateAsync(
+      {
+        roundNumber: input.roundNumber,
+        dateStart: input.dateStart.toISOString(),
+        dateEnd: input.dateEnd.toISOString(),
       },
-      onError: () => setSubmitError(true),
-    });
+      {
+        onSuccess: () => {
+          reset();
+          toast({
+            title: 'Round created.',
+            description: "We've created a new round.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+            position: 'bottom-left',
+          });
+          utils.getRounds.invalidate();
+        },
+        onError: () => setSubmitError(true),
+      },
+    );
   };
 
   return (

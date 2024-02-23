@@ -11,9 +11,8 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
+import { trpc } from 'utils/trpc';
 
 interface CreateGameInputs {
   round: string;
@@ -25,22 +24,18 @@ interface CreateGameInputs {
 }
 
 const CreateGameForm = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  const { data: rounds } = useQuery(['rounds'], async () => (await axios.get('/api/rounds')).data);
+  const { data: rounds } = trpc.getRounds.useQuery();
 
-  const { data: teams } = useQuery(['teams'], async () => (await axios.get('/api/teams')).data);
+  const { data: teams } = trpc.getTeams.useQuery();
 
-  const { data: locations } = useQuery(['locations'], async () => (await axios.get('/api/locations')).data);
+  const { data: locations } = trpc.getLocations.useQuery();
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = useMutation(
-    async (input: Omit<CreateGameInputs, 'startTime' | 'startDate'> & { startDateTime: string }) => {
-      return await axios.post(`/api/games`, input);
-    },
-  );
+  const updateMutation = trpc.createGame.useMutation();
 
   const {
     handleSubmit,
@@ -66,7 +61,7 @@ const CreateGameForm = () => {
             isClosable: true,
             position: 'bottom-left',
           });
-          queryClient.invalidateQueries(['games']);
+          utils.getGames.invalidate();
         },
         onError: () => setSubmitError(true),
       },

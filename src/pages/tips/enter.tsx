@@ -4,23 +4,16 @@ import { ApplicationShell } from 'layouts/application-shell';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import useTokenData from 'custom-hooks/useTokenData.hook';
 import { Card } from 'components/card';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { format, parseISO } from 'date-fns';
 import { AFLLadder } from 'components/afl-ladder';
+import { trpc } from 'utils/trpc';
 
 const LoginPage: NextPage = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const toast = useToast();
   const { user } = useTokenData();
 
-  const { data: rounds, refetch } = useQuery(
-    ['roundsForUser', user?.id],
-    async () => (await axios.get(`/api/rounds/user/${user?.id}`)).data,
-    {
-      enabled: !!user,
-    },
-  );
+  const { data: rounds, refetch } = trpc.roundForUser.useQuery(user?.id || '', { enabled: !!user });
 
   useEffect(() => {
     if (user) refetch();
@@ -28,30 +21,23 @@ const LoginPage: NextPage = () => {
 
   const roundList = useMemo(() => {
     if (!rounds) return [];
-    return rounds.map(({ id, roundNumber }: any) => ({ id, roundNumber }));
+    return rounds.map(({ id, roundNumber }) => ({ id, roundNumber }));
   }, [rounds]);
 
   const [selectedRoundId, setSelectedRoundId] = useState<string | null>(null);
 
   const round = useMemo(() => {
     if (!rounds || !selectedRoundId) return null;
-    return rounds.find((round: any) => round.id === selectedRoundId);
+    return rounds.find((round) => round.id === selectedRoundId);
   }, [rounds, selectedRoundId]);
 
-  const enterTipMutation = useMutation(
-    async (input: { round: string; game: string; selectedTip: string; user: string }) => {
-      return await axios.put(`/api/tips/round/${input.round}/user/${input.user}`, {
-        gameId: input.game,
-        selectedTipId: input.selectedTip,
-      });
-    },
-  );
+  const enterTipMutation = trpc.upsertTip.useMutation();
 
   const handleSetTipOnClick = (round: string, game: string, selectedTip: string) => async () => {
     if (!user) return;
 
     enterTipMutation.mutateAsync(
-      { round, game, selectedTip, user: user.id },
+      { roundId: round, gameId: game, selectedTipId: selectedTip, userId: user.id },
       {
         onSuccess: () => {
           toast({
@@ -62,7 +48,7 @@ const LoginPage: NextPage = () => {
             isClosable: true,
             position: 'bottom-left',
           });
-          queryClient.invalidateQueries(['roundsForUser', user?.id]);
+          utils.roundForUser.invalidate(user?.id);
           refetch();
         },
         onError: () => {
@@ -93,7 +79,7 @@ const LoginPage: NextPage = () => {
           </Heading>
           <Select placeholder="Select Round" mb="6" onChange={handleRoundSelect}>
             {roundList &&
-              roundList.map((round: any) => (
+              roundList.map((round) => (
                 <option key={round.id} value={round.id}>
                   {round.roundNumber}
                 </option>
@@ -110,7 +96,7 @@ const LoginPage: NextPage = () => {
               <Divider />
               <VStack w="full" spacing="4">
                 {round.games &&
-                  round.games.map((game: any) => (
+                  round.games.map((game) => (
                     <HStack key={game.id} w="full" bg="gray.100" px="2" py="4" rounded="md">
                       {/*  HOME  */}
                       <Flex flex="1" alignItems="center" justifyContent="center">

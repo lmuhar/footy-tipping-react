@@ -14,11 +14,10 @@ import CreateGameForm from 'components/forms/create-game-form/create-game-form.c
 import { GameList } from 'components/game-list';
 import { LocationList } from 'components/location-list';
 import { TeamList } from 'components/team-list';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { trpc } from 'utils/trpc';
 
 const LoginPage: NextPage = () => {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const { user } = useTokenData();
   const { push } = useRouter();
 
@@ -26,13 +25,11 @@ const LoginPage: NextPage = () => {
     if (user && user?.role !== 'admin') push('/');
   }, [user, push]);
 
-  const primeMutation = useMutation(async () => {
-    return await axios.post('/api/ladder/prime');
-  });
+  const primeMutation = trpc.primeLadder.useMutation();
 
   const handlePrimeTeamsOnClick = () => {
     primeMutation.mutate();
-    queryClient.invalidateQueries(['teams']);
+    utils.getTeams.invalidate();
   };
 
   return (
@@ -105,7 +102,7 @@ const LoginPage: NextPage = () => {
         <Card>
           <HStack mb="2">
             <Heading size="md">Teams</Heading>
-            <Button size="xs" colorScheme="blue" onClick={handlePrimeTeamsOnClick} isLoading={primeMutation.isLoading}>
+            <Button size="xs" colorScheme="blue" onClick={handlePrimeTeamsOnClick} isLoading={primeMutation.isPending}>
               Prime Teams
             </Button>
           </HStack>
