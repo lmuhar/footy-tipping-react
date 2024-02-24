@@ -11,7 +11,7 @@ primary_region = "syd"
 [build]
 
 [deploy]
-  release_command = "pnpm run db:deploy"
+  release_command = "pnpx prisma migrate deploy"
 
 [http_service]
   internal_port = 3000

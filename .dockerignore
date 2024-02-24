@@ -18,3 +18,10 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+node_modules
+start-database.sh
+.prettierrc
+.next
+.github
+*.md

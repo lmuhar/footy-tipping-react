@@ -19,8 +19,8 @@ import { api } from "~/utils/api";
 
 interface CreateRoundInputs {
   roundNumber: number;
-  dateStart: Date;
-  dateEnd: Date;
+  dateStart: string;
+  dateEnd: string;
 }
 
 const CreateRoundForm = () => {
@@ -43,8 +43,8 @@ const CreateRoundForm = () => {
     void updateMutation.mutateAsync(
       {
         roundNumber: input.roundNumber,
-        dateStart: input.dateStart.toISOString(),
-        dateEnd: input.dateEnd.toISOString(),
+        dateStart: input.dateStart,
+        dateEnd: input.dateEnd,
       },
       {
         onSuccess: () => {

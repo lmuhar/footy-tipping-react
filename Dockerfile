@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=18.16.1
-FROM node:${NODE_VERSION}-slim as base
+ARG NODE_VERSION=20.11.0
+FROM node:${NODE_VERSION}-bullseye-slim as base
 
 LABEL fly_launch_runtime="Next.js"
 
@@ -31,7 +31,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 COPY --link . .
 
 # Build application
-RUN SKIP_ENV_VALIDATION=1 pnpm run build
+RUN pnpm run setup && SKIP_ENV_VALIDATION=1 pnpm run build
 
 # Remove development dependencies
 RUN pnpm prune --prod
