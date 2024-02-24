@@ -16,7 +16,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Example:
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
 
-RUN yarn build
+RUN SKIP_ENV_VALIDATION=1 yarn build
 
 # If using npm comment out above and use below instead
 # RUN npm run build
