@@ -1,9 +1,9 @@
 import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { format, parseISO } from 'date-fns';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 const RoundList = () => {
-  const { data } = trpc.getRounds.useQuery();
+  const { data } = api.getRounds.useQuery();
 
   return (
     <Stack>

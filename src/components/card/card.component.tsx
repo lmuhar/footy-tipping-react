@@ -1,4 +1,4 @@
-import { Box, BoxProps, useStyleConfig } from '@chakra-ui/react';
+import { Box, type BoxProps, useStyleConfig } from '@chakra-ui/react';
 import * as React from 'react';
 
 type Props = BoxProps;

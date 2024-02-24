@@ -1,8 +1,8 @@
 import { TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 const AFLLadder = () => {
-  const { data } = trpc.ladder.useQuery();
+  const { data } = api.ladder.useQuery();
 
   return (
     <TableContainer borderRadius="md" overflow="hidden" w="full">
@@ -17,8 +17,7 @@ const AFLLadder = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {data &&
-            data.map((rowData) => (
+          {data?.map((rowData) => (
               <Tr key={rowData.name}>
                 <Td isNumeric>{rowData.order}</Td>
                 <Td>{rowData.name}</Td>

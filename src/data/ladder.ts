@@ -1,10 +1,13 @@
-import to from 'await-to-js';
-import axios from 'axios';
-import * as Cheerio from 'cheerio';
-import prisma from 'data';
-import { get, put } from 'memory-cache';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import to from "await-to-js";
+import axios from "axios";
+import * as Cheerio from "cheerio";
+import { db } from "~/server/db";
+import { get, put } from "memory-cache";
 
-const ladderUrl = 'http://www.fanfooty.com.au/game/ladder.php';
+const ladderUrl = "http://www.fanfooty.com.au/game/ladder.php";
 
 export interface Rung {
   order: number;
@@ -29,17 +32,18 @@ export const fetchLadder = async (): Promise<Ladder> => {
 
   if (err) throw err;
 
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const htmlString = await res.data;
   const $ = Cheerio.load(htmlString);
 
   const ladder: Ladder = [];
   let j = 1;
-  $('table')
-    .find('tr')
+  $("table")
+    .find("tr")
     .each((_i, elem) => {
       const data: Rung = { order: 0 };
       $(elem)
-        .find('td')
+        .find("td")
         .each((t, element) => {
           if (t === 0) {
             data.name = $(element).text();
@@ -76,30 +80,39 @@ export const primeTeamNames = async () => {
   const [err, res] = await to(axios.get<string>(ladderUrl));
   if (err) throw err;
 
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const htmlString = await res.data;
   const $ = Cheerio.load(htmlString);
 
   const names: string[] = [];
-  $('table')
-    .find('tr')
-    .each((_i, elem) =>
-      $(elem).hasClass('odd') || $(elem).hasClass('even')
-        ? $(elem)
-            .find('td')
-            .each((i, element) => (i === 0 ? names.push($(element).text()) : undefined))
-        : undefined,
-    );
 
+  $("table")
+    .find("tr")
+    .each((_i, elem) => {
+      const hasEvenOrOdd = $(elem).hasClass("even") || $(elem).hasClass("odd");
+      if (hasEvenOrOdd) {
+        $(elem)
+          .find("td")
+          .each((i, element) => {
+            const isFirstIndex = i === 0;
+            if (isFirstIndex) {
+              names.push($(element).text());
+            }
+          });
+      }
+    });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_createNamesErr, createdNames] = await to(
     Promise.all(
       names.map((name) =>
-        prisma.teamName.upsert({
+        db.teamName.upsert({
           where: { name },
           create: { name },
           update: {},
-        }),
-      ),
-    ),
+        })
+      )
+    )
   );
 
   return createdNames;

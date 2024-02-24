@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import {
   Button,
   FormControl,
@@ -13,9 +13,9 @@ import {
   Stack,
   Text,
   useToast,
-} from '@chakra-ui/react';
-import { useState } from 'react';
-import { trpc } from 'utils/trpc';
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { api } from "~/utils/api";
 
 interface CreateRoundInputs {
   roundNumber: number;
@@ -24,12 +24,12 @@ interface CreateRoundInputs {
 }
 
 const CreateRoundForm = () => {
-  const utils = trpc.useUtils();
+  const utils = api.useUtils();
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = trpc.addRound.useMutation();
+  const updateMutation = api.addRound.useMutation();
 
   const {
     handleSubmit,
@@ -40,7 +40,7 @@ const CreateRoundForm = () => {
 
   const onSubmit = (input: CreateRoundInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(
+    void updateMutation.mutateAsync(
       {
         roundNumber: input.roundNumber,
         dateStart: input.dateStart.toISOString(),
@@ -50,17 +50,17 @@ const CreateRoundForm = () => {
         onSuccess: () => {
           reset();
           toast({
-            title: 'Round created.',
+            title: "Round created.",
             description: "We've created a new round.",
-            status: 'success',
+            status: "success",
             duration: 5000,
             isClosable: true,
-            position: 'bottom-left',
+            position: "bottom-left",
           });
-          utils.getRounds.invalidate();
+          void utils.getRounds.invalidate();
         },
         onError: () => setSubmitError(true),
-      },
+      }
     );
   };
 
@@ -73,7 +73,7 @@ const CreateRoundForm = () => {
           <NumberInput>
             <NumberInputField
               id="round-number"
-              {...register('roundNumber', {
+              {...register("roundNumber", {
                 valueAsNumber: true,
                 value: 0,
               })}
@@ -83,7 +83,7 @@ const CreateRoundForm = () => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          <FormErrorMessage>{errors.roundNumber && errors.roundNumber.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.roundNumber?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Date Start */}
@@ -92,11 +92,11 @@ const CreateRoundForm = () => {
           <Input
             id="date-start"
             type="date"
-            {...register('dateStart', {
-              required: 'This is required',
+            {...register("dateStart", {
+              required: "This is required",
             })}
           />
-          <FormErrorMessage>{errors.dateStart && errors.dateStart.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.dateStart?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Date End */}
@@ -105,11 +105,11 @@ const CreateRoundForm = () => {
           <Input
             id="end-start"
             type="date"
-            {...register('dateEnd', {
-              required: 'This is required',
+            {...register("dateEnd", {
+              required: "This is required",
             })}
           />
-          <FormErrorMessage>{errors.dateEnd && errors.dateEnd.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.dateEnd?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Submit */}

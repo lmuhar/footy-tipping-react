@@ -22,7 +22,7 @@ export const fetchLatestRound = async () => {
         tips: {
           select: {
             id: true,
-            user: { select: { username: true } },
+            user: { select: { name: true } },
             selectedTip: true,
             game: { select: { startDateTime: true, homeTeam: true, awayTeam: true, result: true } },
           },

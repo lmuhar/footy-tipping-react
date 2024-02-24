@@ -1,8 +1,19 @@
-import { Avatar, Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { trpc } from 'utils/trpc';
+import {
+  Avatar,
+  Stack,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import { api } from "~/utils/api";
 
 const UserList = () => {
-  const { data } = trpc.getUsers.useQuery();
+  const { data } = api.getUsers.useQuery();
 
   return (
     <Stack>
@@ -18,10 +29,10 @@ const UserList = () => {
             </Thead>
             <Tbody>
               {data.map((user) => (
-                <Tr key={user.username}>
+                <Tr key={user.name}>
                   <Td display="flex" alignItems="center">
-                    <Avatar name={user.username} size="xs" mr="2" />
-                    {user.username}
+                    <Avatar name={user.name ?? undefined} size="xs" mr="2" />
+                    {user.name}
                   </Td>
                   <Td>{user.email}</Td>
                 </Tr>

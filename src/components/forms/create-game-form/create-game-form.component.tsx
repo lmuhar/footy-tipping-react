@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 interface CreateGameInputs {
   round: string;
@@ -24,18 +24,18 @@ interface CreateGameInputs {
 }
 
 const CreateGameForm = () => {
-  const utils = trpc.useUtils();
+  const utils = api.useUtils();
 
-  const { data: rounds } = trpc.getRounds.useQuery();
+  const { data: rounds } = api.getRounds.useQuery();
 
-  const { data: teams } = trpc.getTeams.useQuery();
+  const { data: teams } = api.getTeams.useQuery();
 
-  const { data: locations } = trpc.getLocations.useQuery();
+  const { data: locations } = api.getLocations.useQuery();
 
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = trpc.createGame.useMutation();
+  const updateMutation = api.createGame.useMutation();
 
   const {
     handleSubmit,
@@ -48,7 +48,7 @@ const CreateGameForm = () => {
     const { startDate, startTime, ...rest } = input;
     const startDateTime = `${startDate}T${startTime}:00`;
     setSubmitError(false);
-    updateMutation.mutateAsync(
+    void updateMutation.mutateAsync(
       { ...rest, startDateTime },
       {
         onSuccess: () => {
@@ -61,7 +61,7 @@ const CreateGameForm = () => {
             isClosable: true,
             position: 'bottom-left',
           });
-          utils.getGames.invalidate();
+          void utils.getGames.invalidate();
         },
         onError: () => setSubmitError(true),
       },
@@ -78,14 +78,13 @@ const CreateGameForm = () => {
             placeholder="Select Round"
             {...register('round', { value: '', required: { value: true, message: 'Please select a round' } })}
           >
-            {rounds &&
-              rounds.map((round) => (
+            {rounds?.map((round) => (
                 <option key={round.id} value={round.id}>
                   {round.roundNumber}
                 </option>
               ))}
           </Select>
-          <FormErrorMessage>{errors.round && errors.round.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.round?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Home Team */}
@@ -95,14 +94,13 @@ const CreateGameForm = () => {
             placeholder="Select Team"
             {...register('homeTeam', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
-            {teams &&
-              teams.map((team) => (
+            {teams?.map((team) => (
                 <option key={team.id} value={team.id}>
                   {team.name}
                 </option>
               ))}
           </Select>
-          <FormErrorMessage>{errors.homeTeam && errors.homeTeam.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.homeTeam?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Away Team */}
@@ -112,14 +110,13 @@ const CreateGameForm = () => {
             placeholder="Select Team"
             {...register('awayTeam', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
-            {teams &&
-              teams.map((team) => (
+            {teams?.map((team) => (
                 <option key={team.id} value={team.id}>
                   {team.name}
                 </option>
               ))}
           </Select>
-          <FormErrorMessage>{errors.awayTeam && errors.awayTeam.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.awayTeam?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Locations */}
@@ -129,14 +126,13 @@ const CreateGameForm = () => {
             placeholder="Select Location"
             {...register('location', { value: '', required: { value: true, message: 'Please select a team' } })}
           >
-            {locations &&
-              locations.map((location) => (
+            {locations?.map((location) => (
                 <option key={location.id} value={location.id}>
                   {location.name}
                 </option>
               ))}
           </Select>
-          <FormErrorMessage>{errors.location && errors.location.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.location?.message}</FormErrorMessage>
         </FormControl>
 
         {/* Date Start */}
@@ -151,7 +147,7 @@ const CreateGameForm = () => {
                   required: 'A date is required',
                 })}
               />
-              <FormErrorMessage>{errors.startDate && errors.startDate.message}</FormErrorMessage>
+              <FormErrorMessage>{errors.startDate?.message}</FormErrorMessage>
             </VStack>
             <VStack flex="1">
               <Input
@@ -161,7 +157,7 @@ const CreateGameForm = () => {
                   required: 'A time is required',
                 })}
               />
-              <FormErrorMessage>{errors.startTime && errors.startTime.message}</FormErrorMessage>
+              <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
             </VStack>
           </Stack>
         </FormControl>

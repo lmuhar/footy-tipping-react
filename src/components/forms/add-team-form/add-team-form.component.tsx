@@ -12,18 +12,18 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 interface AddTeamInputs {
   name: string;
 }
 
 const AddTeamForm = () => {
-  const utils = trpc.useUtils();
+  const utils = api.useUtils();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = trpc.addTeam.useMutation();
+  const updateMutation = api.addTeam.useMutation();
 
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ const AddTeamForm = () => {
 
   const onSubmit = (input: AddTeamInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(input.name, {
+    void updateMutation.mutateAsync(input.name, {
       onSuccess: () => {
         reset();
         toast({
@@ -45,7 +45,7 @@ const AddTeamForm = () => {
           isClosable: true,
           position: 'bottom-left',
         });
-        utils.getTeams.invalidate();
+        void utils.getTeams.invalidate();
       },
       onError: () => setSubmitError(true),
     });
@@ -67,7 +67,7 @@ const AddTeamForm = () => {
               minLength: { value: 5, message: 'Name must be no shorter than 5 characters' },
             })}
           />
-          <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <Stack spacing="4">
           <Button colorScheme="blue" isLoading={isSubmitting} type="submit">

@@ -1,8 +1,8 @@
 import { Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 const LocationList = () => {
-  const { data } = trpc.getLocations.useQuery();
+  const { data } = api.getLocations.useQuery();
 
   return (
     <Stack>

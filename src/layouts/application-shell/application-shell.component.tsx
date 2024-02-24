@@ -1,8 +1,8 @@
-import { Box, Container } from '@chakra-ui/react';
-import { Navigation } from 'components/navigation';
-import { PropsWithChildren } from 'react';
+import { Box, Container } from "@chakra-ui/react";
+import { Navigation } from "~/components/navigation";
+import { type PropsWithChildren } from "react";
 
-const ApplicationShell = ({ children }: PropsWithChildren<{ isLoggedInOnly?: boolean; isAdminOnly?: boolean }>) => {
+const ApplicationShell = ({ children }: PropsWithChildren) => {
   return (
     <Box as="main">
       <Navigation />

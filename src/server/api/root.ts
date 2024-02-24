@@ -1,33 +1,32 @@
-import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import { z } from "zod";
 import {
-  createGame,
-  createLocation,
-  createNewUser,
+  fetchAllUsersTipCount,
+  fetchLatestRoundId,
+  fetchLadder,
+  fetchRoundsWithGamesForUser,
+  fetchLatestRound,
+  upsertTip,
+  primeTeamNames,
+  fetchAllRounds,
+  fetchLatestRoundWithGames,
   createRound,
+  fetchAllTeamNames,
   createTeamName,
   fetchAllGames,
   fetchAllLocations,
-  fetchAllRounds,
-  fetchAllTeamNames,
+  createLocation,
+  createGame,
   fetchAllUsers,
-  fetchAllUsersTipCount,
-  fetchLadder,
-  fetchLatestRound,
-  fetchLatestRoundId,
-  fetchLatestRoundWithGames,
-  fetchRoundsWithGamesForUser,
-  fetchUserByEmail,
-  primeTeamNames,
   updateGameResult,
-  updateUsername,
-  upsertTip,
-} from 'data';
-import * as jwt from 'jsonwebtoken';
-import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
-import { TRPCError } from '@trpc/server';
+} from "~/data";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const appRouter = router({
+/**
+ * This is the primary router for your server.
+ *
+ * All routers added in /api/routers should be manually added here.
+ */
+export const appRouter = createTRPCRouter({
   usersWithTips: publicProcedure.query(async ({}) => {
     return fetchAllUsersTipCount();
   }),
@@ -50,67 +49,15 @@ export const appRouter = router({
         gameId: z.string(),
         selectedTipId: z.string(),
         userId: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
-      return upsertTip(input.roundId, input.selectedTipId, input.userId, input.gameId);
-    }),
-  login: publicProcedure
-    .input(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      const { email, password } = input;
-
-      const user = await fetchUserByEmail(email);
-
-      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' });
-
-      const isMatch = compareSync(password, user.password);
-      if (!isMatch) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' });
-
-      const token = jwt.sign({ user }, String(process.env.SECRET_TOKEN));
-      return { token: token };
-    }),
-  updateUsername: publicProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-        username: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      console.info('Update Username Request');
-      const { username, userId } = input;
-
-      const user = await updateUsername(userId, username);
-
-      if (!user) throw new TRPCError({ code: 'NOT_FOUND', message: 'no matching user found' });
-
-      const token = jwt.sign({ user }, process.env.SECRET_TOKEN as string);
-      return { token: token };
-    }),
-  register: publicProcedure
-    .input(
-      z.object({
-        username: z.string(),
-        password: z.string(),
-        email: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      const { username, password, email } = input;
-
-      const hashedPassword = hashSync(password, genSaltSync(10));
-      const user = await createNewUser(username, hashedPassword, email);
-
-      if (!user) throw new TRPCError({ code: 'NOT_FOUND', message: 'no matching user found' });
-
-      const token = jwt.sign({ user }, process.env.SECRET_TOKEN as string);
-      return { token: token };
+      return upsertTip(
+        input.roundId,
+        input.selectedTipId,
+        input.userId,
+        input.gameId
+      );
     }),
   primeLadder: publicProcedure.mutation(async ({}) => {
     return primeTeamNames();
@@ -127,7 +74,7 @@ export const appRouter = router({
         roundNumber: z.number(),
         dateStart: z.string(),
         dateEnd: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       const { roundNumber, dateStart, dateEnd } = input;
@@ -156,11 +103,17 @@ export const appRouter = router({
         awayTeam: z.string(),
         location: z.string(),
         startDateTime: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       const { round, homeTeam, awayTeam, location, startDateTime } = input;
-      return createGame(round, homeTeam, awayTeam, location, new Date(startDateTime));
+      return createGame(
+        round,
+        homeTeam,
+        awayTeam,
+        location,
+        new Date(startDateTime)
+      );
     }),
   getUsers: publicProcedure.query(async ({}) => {
     return fetchAllUsers();
@@ -170,11 +123,12 @@ export const appRouter = router({
       z.object({
         gameId: z.string(),
         teamId: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       return updateGameResult(input.gameId, input.teamId);
     }),
 });
 
+// export type definition of API
 export type AppRouter = typeof appRouter;

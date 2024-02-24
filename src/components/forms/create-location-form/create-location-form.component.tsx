@@ -12,18 +12,18 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { trpc } from 'utils/trpc';
+import { api} from '~/utils/api';
 
 interface CreateLocationInputs {
   name: string;
 }
 
 const CreateLocationForm = () => {
-  const utils = trpc.useUtils();
+  const utils = api.useUtils();
   const [submitError, setSubmitError] = useState<boolean>(false);
   const toast = useToast();
 
-  const updateMutation = trpc.addLocation.useMutation();
+  const updateMutation = api.addLocation.useMutation();
 
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ const CreateLocationForm = () => {
 
   const onSubmit = (input: CreateLocationInputs) => {
     setSubmitError(false);
-    updateMutation.mutateAsync(input.name, {
+    void updateMutation.mutateAsync(input.name, {
       onSuccess: () => {
         reset();
         toast({
@@ -45,7 +45,7 @@ const CreateLocationForm = () => {
           isClosable: true,
           position: 'bottom-left',
         });
-        utils.getLocations.invalidate();
+        void utils.getLocations.invalidate();
       },
       onError: () => setSubmitError(true),
     });
@@ -67,7 +67,7 @@ const CreateLocationForm = () => {
               minLength: { value: 3, message: 'Name must be no shorter than 3 characters' },
             })}
           />
-          <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <Stack spacing="4">
           <Button colorScheme="blue" isLoading={isSubmitting} type="submit">

@@ -4,6 +4,10 @@
 app = "muhar-tipping"
 primary_region = "syd"
 
+[env]
+  NEXTAUTH_URL="https://tipping.muhar.xyz"
+  GOOGLE_CLIENT_ID="734459720589-duo0ouap4tc1fnd5t0tp23lslrts9ai9.apps.googleusercontent.com"
+
 [processes]
   web = "yarn start"
 

@@ -1,86 +1,126 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+generator client {
+    provider = "prisma-client-js"
 }
 
-generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x"]
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
-  admin
-  user
-}
-
-model Location {
-  id   String @id @default(cuid())
-  name String @unique
-  game Game[]
-}
-
-model TeamName {
-  id       String @id @default(cuid())
-  name     String @unique
-  gameAway Game[] @relation("gameAway")
-  gameHome Game[] @relation("gameHome")
-  result   Game[] @relation("result")
-  userTips Tip[]
-}
-
-model Tip {
-  id            String   @id @default(cuid())
-  createdAt     DateTime @default(now())
-  selectedTip   TeamName @relation(fields: [selectedTipId], references: [id])
-  selectedTipId String
-  round         Round    @relation(fields: [roundId], references: [id])
-  roundId       String
-  game          Game     @relation(fields: [gameId], references: [id])
-  gameId        String
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String
-  correct       Boolean?
-
-  @@unique([userId, gameId])
-}
-
-model Game {
-  id            String    @id @default(cuid())
-  homeTeamId    String
-  homeTeam      TeamName  @relation("gameHome", fields: [homeTeamId], references: [id])
-  awayTeamId    String
-  awayTeam      TeamName  @relation("gameAway", fields: [awayTeamId], references: [id])
-  location      Location  @relation(fields: [locationId], references: [id])
-  locationId    String
-  startDateTime DateTime
-  round         Round     @relation(fields: [roundId], references: [id])
-  roundId       String
-  resultId      String?
-  result        TeamName? @relation("result", fields: [resultId], references: [id])
-  tip           Tip[]
-
-  @@unique([homeTeamId, awayTeamId, roundId])
-}
-
-model Round {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  dateStart   DateTime
-  dateEnd     DateTime
-  roundNumber Int @unique
-  games       Game[]
-  tips        Tip[]
+    admin
+    user
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  username  String   @unique
-  email     String   @unique
-  password  String
-  role      Role     @default(user)
-  tips      Tip[]
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    role          Role      @default(user)
+    tips          Tip[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Location {
+    id   String @id @default(cuid())
+    name String @unique
+    game Game[]
+}
+
+model TeamName {
+    id       String @id @default(cuid())
+    name     String @unique
+    gameAway Game[] @relation("gameAway")
+    gameHome Game[] @relation("gameHome")
+    result   Game[] @relation("result")
+    userTips Tip[]
+}
+
+model Tip {
+    id            String   @id @default(cuid())
+    createdAt     DateTime @default(now())
+    selectedTip   TeamName @relation(fields: [selectedTipId], references: [id])
+    selectedTipId String
+    round         Round    @relation(fields: [roundId], references: [id])
+    roundId       String
+    game          Game     @relation(fields: [gameId], references: [id])
+    gameId        String
+    user          User     @relation(fields: [userId], references: [id])
+    userId        String
+    correct       Boolean?
+
+    @@unique([userId, gameId])
+}
+
+model Game {
+    id            String    @id @default(cuid())
+    homeTeamId    String
+    homeTeam      TeamName  @relation("gameHome", fields: [homeTeamId], references: [id])
+    awayTeamId    String
+    awayTeam      TeamName  @relation("gameAway", fields: [awayTeamId], references: [id])
+    location      Location  @relation(fields: [locationId], references: [id])
+    locationId    String
+    startDateTime DateTime
+    round         Round     @relation(fields: [roundId], references: [id])
+    roundId       String
+    resultId      String?
+    result        TeamName? @relation("result", fields: [resultId], references: [id])
+    tip           Tip[]
+
+    @@unique([homeTeamId, awayTeamId, roundId])
+}
+
+model Round {
+    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    dateStart   DateTime
+    dateEnd     DateTime
+    roundNumber Int      @unique
+    games       Game[]
+    tips        Tip[]
 }

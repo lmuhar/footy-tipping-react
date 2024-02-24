@@ -1,10 +1,10 @@
 import { Select, Stack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { ChangeEventHandler, useMemo, useState } from 'react';
-import { trpc } from 'utils/trpc';
+import { type ChangeEventHandler, useMemo, useState } from 'react';
+import { api} from '~/utils/api';
 
 const UserList = () => {
-  const { data: rounds } = trpc.getRounds.useQuery();
-  const { data: games } = trpc.getGames.useQuery();
+  const { data: rounds } = api.getRounds.useQuery();
+  const { data: games } = api.getGames.useQuery();
 
   const [roundId, setRoundId] = useState<string | null>(null);
 
@@ -21,8 +21,7 @@ const UserList = () => {
   return (
     <Stack>
       <Select placeholder="Select Round" onChange={handleRoundSelect}>
-        {rounds &&
-          rounds.map((round) => (
+        {rounds?.map((round) => (
             <option key={round.id} value={round.id}>
               {round.roundNumber}
             </option>

@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { type NextPage } from "next";
 import {
   TableCaption,
   Thead,
@@ -12,20 +12,20 @@ import {
   HStack,
   Text,
   Avatar,
-} from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { ApplicationShell } from 'layouts/application-shell';
-import { Card } from 'components/card';
-import { AFLLadder } from 'components/afl-ladder';
-import { trpc } from 'utils/trpc';
+} from "@chakra-ui/react";
+import { useMemo } from "react";
+import { ApplicationShell } from "~/layouts/application-shell";
+import { Card } from "~/components/card";
+import { AFLLadder } from "~/components/afl-ladder";
+import { api } from "~/utils/api";
 
 const UserLadder = () => {
-  const { data: usersWithTips } = trpc.usersWithTips.useQuery();
+  const { data: usersWithTips } = api.usersWithTips.useQuery();
 
-  const { data: roundId } = trpc.roundId.useQuery();
+  const { data: roundId } = api.roundId.useQuery();
 
   const tableData = useMemo(() => {
-    if (!usersWithTips || !usersWithTips.length || !roundId) return [];
+    if (!usersWithTips?.length || !roundId) return [];
 
     const info: {
       id: string;
@@ -38,7 +38,11 @@ const UserLadder = () => {
       let lastRound = 0;
 
       userWithTip.tips.forEach((tip) => {
-        if (tip.selectedTip && tip.game.result && tip.selectedTip.id === tip.game.result.id) {
+        if (
+          tip.selectedTip &&
+          tip.game.result &&
+          tip.selectedTip.id === tip.game.result.id
+        ) {
           total = total + 1;
           if (roundId === tip.game.roundId) {
             lastRound = lastRound + 1;
@@ -46,12 +50,12 @@ const UserLadder = () => {
         }
       });
 
-      const { id, username: name } = userWithTip;
+      const { id, name } = userWithTip;
 
       if (total > 0)
         info.push({
           id,
-          name,
+          name: name ?? "unknown",
           lastRound,
           total,
         });
