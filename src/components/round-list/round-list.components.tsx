@@ -22,8 +22,8 @@ const RoundList = () => {
               {data.map((round) => (
                 <Tr key={round.id}>
                   <Td isNumeric>{round.roundNumber}</Td>
-                  <Td>{format(parseISO(round.dateStart), 'dd/MM/yyyy')}</Td>
-                  <Td>{format(parseISO(round.dateEnd), 'dd/MM/yyyy')}</Td>
+                  <Td>{format(parseISO(round.dateStart), 'PPP')}</Td>
+                  <Td>{format(parseISO(round.dateEnd), 'PPP')}</Td>
                 </Tr>
               ))}
             </Tbody>

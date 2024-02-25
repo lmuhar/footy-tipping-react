@@ -1,4 +1,7 @@
-import { z } from "zod";
+import { TRPCError } from '@trpc/server';
+import { addDays, addWeeks, endOfWeek, startOfWeek } from 'date-fns';
+import { start } from 'repl';
+import { z } from 'zod';
 import {
   fetchAllUsersTipCount,
   fetchLatestRoundId,
@@ -18,8 +21,8 @@ import {
   createGame,
   fetchAllUsers,
   updateGameResult,
-} from "~/data";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+} from '~/data';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
 
 /**
  * This is the primary router for your server.
@@ -49,15 +52,10 @@ export const appRouter = createTRPCRouter({
         gameId: z.string(),
         selectedTipId: z.string(),
         userId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
-      return upsertTip(
-        input.roundId,
-        input.selectedTipId,
-        input.userId,
-        input.gameId
-      );
+      return upsertTip(input.roundId, input.selectedTipId, input.userId, input.gameId);
     }),
   primeLadder: publicProcedure.mutation(async ({}) => {
     return primeTeamNames();
@@ -74,7 +72,7 @@ export const appRouter = createTRPCRouter({
         roundNumber: z.number(),
         dateStart: z.string(),
         dateEnd: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { roundNumber, dateStart, dateEnd } = input;
@@ -103,17 +101,11 @@ export const appRouter = createTRPCRouter({
         awayTeam: z.string(),
         location: z.string(),
         startDateTime: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { round, homeTeam, awayTeam, location, startDateTime } = input;
-      return createGame(
-        round,
-        homeTeam,
-        awayTeam,
-        location,
-        new Date(startDateTime)
-      );
+      return createGame(round, homeTeam, awayTeam, location, new Date(startDateTime));
     }),
   getUsers: publicProcedure.query(async ({}) => {
     return fetchAllUsers();
@@ -123,10 +115,66 @@ export const appRouter = createTRPCRouter({
       z.object({
         gameId: z.string(),
         teamId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       return updateGameResult(input.gameId, input.teamId);
+    }),
+  fetchSeasons: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.season.findMany({
+      select: {
+        id: true,
+        year: true,
+        rounds: {
+          select: {
+            id: true,
+            roundNumber: true,
+            dateStart: true,
+            dateEnd: true,
+            _count: {
+              select: {
+                games: true,
+              },
+            },
+          },
+          orderBy: {
+            roundNumber: 'asc',
+          }
+        },
+      },
+    });
+  }),
+  createSeason: protectedProcedure
+    .input(
+      z.object({
+        year: z.string(),
+        startWeek: z.string().datetime(),
+        roundsCount: z.number().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session.user.role !== 'admin') throw new TRPCError({ code: 'UNAUTHORIZED' });
+      const startWeek = new Date(input.startWeek);
+      const season = await ctx.db.season.create({
+        data: {
+          year: input.year,
+          rounds: {
+            createMany: {
+              data: Array.from({ length: input.roundsCount }).map((_, i) => {
+                const dateStart = addWeeks(startWeek, i);
+                const dateEnd = addDays(dateStart, 6);
+                return {
+                  roundNumber: i + 1,
+                  dateStart,
+                  dateEnd,
+                };
+              }),
+            },
+          },
+        },
+      });
+
+      return season;
     }),
 });
 

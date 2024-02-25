@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { Button, Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Button, Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ApplicationShell } from '~/layouts/application-shell';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -21,6 +21,7 @@ const LoginPage: NextPage = () => {
   const { data } = useSession();
   const { push } = useRouter();
 
+
   useEffect(() => {
     if (data?.user.role !== 'admin') void push('/');
   }, [push, data?.user.role]);
@@ -35,6 +36,11 @@ const LoginPage: NextPage = () => {
   return (
     <ApplicationShell>
       <Stack spacing={12}>
+        <Card>
+          <Heading size="md">Manage</Heading>
+          <Button onClick={() => push('/admin/manage')}>Manage</Button>
+        </Card>
+
         {/* Rounds */}
         <Card>
           <Heading size="md" mb="2">

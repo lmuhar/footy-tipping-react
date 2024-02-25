@@ -120,7 +120,17 @@ model Round {
     createdAt   DateTime @default(now())
     dateStart   DateTime
     dateEnd     DateTime
-    roundNumber Int      @unique
+    roundNumber Int
     games       Game[]
     tips        Tip[]
+    Season      Season?  @relation(fields: [seasonId], references: [id])
+    seasonId    String?
+
+    @@unique([roundNumber, seasonId])
+}
+
+model Season {
+    id     String  @id @default(cuid())
+    year   String  @unique
+    rounds Round[]
 }
